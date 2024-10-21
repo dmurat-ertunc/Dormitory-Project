@@ -8,6 +8,7 @@ import com.dme.DormitoryProject.dtos.mailVerification.MailVerificationDTO;
 import com.dme.DormitoryProject.dtos.studentDtos.StudentDTO;
 import com.dme.DormitoryProject.dtos.studentDtos.StudentMapper;
 import com.dme.DormitoryProject.entity.*;
+import com.dme.DormitoryProject.mernis.DBQKPSPublicSoap;
 import com.dme.DormitoryProject.repository.*;
 import com.dme.DormitoryProject.response.ErrorResult;
 import com.dme.DormitoryProject.response.Result;
@@ -104,20 +105,31 @@ public class StudentManager implements IStudentService{
 
     @Override
     public Result saveStudent(StudentDTO studentDTO){
-        List<Student> students = studentDao.findAll();
-        if (control(students,studentDTO,"getMail") || control(students,studentDTO,"getTcNo")){
-            LogLevelSave(1,"Mail veya kimlik nummarası benzersiz olmalıdır");
-            return new ErrorResult("Mail veya kimlik numarası benzersiz olmaıl",false);
-        }
+        DBQKPSPublicSoap client = new DBQKPSPublicSoap();
+        Integer year = studentDTO.getBirthDate().getYear();
+        Long tcNo = Long.parseLong(studentDTO.getTcNo());
         try {
-            studentDTO.setVerify(false);
-            studentDao.save(dtoToEntity(studentDTO));
-            LogLevelSave(3,"Öğrenci ekleme işlemi başarılı");
-            return new SuccessDataResult("Öğrenci ekleme işlemi başarılı",true,studentDTO);
-        }catch (Exception e){
-            LogLevelSave(1,"Öğrenci ekleme işleminde hata oluştu");
-            return new ErrorResult("Öğrenci ekleme  işleminde hata oluştu",false);
+            boolean isRealPerson = client.TCKimlikNoDogrula(tcNo,studentDTO.getName(),studentDTO.getSurName(),year);
+            if(isRealPerson){
+                List<Student> students = studentDao.findAll();
+                if (control(students,studentDTO,"getMail") || control(students,studentDTO,"getTcNo")){
+                    LogLevelSave(1,"Mail veya kimlik nummarası benzersiz olmalıdır");
+                    return new ErrorResult("Mail veya kimlik numarası benzersiz olmaıl",false);
+                }
+                try {
+                    studentDTO.setVerify(false);
+                    studentDao.save(dtoToEntity(studentDTO));
+                    LogLevelSave(3,"Öğrenci ekleme işlemi başarılı");
+                    return new SuccessDataResult("Öğrenci ekleme işlemi başarılı",true,studentDTO);
+                }catch (Exception e){
+                    LogLevelSave(1,"Öğrenci ekleme işleminde hata oluştu");
+                    return new ErrorResult("Öğrenci ekleme  işleminde hata oluştu",false);
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+        return new ErrorResult("Bu verilere ait bir vatandaş bulunamadı",false);
     }
 
     @Override
