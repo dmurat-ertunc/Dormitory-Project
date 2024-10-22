@@ -111,7 +111,7 @@ public class RentalManager implements IRentalService {
             }
             List<Rental> rentals = rentalDao.findAll();
             for(Rental rental1 : rentals){
-                if (rentalDTO.getStartTime().isAfter(rental1.getStartTime())
+                if ((rentalDTO.getStartTime().isAfter(rental1.getStartTime()) || Objects.equals(rentalDTO.getStartTime(),rental1.getStartTime()))
                         && rentalDTO.getStartTime().isBefore(rental1.getEndTime())
                         && Objects.equals(rentalDTO.getRentalDate(),rental1.getRentalDate())
                         && Objects.equals(rental1.getSportArea().getId(),rentalDTO.getSportAreaId())) {
@@ -137,8 +137,9 @@ public class RentalManager implements IRentalService {
                 return new ErrorResult("Kiralama güncelleme işleminde, ilişki olacağı tablo kaldırılmış.",false);
             }
             List<Rental> rentals = rentalDao.findAll();
+            rentals.remove(editRental);
             for(Rental rental1 : rentals){
-                if (rentalDTO.getStartTime().isAfter(rental1.getStartTime())
+                if ((rentalDTO.getStartTime().isAfter(rental1.getStartTime()) || Objects.equals(rentalDTO.getStartTime(),rental1.getStartTime()))
                         && rentalDTO.getStartTime().isBefore(rental1.getEndTime())
                         && Objects.equals(rentalDTO.getRentalDate(),rental1.getRentalDate())
                         && Objects.equals(rental1.getSportArea().getId(),rentalDTO.getSportAreaId())) {

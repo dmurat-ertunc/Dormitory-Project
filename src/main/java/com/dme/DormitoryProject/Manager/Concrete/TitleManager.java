@@ -114,19 +114,19 @@ public class TitleManager implements ITitleService {
             deleteTitle = titleDao.getById(id);
             List<Staff> staffList = staffDao.findAll();  // gireilen id değerini içeren bir staff olup olmadığının kontrolü
             for (Staff staff : staffList) {
-                if (staff.getManager().getId() == id) {
+                if (staff.getTitle().getId() == id) {
                     LogLevelSave(4, "Bu ünvan, çalışan ile ilişkili, siliniemez.");
                     return new ErrorResult("Bu ünvan, çalışan ile ilişkil, siliniemez.",false);
                 }
             }
-            LogLevelSave(3,"Yönetici silme İşlemi başarılı.");
+            LogLevelSave(3,"Ünvan silme İşlemi başarılı.");
             deleteTitle.setDeleted(true);
             titleDao.save(deleteTitle);
-            return new SuccesResult("Yönetici silme işlemi başarılı",true);
+            return new SuccesResult("Ünvan silme işlemi başarılı",true);
         } catch (Exception e) {
             // Eğer varlık bulunamadıysa, bu blok çalışır
-            LogLevelSave(1, "Bu id değerine ait bir yönetici bulunamadı.");
-            return new ErrorResult("Bu id değerinde yönetici bulunamadı",false);
+            LogLevelSave(1, "Bu id değerine ait bir ünvan bulunamadı.");
+            return new ErrorResult("Bu id değerinde ünvan bulunamadı",false);
         }
     }
 }

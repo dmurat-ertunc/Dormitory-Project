@@ -169,27 +169,37 @@ public class StudentManager implements IStudentService{
 
     @Override
     public Result updateStudent(Long id, StudentDTO studentDTO){
-
+        DBQKPSPublicSoap client = new DBQKPSPublicSoap();
+        Integer year = studentDTO.getBirthDate().getYear();
+        Long tcNo = Long.parseLong(studentDTO.getTcNo());
         try {
-            Student editStudent = studentDao.getById(id);
-            List<Student> students = studentDao.findAll();
-            students.remove(editStudent);
-            if (control(students,studentDTO,"getTcNo") ||  control(students,studentDTO,"getMail")){
-                LogLevelSave(1,"Mail veya kimlik nummarası benzersiz olmalıdır");
-                return new ErrorResult("Mail veya kimlik numarası benzersiz olmaıl",false);
+            boolean isRealPerson = client.TCKimlikNoDogrula(tcNo,studentDTO.getName(),studentDTO.getSurName(),year);
+            if (isRealPerson){
+                Student editStudent = studentDao.getById(id);
+                List<Student> students = studentDao.findAll();
+                students.remove(editStudent);
+                if (control(students,studentDTO,"getTcNo") ||  control(students,studentDTO,"getMail")){
+                    LogLevelSave(1,"Mail veya kimlik nummarası benzersiz olmalıdır");
+                    return new ErrorResult("Mail veya kimlik numarası benzersiz olmaıl",false);
+                }
+                try {
+                   editStudent.setName(studentDTO.getName());
+                   editStudent.setTcNo(studentDTO.getTcNo());
+                   editStudent.setBirthDate(studentDTO.getBirthDate());
+                   editStudent.setSurName(studentDTO.getSurName());
+                   editStudent.setMail(studentDTO.getMail());
+                   studentDao.save(editStudent);
+                   LogLevelSave(3,"Öğrenci güncelleme işlemi başarılı");
+                   return new SuccessDataResult("Öğrenci güncelleme işlemi başarılı", true,entityToDtoObject(editStudent));
+               } catch (Exception e) {
+                   LogLevelSave(1,"Bu id değerine ait bir öğrenci bulunamadı.");
+                   return new ErrorResult("Bu id değerine göre öğrenci bulunamadı",false);
+               }
             }
-            editStudent.setName(studentDTO.getName());
-            editStudent.setTcNo(studentDTO.getTcNo());
-            editStudent.setBirthDate(studentDTO.getBirthDate());
-            editStudent.setSurName(studentDTO.getSurName());
-            editStudent.setMail(studentDTO.getMail());
-            studentDao.save(editStudent);
-            LogLevelSave(3,"Öğrenci güncelleme işlemi başarılı");
-            return new SuccessDataResult("Öğrenci güncelleme işlemi başarılı", false,entityToDtoObject(editStudent));
         } catch (Exception e) {
-            LogLevelSave(1,"Bu id değerine ait bir öğrenci bulunamadı.");
-            return new ErrorResult("Bu id değerine göre öğrenci bulunamadı",false);
+            throw new RuntimeException(e);
         }
+        return new ErrorResult("Bu verilere ait bir vatandaş bulunamadı",false);
     }
 
     @Override

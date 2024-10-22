@@ -138,14 +138,14 @@ public class StaffManager implements IStaffService {
         Staff deleteStaff;
         try {
             deleteStaff = staffDao.getById(id);
-            LogLevelSave(3,"Yönetici silme İşlemi başarılı.");
+            LogLevelSave(3,"Personel silme İşlemi başarılı.");
             deleteStaff.setDeleted(true);
             staffDao.save(deleteStaff);
-            return new SuccesResult("Yönetici silme işlemi başarılı",true);
+            return new SuccesResult("Personel silme işlemi başarılı",true);
         } catch (Exception e) {
             // Eğer varlık bulunamadıysa, bu blok çalışır
-            LogLevelSave(1, "Bu id değerine ait bir yönetici bulunamadı.");
-            return new ErrorResult("Bu id değerinde yönetici bulunamadı",false);
+            LogLevelSave(1, "Bu id değerine ait bir personel bulunamadı.");
+            return new ErrorResult("Bu id değerinde personel bulunamadı",false);
         }
     }
 
