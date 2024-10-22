@@ -4,7 +4,9 @@ import com.dme.DormitoryProject.dtos.rentalDtos.RentalDTO;
 import com.dme.DormitoryProject.entity.Rental;
 import com.dme.DormitoryProject.entity.Staff;
 import com.dme.DormitoryProject.response.Result;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
@@ -16,4 +18,5 @@ public interface IRentalService {
     Result deleteRental(Long id);
     Result updateRental(Long id, RentalDTO rentalDTO);
     Result afterRental(LocalTime startTime);
+    Result emptyField(LocalTime startTime, LocalTime endTime, LocalDate date);
 }

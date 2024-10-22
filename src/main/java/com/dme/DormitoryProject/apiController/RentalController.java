@@ -7,6 +7,7 @@ import com.dme.DormitoryProject.response.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
@@ -20,12 +21,10 @@ public class RentalController {
     public RentalController(IRentalService rentalService){
         this.rentalService=rentalService;
     }
-
     @GetMapping("getAll")
     public Result getAll(){
         return this.rentalService.getAll();
     }
-
     @GetMapping("rentalId/{id}")
     public Result getById(@PathVariable Long id){
         return this.rentalService.getById(id);
@@ -45,5 +44,9 @@ public class RentalController {
     @PutMapping("delete/{id}")
     public Result deleteRental(@PathVariable Long id){
         return this.rentalService.deleteRental(id);
+    }
+    @GetMapping("emptyField")
+    public Result emptyFiled(@RequestParam LocalTime startTime, @RequestParam LocalTime endTime, @RequestParam LocalDate date){
+        return  this.rentalService.emptyField(startTime,endTime,date);
     }
 }

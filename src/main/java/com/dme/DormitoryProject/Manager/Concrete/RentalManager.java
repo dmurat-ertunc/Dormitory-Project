@@ -3,12 +3,11 @@ package com.dme.DormitoryProject.Manager.Concrete;
 import com.dme.DormitoryProject.Manager.Abstract.IRentalService;
 import com.dme.DormitoryProject.dtos.rentalDtos.RentalDTO;
 import com.dme.DormitoryProject.dtos.rentalDtos.RentalMapper;
+import com.dme.DormitoryProject.dtos.sportAreaDtos.SportAreaDTO;
+import com.dme.DormitoryProject.dtos.sportAreaDtos.SportAreaMapper;
 import com.dme.DormitoryProject.dtos.staffDtos.StaffDTO;
 import com.dme.DormitoryProject.dtos.staffDtos.StaffMapper;
-import com.dme.DormitoryProject.entity.Lgo;
-import com.dme.DormitoryProject.entity.LogLevel;
-import com.dme.DormitoryProject.entity.Rental;
-import com.dme.DormitoryProject.entity.Staff;
+import com.dme.DormitoryProject.entity.*;
 import com.dme.DormitoryProject.repository.*;
 import com.dme.DormitoryProject.response.ErrorResult;
 import com.dme.DormitoryProject.response.Result;
@@ -61,8 +60,24 @@ public class RentalManager implements IRentalService {
         }
         return rentalDTOS;
     }
+    public List<SportAreaDTO> entityToDtoListSportArea(List<SportArea> sportAreas){
+        List<SportAreaDTO> sportAreaDTOS = new ArrayList<>();
+
+        for (SportArea sportArea : sportAreas) {
+            SportAreaDTO dto = SportAreaMapper.toDTO(sportArea);
+            sportAreaDTOS.add(dto);
+            String a = new String("1");
+            String b = "1";
+
+
+        }
+        return sportAreaDTOS;
+    }
     public RentalDTO entityToDtoObject(Rental rental){
         return RentalMapper.toDTO(rental);
+    }
+    public SportAreaDTO entityToDtoObjectSportArea(SportArea sportArea){
+        return SportAreaMapper.toDTO(sportArea);
     }
 
     public Rental dtoToEntity(RentalDTO rentalDTO){
@@ -172,6 +187,12 @@ public class RentalManager implements IRentalService {
             LogLevelSave(1,"Silme işlemi başarısız");
             return new ErrorResult("Silme işlemi başarısızı",false);
         }
+    }
+
+    @Override
+    public Result emptyField(LocalTime startTime, LocalTime endTime, LocalDate date){
+        List<SportAreaDTO> sportAreaDTOS = entityToDtoListSportArea(rentalDao.findOverlappingRentals(startTime,endTime,date));
+        return new SuccessDataResult("Girilen saatler arasında boş olan sahalar",true,sportAreaDTOS);
     }
 }
 //"startTime": "14:30:00",
