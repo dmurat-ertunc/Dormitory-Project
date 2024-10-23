@@ -1,5 +1,6 @@
 package com.dme.DormitoryProject.dtos.staffDtos;
 
+import com.dme.DormitoryProject.annotations.UniqueMailStaff;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -19,6 +20,7 @@ public class StaffDTO {
     @NotEmpty(message = "Çalışan mail alanı boş bırakılamaz")
     @Email(message = "Email formatına uygun şekilde girin")
     @Column(unique = true)
+    @UniqueMailStaff
     private String mail;
     @NotNull(message = "Çalışan maaş alanı boş bırakılamaz")
     private int salary;

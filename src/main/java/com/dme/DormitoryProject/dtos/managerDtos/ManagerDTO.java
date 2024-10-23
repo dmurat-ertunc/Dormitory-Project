@@ -14,6 +14,7 @@ public class ManagerDTO {
     @NotEmpty(message = "Mail alanı boş bırakılamaz")
     @NotNull(message = "Mail alanı boş bırakılmaz")
     @Email(message = "Mail alanını uygun formatta giriniz")
+    @MailUniqueCheck
     @Column(unique = true)
     private String mail;
     @NotEmpty(message = "İsim alanı boş bırakılamaz")
