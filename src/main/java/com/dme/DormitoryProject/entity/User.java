@@ -29,6 +29,10 @@ public class User {
     //@JsonManagedReference
     private List<Roles> roles = new ArrayList<>();
 
+    public User(){
+
+    }
+
     public List<Roles> getRoles() {
         return roles;
     }
