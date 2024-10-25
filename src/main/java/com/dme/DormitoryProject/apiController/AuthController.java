@@ -1,11 +1,13 @@
 package com.dme.DormitoryProject.apiController;
 
+import com.dme.DormitoryProject.dtos.auth.AuthResponseDTO;
 import com.dme.DormitoryProject.dtos.login.LoginDTO;
 import com.dme.DormitoryProject.dtos.register.RegisterDTO;
 import com.dme.DormitoryProject.entity.Roles;
 import com.dme.DormitoryProject.entity.User;
 import com.dme.DormitoryProject.repository.IRoleDao;
 import com.dme.DormitoryProject.repository.IUserDao;
+import com.dme.DormitoryProject.security.JWTGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,28 +27,27 @@ public class AuthController {
     private IUserDao userDao;
     private IRoleDao roleDao;
     private PasswordEncoder passwordEncoder;
-    //private JWTGenerator jwtGenerator;
+    private JWTGenerator jwtGenerator;
 
     @Autowired
     public AuthController(AuthenticationManager authenticationManager, IUserDao userDao,
-                          IRoleDao roleDao, PasswordEncoder passwordEncoder) {
+                          IRoleDao roleDao, PasswordEncoder passwordEncoder, JWTGenerator jwtGenerator) {
         this.authenticationManager = authenticationManager;
         this.userDao = userDao;
         this.roleDao = roleDao;
         this.passwordEncoder = passwordEncoder;
-        //this.jwtGenerator = jwtGenerator;
+        this.jwtGenerator = jwtGenerator;
     }
 
     @PostMapping("login")
-    public ResponseEntity<String> login(@RequestBody LoginDTO loginDto){
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginDTO loginDto){
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginDto.getUserName(),
                         loginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return new ResponseEntity<>("Giriş başarılı",HttpStatus.OK);
-//        String token = jwtGenerator.generateToken(authentication);
-//        return new ResponseEntity<>(new AuthResponseDTO(token), HttpStatus.OK);
+        String token = jwtGenerator.generateToken(authentication);
+        return new ResponseEntity<>(new AuthResponseDTO(token), HttpStatus.OK);
     }
 
     @PostMapping("register")
