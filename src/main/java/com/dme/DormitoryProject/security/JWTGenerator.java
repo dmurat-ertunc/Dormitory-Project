@@ -1,9 +1,8 @@
 package com.dme.DormitoryProject.security;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.*;
 
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -13,7 +12,7 @@ import java.util.Date;
 
 @Component
 public class JWTGenerator {
-    private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+    private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
     public String generateToken(Authentication authentication) {
         String username = authentication.getName();
@@ -24,10 +23,11 @@ public class JWTGenerator {
                 .setSubject(username)
                 .setIssuedAt( new Date())
                 .setExpiration(expireDate)
-                .signWith(key,SignatureAlgorithm.HS512)
+                .signWith(key,SignatureAlgorithm.HS256)
                 .compact();
         System.out.println("New token :");
         System.out.println(token);
+        System.out.println(key.getAlgorithm());
         return token;
     }
     public String getUsernameFromJWT(String token){
@@ -41,10 +41,25 @@ public class JWTGenerator {
 
     public boolean validateToken(String token) {
         try {
+            System.out.println(key);
             Jwts.parserBuilder()
                     .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token);
+                    .build();
+            try {
+                Claims claims = Jwts.parser()
+                        .setSigningKey(key) // Gizli anahtarın doğru olduğundan emin olun
+                        .parseClaimsJws(token)
+                        .getBody();
+                // Claims ile işlemler
+            } catch (ExpiredJwtException e) {
+                System.out.println("Token süresi dolmuş.");
+            } catch (SignatureException e) {
+                System.out.println("Token imzası geçersiz.");
+            } catch (MalformedJwtException e) {
+                System.out.println("Token biçimi bozuk.");
+            } catch (IllegalArgumentException e) {
+                System.out.println("Token boş veya geçersiz.");
+            }
             return true;
         } catch (Exception ex) {
             throw new AuthenticationCredentialsNotFoundException("JWT was exprired or incorrect",ex.fillInStackTrace());

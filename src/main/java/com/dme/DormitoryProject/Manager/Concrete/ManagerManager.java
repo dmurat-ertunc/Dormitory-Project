@@ -1,6 +1,7 @@
 package com.dme.DormitoryProject.Manager.Concrete;
 
 import com.dme.DormitoryProject.Manager.Abstract.IManagerService;
+import com.dme.DormitoryProject.Manager.Abstract.IUserService;
 import com.dme.DormitoryProject.dtos.managerDtos.ManagerDTO;
 import com.dme.DormitoryProject.dtos.managerDtos.ManagerMapper;
 import com.dme.DormitoryProject.entity.*;
@@ -26,13 +27,16 @@ public class ManagerManager implements IManagerService {
     private ILogLevelDao logLevelDao;
     private IStaffDao staffDao;
     private GlobalExceptionHandler globalExceptionHandler;
+    private IUserService userService;
     @Autowired
-    public ManagerManager(IManagerDao managerDao, ILgoDao logDao,ILogLevelDao logLevelDao,IStaffDao staffDao,GlobalExceptionHandler globalExceptionHandler){
+    public ManagerManager(IManagerDao managerDao, ILgoDao logDao,ILogLevelDao logLevelDao,IStaffDao staffDao,
+                          GlobalExceptionHandler globalExceptionHandler,IUserService userService){
         this.managerDao=managerDao;
         this.logDao=logDao;
         this.logLevelDao=logLevelDao;
         this.staffDao=staffDao;
         this.globalExceptionHandler=globalExceptionHandler;
+        this.userService=userService;
     }
     public void LogLevelSave(long id,String message){
         Lgo log = new Lgo();
@@ -91,8 +95,9 @@ public class ManagerManager implements IManagerService {
         return new ErrorResult("Belirtilen miktardan fazla maaş alan yönetici bulunamadı",false);
     }
     @Override
-    public Result saveManager(ManagerDTO managerDTO){
+    public Result saveManager(ManagerDTO managerDTO, String passwword){
         try {
+            userService.saveUser(managerDTO,"MANAGER",passwword);
             managerDao.save(dtoToEntity(managerDTO));
             LogLevelSave(3,"Yönetici ekleme işlemi başarılı");
             return new SuccessDataResult("Yönetici ekleme işlemi başarılı",true,managerDTO);

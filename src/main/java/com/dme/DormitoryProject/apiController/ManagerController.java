@@ -4,6 +4,7 @@ import com.dme.DormitoryProject.Manager.Abstract.IManagerService;
 import com.dme.DormitoryProject.dtos.managerDtos.ManagerDTO;
 import com.dme.DormitoryProject.entity.Manager;
 import com.dme.DormitoryProject.response.Result;
+import jakarta.annotation.security.PermitAll;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +13,7 @@ import jakarta.validation.Valid;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("api/managers/")
+@RequestMapping("api/managers")
 public class ManagerController {
 
     private IManagerService managerService;
@@ -23,6 +24,7 @@ public class ManagerController {
     }
 
     @GetMapping("getAll")
+    @PermitAll
     public Result getAll() {
         return this.managerService.getAll();
     }
@@ -35,8 +37,8 @@ public class ManagerController {
         return this.managerService.findBySalaryGreaterThan(salary);
     }
     @PostMapping("saveManager")
-    public Result saveManager(@RequestBody @Valid ManagerDTO managerDTO){
-        return this.managerService.saveManager(managerDTO);
+    public Result saveManager(@RequestBody @Valid ManagerDTO managerDTO, @RequestParam String password){
+        return this.managerService.saveManager(managerDTO,password);
     }
     @PutMapping("update/{id}")
     public Result updateManager(@PathVariable Long id,@RequestBody @Valid ManagerDTO managerDTO){

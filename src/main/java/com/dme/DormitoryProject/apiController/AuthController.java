@@ -60,7 +60,7 @@ public class AuthController {
         user.setUsernName(registerDto.getUserName());
         user.setPassword(passwordEncoder.encode((registerDto.getPassword())));
 
-        Roles roles = roleDao.findByName("USER").get();
+        Roles roles = roleDao.findByName("STAFF").get();
         user.setRoles(Collections.singletonList(roles));
 
         userDao.save(user);

@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface IManagerService {
     Result getAll();
     Result getById(Long id);
-    Result saveManager(ManagerDTO managerDTO);
+    Result saveManager(ManagerDTO managerDTO, String password);
     Result updateManager(Long id,ManagerDTO managerDTO);
     Result deleteManager(Long id);
     Result findBySalaryGreaterThan(int salary);
