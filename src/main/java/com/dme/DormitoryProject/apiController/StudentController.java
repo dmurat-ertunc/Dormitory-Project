@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("api/students/")
+@RequestMapping("api/students")
 public class StudentController {
 
     private IStudentService studentService;
@@ -29,7 +29,6 @@ public class StudentController {
     }
 
     @GetMapping("getAll")
-    @Secured({"ROLE_STAFF"})
     public Result getAll(){
         return studentService.getAll();
     }

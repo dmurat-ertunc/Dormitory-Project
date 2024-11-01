@@ -3,6 +3,7 @@ package com.dme.DormitoryProject.security;
 import com.dme.DormitoryProject.entity.Roles;
 import com.dme.DormitoryProject.entity.User;
 import com.dme.DormitoryProject.repository.IUserDao;
+import jakarta.transaction.Transactional;
 import org.hibernate.internal.build.AllowSysOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,7 +24,7 @@ public class CustomUserDetailService implements UserDetailsService {
     public CustomUserDetailService(IUserDao userDao){
         this.userDao=userDao;
     }
-
+    @Transactional
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException{
         User user = userDao.findByUserName(userName).orElseThrow(() -> new UsernameNotFoundException("Kullanıcı adı bulunamadı"));

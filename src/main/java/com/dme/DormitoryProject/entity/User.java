@@ -13,20 +13,15 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String userName;
-
     private String mail;
-
     private String password;
-
     @ManyToMany
     @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "roles_id")
     )
-    //@JsonManagedReference
     private List<Roles> roles = new ArrayList<>();
 
     public User(){

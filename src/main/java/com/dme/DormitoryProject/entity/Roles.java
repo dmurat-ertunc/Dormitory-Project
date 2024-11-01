@@ -10,6 +10,17 @@ import java.util.Set;
 @Entity
 @Table(name = "roles")
 public class Roles {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+    @ManyToMany(mappedBy = "roles",fetch = FetchType.EAGER)
+    private List<User> users = new ArrayList<>();
+
+    public Roles(){
+
+    }
+
     public Long getId() {
         return id;
     }
@@ -33,11 +44,4 @@ public class Roles {
     public void setUsers(List<User> users) {
         this.users = users;
     }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String name;
-    @ManyToMany(mappedBy = "roles",fetch = FetchType.EAGER)
-    private List<User> users = new ArrayList<>();
 }

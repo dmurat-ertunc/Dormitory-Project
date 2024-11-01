@@ -1,5 +1,6 @@
 package com.dme.DormitoryProject.apiController;
 
+import com.dme.DormitoryProject.Manager.Abstract.ITokenBlackListService;
 import com.dme.DormitoryProject.dtos.auth.AuthResponseDTO;
 import com.dme.DormitoryProject.dtos.login.LoginDTO;
 import com.dme.DormitoryProject.dtos.register.RegisterDTO;
@@ -28,15 +29,18 @@ public class AuthController {
     private IRoleDao roleDao;
     private PasswordEncoder passwordEncoder;
     private JWTGenerator jwtGenerator;
+    private ITokenBlackListService tokenBlackListService;
 
     @Autowired
     public AuthController(AuthenticationManager authenticationManager, IUserDao userDao,
-                          IRoleDao roleDao, PasswordEncoder passwordEncoder, JWTGenerator jwtGenerator) {
+                          IRoleDao roleDao, PasswordEncoder passwordEncoder, JWTGenerator jwtGenerator,
+                          ITokenBlackListService tokenBlackListService) {
         this.authenticationManager = authenticationManager;
         this.userDao = userDao;
         this.roleDao = roleDao;
         this.passwordEncoder = passwordEncoder;
         this.jwtGenerator = jwtGenerator;
+        this.tokenBlackListService=tokenBlackListService;
     }
 
     @PostMapping("login")
@@ -50,21 +54,28 @@ public class AuthController {
         return new ResponseEntity<>(new AuthResponseDTO(token), HttpStatus.OK);
     }
 
-    @PostMapping("register")
-    public ResponseEntity<String> register(@RequestBody RegisterDTO registerDto) {
-        if (userDao.existsByUserName(registerDto.getUserName())) {
-            return new ResponseEntity<>("Kullanıcı adı zaten alınmış", HttpStatus.BAD_REQUEST);
-        }
-
-        User user = new User();
-        user.setUsernName(registerDto.getUserName());
-        user.setPassword(passwordEncoder.encode((registerDto.getPassword())));
-
-        Roles roles = roleDao.findByName("STAFF").get();
-        user.setRoles(Collections.singletonList(roles));
-
-        userDao.save(user);
-
-        return new ResponseEntity<>("Kayıt ekleme başarılı", HttpStatus.OK);
+    @PostMapping("logout")
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String token){
+        String jwt = token.substring(7);
+        tokenBlackListService.blackListToken(jwt);
+        return ResponseEntity.ok("Çıkış Başarılı");
     }
+
+//    @PostMapping("register")
+//    public ResponseEntity<String> register(@RequestBody RegisterDTO registerDto) {
+//        if (userDao.existsByUserName(registerDto.getUserName())) {
+//            return new ResponseEntity<>("Kullanıcı adı zaten alınmış", HttpStatus.BAD_REQUEST);
+//        }
+//
+//        User user = new User();
+//        user.setUsernName(registerDto.getUserName());
+//        user.setPassword(passwordEncoder.encode((registerDto.getPassword())));
+//
+//        Roles roles = roleDao.findByName("STAFF").get();
+//        user.setRoles(Collections.singletonList(roles));
+//
+//        userDao.save(user);
+//
+//        return new ResponseEntity<>("Kayıt ekleme başarılı", HttpStatus.OK);
+//    }
 }
