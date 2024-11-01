@@ -1,5 +1,6 @@
 package com.dme.DormitoryProject.security;
 
+import com.dme.DormitoryProject.Manager.Abstract.ITokenBlackListService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,14 +20,15 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     private JWTGenerator tokenGenerator;
     @Autowired
     private CustomUserDetailService customUserDetailsService;
-
+    @Autowired
+    private ITokenBlackListService tokenBlackListService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         String token = getJWTFromRequest(request);
-        if(StringUtils.hasText(token) && tokenGenerator.validateToken(token)) {
+        if(StringUtils.hasText(token) && tokenGenerator.validateToken(token) && !(tokenBlackListService.isTokenBlackListed(token))) {
             String username = tokenGenerator.getUsernameFromJWT(token);
 
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
