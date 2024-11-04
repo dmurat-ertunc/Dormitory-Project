@@ -15,18 +15,16 @@ public class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private boolean isDeleted = false;
+    private LocalDate addDate = date;
 
-    public boolean isDeleted() {
-        return isDeleted;
-    }
 
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;
     }
-
-    private boolean isDeleted = false;
-    private LocalDate addDate = date;
-
+    public boolean isDeleted() {
+        return isDeleted;
+    }
     public long getId(){
         return id;
     }
@@ -36,7 +34,6 @@ public class BaseEntity {
     public boolean getIsDeleted(){
         return isDeleted;
     }
-
     public LocalDate getAddDate() {
         return addDate;
     }
