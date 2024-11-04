@@ -9,6 +9,7 @@ import com.dme.DormitoryProject.entity.User;
 import com.dme.DormitoryProject.repository.IRoleDao;
 import com.dme.DormitoryProject.repository.IUserDao;
 import com.dme.DormitoryProject.security.JWTGenerator;
+import jakarta.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +52,8 @@ public class AuthController {
                         loginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtGenerator.generateToken(authentication);
+//        Cookie cookie = new Cookie("asd","zxa");
+//        cookie.setToken(token);
         return new ResponseEntity<>(new AuthResponseDTO(token), HttpStatus.OK);
     }
 

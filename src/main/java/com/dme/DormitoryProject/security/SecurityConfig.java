@@ -41,6 +41,7 @@ public class SecurityConfig {
                         .requestMatchers("api/auth/**").permitAll() // `antMatchers` yerine `requestMatchers` kullanılıyor
                         .requestMatchers("api/managers/**").permitAll()
                         .requestMatchers("api/staffs/**").permitAll()
+                        .requestMatchers("api/rentals/**").permitAll()
                         .requestMatchers("api/students/**").hasRole(("STAFF"))
                         .anyRequest().authenticated()
                 )
