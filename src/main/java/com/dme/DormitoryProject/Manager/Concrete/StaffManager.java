@@ -1,6 +1,7 @@
 package com.dme.DormitoryProject.Manager.Concrete;
 
 import com.dme.DormitoryProject.Manager.Abstract.IStaffService;
+import com.dme.DormitoryProject.Manager.Abstract.IUserService;
 import com.dme.DormitoryProject.dtos.managerDtos.ManagerDTO;
 import com.dme.DormitoryProject.dtos.managerDtos.ManagerMapper;
 import com.dme.DormitoryProject.dtos.staffDtos.StaffDTO;
@@ -30,15 +31,19 @@ public class StaffManager implements IStaffService {
     private ILogLevelDao logLevelDao;
     private IDepartmentDao departmentDao;
     private IManagerDao managerDao;
+    private IUserService userService;
 
     @Autowired
-    public StaffManager(IStaffDao staffDao, ILgoDao lgoDao, ILogLevelDao logLevelDao, IDepartmentDao departmentDao, IManagerDao managerDao, ITitleDao titleDao) {
+    public StaffManager(IStaffDao staffDao, ILgoDao lgoDao, ILogLevelDao logLevelDao,
+                        IDepartmentDao departmentDao, IManagerDao managerDao, ITitleDao titleDao,
+                        IUserService userService) {
         this.staffDao = staffDao;
         this.lgoDao = lgoDao;
         this.logLevelDao = logLevelDao;
         this.departmentDao = departmentDao;
         this.managerDao = managerDao;
         this.titleDao = titleDao;
+        this.userService=userService;
     }
 
     public void LogLevelSave(long id,String message){
@@ -90,14 +95,12 @@ public class StaffManager implements IStaffService {
         }
     }
     @Override
-    public Result saveStaff(StaffDTO staffDTO){
+    public Result saveStaff(StaffDTO staffDTO,String password){
         try{
             staffDao.save(dtoToEntity(staffDTO));
+            userService.saveUser(staffDTO,"ROLE_STAFF",password);
             LogLevelSave(3,"Personel kaydetme işlemi başarılır");
             return new SuccessDataResult("Personel ekleme işlemi başarılı",true,staffDTO);
-        }catch (DataIntegrityViolationException e){
-            LogLevelSave(1,"Bu mail veya telefon numarası zaten kayıtlı");
-            return new ErrorResult("Bu mail veya telefon numarası zaten kayıtlı",false);
         } catch (Exception e) {
             LogLevelSave(1, "Personel ekleme işlemi başarısız");
             return new ErrorResult("Personel ekleme işlemi başarısız",false);

@@ -32,22 +32,29 @@ public class UserManager implements IUserService<T> {
         this.passwordEncoder=passwordEncoder;
     }
 
-    @Override
-    public String mailToUsername(String mail) {
-        Random random = new Random();
-        List<User> userList = userDao.findAll();
-        int value;
-        boolean isUnique;
-        do {
-            value = 100000 + random.nextInt(900000);  // 100000-999999 arasında sayı üret
-            int finalValue = value;
-            isUnique = userList.stream().noneMatch(user -> user.getId().equals(finalValue));
-        } while (!isUnique);
+
+    private String mailToUsername(String mail) {
+        // E-posta adresini doğrulama (isteğe bağlı)
+        if (mail == null || !mail.contains("@")) {
+            throw new IllegalArgumentException("Geçersiz e-posta adresi");
+        }
+
+        // E-posta adresinin '@' kısmından önceki bölümünü al
         String username = mail.split("@")[0];
-        return "DMT" + value + username;
+
+        // Noktaları kaldır
+        String formattedUsername = username.replace(".", "");
+
+        // E-posta adresinin uzantısını al
+        String domain = mail.split("@")[1].split("\\.")[0]; // ".com" veya diğer uzantılardan önceki kısmı alır
+
+        // Dinamik olarak sonuca domain ekle
+        String formattedEmail = formattedUsername + domain;
+
+        return formattedEmail;
     }
 
-    public <T> String findDto(T dto){
+    private  <T> String findDto(T dto){
         if (dto instanceof ManagerDTO) {
             return ((ManagerDTO) dto).getMail();
         } else if (dto instanceof StaffDTO) {
@@ -60,13 +67,13 @@ public class UserManager implements IUserService<T> {
     }
 
     @Override
-    public void saveUser(T dto, String role,String password) {
+    public void saveUser(Object dto, String role,String password) {
         String username = mailToUsername(findDto(dto));
 
         User user = new User();
         user.setUsernName(username);
         user.setPassword(passwordEncoder.encode(password));
-
+        user.setMail(findDto(dto));
         Roles roles = roleDao.findByName(role).get();
         user.setRoles(Collections.singletonList(roles));
 

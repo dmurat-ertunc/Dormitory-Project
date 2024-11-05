@@ -63,22 +63,4 @@ public class AuthController {
         tokenBlackListService.blackListToken(jwt);
         return ResponseEntity.ok("Çıkış Başarılı");
     }
-
-//    @PostMapping("register")
-//    public ResponseEntity<String> register(@RequestBody RegisterDTO registerDto) {
-//        if (userDao.existsByUserName(registerDto.getUserName())) {
-//            return new ResponseEntity<>("Kullanıcı adı zaten alınmış", HttpStatus.BAD_REQUEST);
-//        }
-//
-//        User user = new User();
-//        user.setUsernName(registerDto.getUserName());
-//        user.setPassword(passwordEncoder.encode((registerDto.getPassword())));
-//
-//        Roles roles = roleDao.findByName("STAFF").get();
-//        user.setRoles(Collections.singletonList(roles));
-//
-//        userDao.save(user);
-//
-//        return new ResponseEntity<>("Kayıt ekleme başarılı", HttpStatus.OK);
-//    }
 }

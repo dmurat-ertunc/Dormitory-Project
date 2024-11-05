@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface IStaffService {
     Result getAll();
     Result getById(Long id);
-    Result saveStaff(StaffDTO staffDTO);
+    Result saveStaff(StaffDTO staffDTO,String password);
     Result deleteStaff(Long id);
     Result updateStaff(Long id, StaffDTO staffDTO);
 }

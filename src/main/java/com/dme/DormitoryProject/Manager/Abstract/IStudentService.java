@@ -13,7 +13,7 @@ public interface IStudentService {
     Result findStudentById(Long id);
     Result getAll();
     List<Student> findStudentsOlderThan18Native();
-    Result saveStudent(StudentDTO studentDTO);
+    Result saveStudent(StudentDTO studentDTO, String password);
     List<Student> saveStudentAll(List<Student> students);
     Result updateStudent(Long id,StudentDTO studentDTO);
     Result deleteStudent(Long id);

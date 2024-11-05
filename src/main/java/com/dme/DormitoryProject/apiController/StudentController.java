@@ -45,8 +45,8 @@ public class StudentController {
     }
 
     @PostMapping("saveStudent")
-    public Result saveStudent(@RequestBody @Valid StudentDTO studentDTO){
-        return this.studentService.saveStudent(studentDTO);
+    public Result saveStudent(@RequestBody @Valid StudentDTO studentDTO, @RequestParam String password){
+        return this.studentService.saveStudent(studentDTO,password);
     }
     @GetMapping("sendMail/{id}")
     public Result sendMail(@PathVariable Long id){

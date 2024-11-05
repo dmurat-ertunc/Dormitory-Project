@@ -4,6 +4,7 @@ import ch.qos.logback.classic.spi.LoggerContextListener;
 import com.dme.DormitoryProject.Manager.Abstract.IMailService;
 import com.dme.DormitoryProject.Manager.Abstract.IRedisService;
 import com.dme.DormitoryProject.Manager.Abstract.IStudentService;
+import com.dme.DormitoryProject.Manager.Abstract.IUserService;
 import com.dme.DormitoryProject.dtos.mailVerification.MailVerificationDTO;
 import com.dme.DormitoryProject.dtos.studentDtos.StudentDTO;
 import com.dme.DormitoryProject.dtos.studentDtos.StudentMapper;
@@ -34,9 +35,12 @@ public class StudentManager implements IStudentService{
     private IUniversityDao universityDao;
     private IRedisService redisService;
     private IMailService mailService;
+    private IUserService userService;
 
     @Autowired
-    public StudentManager(IStudentDao studentDao, IRentalDao rentalDao, ILgoDao lgoDao, ILogLevelDao logLevelDao,IUniversityDao universityDao,IRedisService redisService, IMailService mailService) {
+    public StudentManager(IStudentDao studentDao, IRentalDao rentalDao,
+                          ILgoDao lgoDao, ILogLevelDao logLevelDao,IUniversityDao universityDao,
+                          IRedisService redisService, IMailService mailService, IUserService userService) {
         this.studentDao = studentDao;
         this.rentalDao = rentalDao;
         this.lgoDao = lgoDao;
@@ -44,6 +48,7 @@ public class StudentManager implements IStudentService{
         this.universityDao = universityDao;
         this.redisService=redisService;
         this.mailService=mailService;
+        this.userService=userService;
     }
     public List<StudentDTO> entityToDtoList(List<Student> students){
         List<StudentDTO> studentDTOS = new ArrayList<>();
@@ -104,7 +109,7 @@ public class StudentManager implements IStudentService{
     }
 
     @Override
-    public Result saveStudent(StudentDTO studentDTO){
+    public Result saveStudent(StudentDTO studentDTO, String password){
         DBQKPSPublicSoap client = new DBQKPSPublicSoap();
         Integer year = studentDTO.getBirthDate().getYear();
         Long tcNo = Long.parseLong(studentDTO.getTcNo());
@@ -118,6 +123,7 @@ public class StudentManager implements IStudentService{
                 }
                 try {
                     studentDTO.setVerify(false);
+                    userService.saveUser(studentDTO,"ROLE_STUDENT",password);
                     studentDao.save(dtoToEntity(studentDTO));
                     LogLevelSave(3,"Öğrenci ekleme işlemi başarılı");
                     return new SuccessDataResult("Öğrenci ekleme işlemi başarılı",true,studentDTO);

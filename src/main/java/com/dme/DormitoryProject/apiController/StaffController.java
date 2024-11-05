@@ -29,8 +29,8 @@ public class StaffController {
         return this.staffService.getById(id);
     }
     @PostMapping("saveStaff")
-    public Result saveStaff(@RequestBody @Valid StaffDTO staffDTO){
-        return this.staffService.saveStaff(staffDTO);
+    public Result saveStaff(@RequestBody @Valid StaffDTO staffDTO,@RequestParam String password){
+        return this.staffService.saveStaff(staffDTO,password);
     }
     @PutMapping("update/{id}")
     public Result updateStaff(@PathVariable Long id,@RequestBody @Valid StaffDTO staffDTO){
