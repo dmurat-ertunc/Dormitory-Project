@@ -1,5 +1,6 @@
 package com.dme.DormitoryProject.Manager.Concrete;
 
+import com.dme.DormitoryProject.Manager.Abstract.IMailService;
 import com.dme.DormitoryProject.Manager.Abstract.IRentalService;
 import com.dme.DormitoryProject.Manager.Abstract.IStudentRequestRentalService;
 import com.dme.DormitoryProject.dtos.rentalDtos.RentalDTO;
@@ -23,16 +24,17 @@ public class StudentRequestRentalRentalManager implements IStudentRequestRentalS
     private IStudentDao studentDao;
     private ISportAreaDao sportAreaDao;
     private IRentalDao rentalDao;
+    private IMailService mailService;
 
 
     @Autowired
     public StudentRequestRentalRentalManager(IStudentRequestRentalDao studentRequestRentalDao, ISportAreaDao sportAreaDao,
-                                             IStudentDao studentDao, IRentalDao rentalDao){
+                                             IStudentDao studentDao, IRentalDao rentalDao, IMailService mailService){
         this.studentRequestRentalDao=studentRequestRentalDao;
         this.studentDao=studentDao;
         this.sportAreaDao=sportAreaDao;
         this.rentalDao=rentalDao;
-
+        this.mailService=mailService;
     }
 
     private StudentRequestRental dtoToEntity(StudentRequestRentalDTO studentRequestRentalDTO){
@@ -49,7 +51,7 @@ public class StudentRequestRentalRentalManager implements IStudentRequestRentalS
         studentRequestRental.setStatus(RequestStatus.Approved);
         studentRequestRentalDao.save(studentRequestRental);
         if (saveRental(studentRequestRental)){
-            return new Result<>("İstek onaylandı",true);
+            return new Result<>("İstek onaylandı, onay maili gönderildi",true);
         }
         return new ErrorResult("Onaylama işleminde hata oluştu",false);
     }
@@ -63,6 +65,8 @@ public class StudentRequestRentalRentalManager implements IStudentRequestRentalS
             rental.setStudent(rental.getStudent());
             rental.setSportArea(studentRequestRental.getSportArea());
             rentalDao.save(rental);
+            mailService.permitMailSending(studentRequestRental.getStudent().getMail(),studentRequestRental.getSportArea().getSporType()
+                    ,studentRequestRental.getStartTime(),studentRequestRental.getEndTime());
             return true;
         }catch (Exception e){
             return false;

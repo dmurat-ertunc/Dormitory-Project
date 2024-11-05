@@ -9,6 +9,9 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 @Service
 public class MailManager implements IMailService {
     private JavaMailSender mailSender;
@@ -25,6 +28,15 @@ public class MailManager implements IMailService {
         simpleMailMessage.setTo(mail);
         simpleMailMessage.setText(String.valueOf(code));
         simpleMailMessage.setSubject("Doğrulama Kodu");
+        mailSender.send(simpleMailMessage);
+    }
+    @Override
+    public void permitMailSending(String mail, String sportArea, LocalTime startTime, LocalTime endTime){
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setFrom("cengdme@gmail.com");
+        simpleMailMessage.setTo(mail);
+        simpleMailMessage.setText(String.valueOf(sportArea + " alanı " + startTime + " ile " + endTime + " isteğiniz doğrultusunda onaylanmıştır"));
+        simpleMailMessage.setSubject("İstek Cevabı");
         mailSender.send(simpleMailMessage);
     }
 
