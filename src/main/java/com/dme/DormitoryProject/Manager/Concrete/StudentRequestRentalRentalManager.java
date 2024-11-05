@@ -1,14 +1,18 @@
 package com.dme.DormitoryProject.Manager.Concrete;
 
+import com.dme.DormitoryProject.Manager.Abstract.IRentalService;
 import com.dme.DormitoryProject.Manager.Abstract.IStudentRequestRentalService;
 import com.dme.DormitoryProject.dtos.rentalDtos.RentalDTO;
 import com.dme.DormitoryProject.dtos.studentRentalDtos.StudentRequestMapper;
 import com.dme.DormitoryProject.dtos.studentRentalDtos.StudentRequestRentalDTO;
+import com.dme.DormitoryProject.entity.Rental;
 import com.dme.DormitoryProject.entity.StudentRequestRental;
 import com.dme.DormitoryProject.enums.RequestStatus;
+import com.dme.DormitoryProject.repository.IRentalDao;
 import com.dme.DormitoryProject.repository.ISportAreaDao;
 import com.dme.DormitoryProject.repository.IStudentDao;
 import com.dme.DormitoryProject.repository.IStudentRequestRentalDao;
+import com.dme.DormitoryProject.response.ErrorResult;
 import com.dme.DormitoryProject.response.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,12 +22,17 @@ public class StudentRequestRentalRentalManager implements IStudentRequestRentalS
     private IStudentRequestRentalDao studentRequestRentalDao;
     private IStudentDao studentDao;
     private ISportAreaDao sportAreaDao;
+    private IRentalDao rentalDao;
+
 
     @Autowired
-    public StudentRequestRentalRentalManager(IStudentRequestRentalDao studentRequestRentalDao, ISportAreaDao sportAreaDao, IStudentDao studentDao){
+    public StudentRequestRentalRentalManager(IStudentRequestRentalDao studentRequestRentalDao, ISportAreaDao sportAreaDao,
+                                             IStudentDao studentDao, IRentalDao rentalDao){
         this.studentRequestRentalDao=studentRequestRentalDao;
         this.studentDao=studentDao;
         this.sportAreaDao=sportAreaDao;
+        this.rentalDao=rentalDao;
+
     }
 
     private StudentRequestRental dtoToEntity(StudentRequestRentalDTO studentRequestRentalDTO){
@@ -39,6 +48,24 @@ public class StudentRequestRentalRentalManager implements IStudentRequestRentalS
         StudentRequestRental studentRequestRental = studentRequestRentalDao.getById(id);
         studentRequestRental.setStatus(RequestStatus.Approved);
         studentRequestRentalDao.save(studentRequestRental);
-        return new Result<>("İstek onaylandı",true);
+        if (saveRental(studentRequestRental)){
+            return new Result<>("İstek onaylandı",true);
+        }
+        return new ErrorResult("Onaylama işleminde hata oluştu",false);
+    }
+
+    private boolean saveRental(StudentRequestRental studentRequestRental){
+        try {
+            Rental rental = new Rental();
+            rental.setEndTime(studentRequestRental.getEndTime());
+            rental.setRentalDate(studentRequestRental.getRentalDate());
+            rental.setStartTime(studentRequestRental.getStartTime());
+            rental.setStudent(rental.getStudent());
+            rental.setSportArea(studentRequestRental.getSportArea());
+            rentalDao.save(rental);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
     }
 }

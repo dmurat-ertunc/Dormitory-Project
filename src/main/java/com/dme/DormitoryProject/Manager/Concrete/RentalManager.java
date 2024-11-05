@@ -32,17 +32,20 @@ public class RentalManager implements IRentalService {
     private IStudentDao studentDao;
     private ISportAreaDao sportAreaDao;
     private IStudentRequestRentalService studentRequestRentalService;
+    private IStudentRequestRentalDao studentRequestRentalDao;
 
     @Autowired
     public RentalManager(IRentalDao rentalDao, ILgoDao lgoDao, ILogLevelDao logLevelDao,
                          IStudentDao studentDao, ISportAreaDao sportAreaDao,
-                         IStudentRequestRentalService studentRequestRentalService) {
+                         IStudentRequestRentalService studentRequestRentalService,
+                         IStudentRequestRentalDao studentRequestRentalDao) {
         this.rentalDao = rentalDao;
         this.lgoDao = lgoDao;
         this.logLevelDao = logLevelDao;
         this.studentDao = studentDao;
         this.sportAreaDao = sportAreaDao;
-        this.studentRequestRentalService=studentRequestRentalService;
+        this.studentRequestRentalService = studentRequestRentalService;
+        this.studentRequestRentalDao = studentRequestRentalDao;
     }
 
     private LocalDateTime localDateTime(){
@@ -124,31 +127,21 @@ public class RentalManager implements IRentalService {
         LogLevelSave(1,"Kiralama bulunamadı");
         return new ErrorResult("Kiralama bulunamadı",false);
     }
-    @Override
-    public Result saveRental(RentalDTO rentalDTO){
-        try{
-            List<Rental> rentals = rentalDao.findAll();
-            for(Rental rental1 : rentals){
-                if (emptyField(rentalDTO.getStartTime(),rentalDTO.getEndTime(),rentalDTO.getRentalDate()) == null) {
-                    LogLevelSave(1, "Bu alan daha önce kiralanmış");
-                    return new ErrorResult("Bu alan daha önce kiralanmış",false);
-                }
-            }
-            rentalDao.save(dtoToEntity(rentalDTO));
-            LogLevelSave(3,"Kiralama ekleme işlemi başarılı");
-            return new SuccessDataResult("Kiralama ekleme işlemi başarılı",true,rentalDTO);
-        } catch (Exception e) {
-            LogLevelSave(1, "Kiralama ekleme işlemi başarısız");
-            return new ErrorResult("Kiralama ekleme işlemi başarısız",false);
-        }
-    }
+
     @Override
     public Result addRentalRequest(StudentRequestRentalDTO studentRequestRentalDTO){
         List<SportArea> sportAreaList = new ArrayList<>();
+        List<SportArea> sportAreaList2 = new ArrayList<>();
         sportAreaList = rentalDao.findOverlappingRentals(studentRequestRentalDTO.getStartTime(),studentRequestRentalDTO.getEndTime(),studentRequestRentalDTO.getRentalDate());
         for (SportArea sportArea : sportAreaList){
             if (sportArea.getId() == studentRequestRentalDTO.getSportAreaId()){
-                return new  ErrorResult("Bu saha bu sattaler içinde dolu",false);
+                return new  ErrorResult("Bu saha bu saatler içinde dolu",false);
+            }
+        }
+        sportAreaList2 = studentRequestRentalDao.findOverlappingRentals(studentRequestRentalDTO.getStartTime(),studentRequestRentalDTO.getEndTime(),studentRequestRentalDTO.getRentalDate());
+        for (SportArea sportArea : sportAreaList){
+            if (sportArea.getId() == studentRequestRentalDTO.getSportAreaId()){
+                return new  ErrorResult("Bu sahaya bu saatler için zaten istek atılmış, başka bir saat aralığı belirleyin",false);
             }
         }
         studentRequestRentalService.addRequest(studentRequestRentalDTO);

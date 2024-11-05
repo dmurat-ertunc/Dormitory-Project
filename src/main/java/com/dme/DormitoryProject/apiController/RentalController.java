@@ -34,10 +34,6 @@ public class RentalController {
     public Result afterStartTime(@RequestParam LocalTime startTime){
         return this.rentalService.afterRental(startTime);
     }
-    @PostMapping("saveRental")
-    public Result saveRental(@RequestBody RentalDTO rentalDTO){
-        return this.rentalService.saveRental(rentalDTO);
-    }
     @PostMapping("addRentalRequest")
     public Result addRentalRequest(@RequestBody StudentRequestRentalDTO studentRequestRentalDTO){
         return this.rentalService.addRentalRequest(studentRequestRentalDTO);

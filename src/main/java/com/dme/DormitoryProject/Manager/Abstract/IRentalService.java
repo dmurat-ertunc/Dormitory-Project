@@ -4,6 +4,7 @@ import com.dme.DormitoryProject.dtos.rentalDtos.RentalDTO;
 import com.dme.DormitoryProject.dtos.studentRentalDtos.StudentRequestRentalDTO;
 import com.dme.DormitoryProject.entity.Rental;
 import com.dme.DormitoryProject.entity.Staff;
+import com.dme.DormitoryProject.entity.StudentRequestRental;
 import com.dme.DormitoryProject.response.Result;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -15,7 +16,6 @@ import java.util.Optional;
 public interface IRentalService {
     Result getAll();
     Result getById(Long id);
-    Result saveRental(RentalDTO rentalDTO);
     Result deleteRental(Long id);
     Result updateRental(Long id, RentalDTO rentalDTO);
     Result afterRental(LocalTime startTime);
