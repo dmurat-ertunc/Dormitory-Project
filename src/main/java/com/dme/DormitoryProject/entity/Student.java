@@ -29,6 +29,8 @@ public class Student extends BaseEntity{
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Rental> rentalList;
     private boolean verification = false;
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<StudentRequest> studentRequestList;
 
     public void setVerification(boolean verification) {
         this.verification = verification;
@@ -36,15 +38,12 @@ public class Student extends BaseEntity{
     public boolean getVerification() {
         return verification;
     }
-
     public String getName(){
         return name;
     }
-
     public void setName(String name){
         this.name=name;
     }
-
     public String getSurName(){
         return surName;
     }
