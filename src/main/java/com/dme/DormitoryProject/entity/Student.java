@@ -1,6 +1,5 @@
 package com.dme.DormitoryProject.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -30,7 +29,7 @@ public class Student extends BaseEntity{
     private List<Rental> rentalList;
     private boolean verification = false;
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<StudentRequest> studentRequestList;
+    private List<StudentRequestRental> studentRequestRentalList;
 
     public void setVerification(boolean verification) {
         this.verification = verification;

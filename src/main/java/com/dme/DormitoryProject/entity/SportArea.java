@@ -12,9 +12,15 @@ public class SportArea extends BaseEntity{
     private String sporType;
     @OneToMany(mappedBy = "sportArea", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Rental> rentalList;
+    @OneToMany(mappedBy = "sportArea", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<StudentRequestRental> studentRequestRentalList;
 
-
-
+    public List<StudentRequestRental> getStudentRequestRentalList() {
+        return studentRequestRentalList;
+    }
+    public void setStudentRequestRentalList(List<StudentRequestRental> studentRequestRentalList) {
+        this.studentRequestRentalList = studentRequestRentalList;
+    }
     public List<Rental> getRentalList() {
         return rentalList;
     }
