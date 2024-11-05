@@ -2,6 +2,7 @@ package com.dme.DormitoryProject.apiController;
 
 import com.dme.DormitoryProject.Manager.Abstract.IRentalService;
 import com.dme.DormitoryProject.dtos.rentalDtos.RentalDTO;
+import com.dme.DormitoryProject.dtos.studentRentalDtos.StudentRequestRentalDTO;
 import com.dme.DormitoryProject.entity.Rental;
 import com.dme.DormitoryProject.response.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,10 @@ public class RentalController {
     @PostMapping("saveRental")
     public Result saveRental(@RequestBody RentalDTO rentalDTO){
         return this.rentalService.saveRental(rentalDTO);
+    }
+    @PostMapping("addRentalRequest")
+    public Result addRentalRequest(@RequestBody StudentRequestRentalDTO studentRequestRentalDTO){
+        return this.rentalService.addRentalRequest(studentRequestRentalDTO);
     }
     @PutMapping("update/{id}")
     public Result updateRental(@PathVariable Long id,@RequestBody RentalDTO rentalDTO){

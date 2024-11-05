@@ -14,7 +14,7 @@ public interface IRentalDao extends JpaRepository<Rental,Long> {
     Rental findRentalById(Long id);
     List<Rental> findBySportAreaIdAndRentalDate(Long id, LocalDate date);
     List<Rental> findByStartTimeAfter(LocalTime startTime);
-    @Query("SELECT s FROM SportArea s WHERE s.id NOT IN (" +
+    @Query("SELECT s FROM SportArea s WHERE s.id IN (" +
             "SELECT r.sportArea.id FROM Rental r " +
             "WHERE ((r.startTime BETWEEN :startTime AND :endTime) " +
             "OR (:startTime BETWEEN r.startTime AND r.endTime)) " +

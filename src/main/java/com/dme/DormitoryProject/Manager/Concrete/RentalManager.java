@@ -1,10 +1,12 @@
 package com.dme.DormitoryProject.Manager.Concrete;
 
 import com.dme.DormitoryProject.Manager.Abstract.IRentalService;
+import com.dme.DormitoryProject.Manager.Abstract.IStudentRequestRentalService;
 import com.dme.DormitoryProject.dtos.rentalDtos.RentalDTO;
 import com.dme.DormitoryProject.dtos.rentalDtos.RentalMapper;
 import com.dme.DormitoryProject.dtos.sportAreaDtos.SportAreaDTO;
 import com.dme.DormitoryProject.dtos.sportAreaDtos.SportAreaMapper;
+import com.dme.DormitoryProject.dtos.studentRentalDtos.StudentRequestRentalDTO;
 import com.dme.DormitoryProject.entity.*;
 import com.dme.DormitoryProject.repository.*;
 import com.dme.DormitoryProject.response.ErrorResult;
@@ -29,16 +31,18 @@ public class RentalManager implements IRentalService {
     private ILogLevelDao logLevelDao;
     private IStudentDao studentDao;
     private ISportAreaDao sportAreaDao;
+    private IStudentRequestRentalService studentRequestRentalService;
 
     @Autowired
     public RentalManager(IRentalDao rentalDao, ILgoDao lgoDao, ILogLevelDao logLevelDao,
-                         IStudentDao studentDao, ISportAreaDao sportAreaDao) {
+                         IStudentDao studentDao, ISportAreaDao sportAreaDao,
+                         IStudentRequestRentalService studentRequestRentalService) {
         this.rentalDao = rentalDao;
         this.lgoDao = lgoDao;
         this.logLevelDao = logLevelDao;
         this.studentDao = studentDao;
         this.sportAreaDao = sportAreaDao;
-
+        this.studentRequestRentalService=studentRequestRentalService;
     }
 
     private LocalDateTime localDateTime(){
@@ -123,11 +127,6 @@ public class RentalManager implements IRentalService {
     @Override
     public Result saveRental(RentalDTO rentalDTO){
         try{
-            Rental rental = dtoToEntity(rentalDTO);
-            if (rental.getSportArea().getIsDeleted() || rental.getStudent().isDeleted()){
-                LogLevelSave(1,"Kiralama ekleme işleminde, ilişki olacağı tablo kaldırılmış.");
-                return new ErrorResult("Kiralama ekleme işleminde, ilişki olacağı tablo kaldırılmış.",false);
-            }
             List<Rental> rentals = rentalDao.findAll();
             for(Rental rental1 : rentals){
                 if (emptyField(rentalDTO.getStartTime(),rentalDTO.getEndTime(),rentalDTO.getRentalDate()) == null) {
@@ -142,6 +141,18 @@ public class RentalManager implements IRentalService {
             LogLevelSave(1, "Kiralama ekleme işlemi başarısız");
             return new ErrorResult("Kiralama ekleme işlemi başarısız",false);
         }
+    }
+    @Override
+    public Result addRentalRequest(StudentRequestRentalDTO studentRequestRentalDTO){
+        List<SportArea> sportAreaList = new ArrayList<>();
+        sportAreaList = rentalDao.findOverlappingRentals(studentRequestRentalDTO.getStartTime(),studentRequestRentalDTO.getEndTime(),studentRequestRentalDTO.getRentalDate());
+        for (SportArea sportArea : sportAreaList){
+            if (sportArea.getId() == studentRequestRentalDTO.getSportAreaId()){
+                return new  ErrorResult("Bu saha bu sattaler içinde dolu",false);
+            }
+        }
+        studentRequestRentalService.addRequest(studentRequestRentalDTO);
+        return new SuccesResult("Kiralama isteğiniz gönderildi, onaylanması halinde mail olarak size bildirilecektir",true);
     }
     @Override
     public Result updateRental(Long id, RentalDTO rentalDTO){

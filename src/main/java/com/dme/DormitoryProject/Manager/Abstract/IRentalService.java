@@ -1,6 +1,7 @@
 package com.dme.DormitoryProject.Manager.Abstract;
 
 import com.dme.DormitoryProject.dtos.rentalDtos.RentalDTO;
+import com.dme.DormitoryProject.dtos.studentRentalDtos.StudentRequestRentalDTO;
 import com.dme.DormitoryProject.entity.Rental;
 import com.dme.DormitoryProject.entity.Staff;
 import com.dme.DormitoryProject.response.Result;
@@ -19,4 +20,5 @@ public interface IRentalService {
     Result updateRental(Long id, RentalDTO rentalDTO);
     Result afterRental(LocalTime startTime);
     Result emptyField(LocalTime startTime, LocalTime endTime, LocalDate date);
+    Result addRentalRequest(StudentRequestRentalDTO studentRequestRentalDTO);
 }
