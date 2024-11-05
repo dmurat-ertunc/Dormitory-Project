@@ -23,7 +23,7 @@ public class StudentMapper {
         dto.setTcNo(student.getTcNo());
         dto.setMail(student.getMail());
         dto.setBirthDate(student.getBirthDate());
-        dto.setVerify(student.isVerify());
+        dto.setVerify(student.getVerification());
 
         // Üniversite ID'lerini setlemek için
         Set<Long> universityIds = student.getUniversity().stream()
@@ -53,7 +53,7 @@ public class StudentMapper {
         student.setTcNo(dto.getTcNo());
         student.setMail(dto.getMail());
         student.setBirthDate(dto.getBirthDate());
-        student.setVerify(dto.isVerify());
+        student.setVerification(dto.isVerify());
 
         // Üniversite ID'lerini setlemek için
         Set<University> universities = dto.getUniversityIds().stream()

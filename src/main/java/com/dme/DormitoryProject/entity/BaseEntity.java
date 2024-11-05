@@ -1,9 +1,6 @@
 package com.dme.DormitoryProject.entity;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
@@ -17,8 +14,6 @@ public class BaseEntity {
     private Long id;
     private boolean isDeleted = false;
     private LocalDate addDate = date;
-
-
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;
     }

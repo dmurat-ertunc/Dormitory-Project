@@ -18,7 +18,6 @@ public class Student extends BaseEntity{
     private String tcNo;
     private String mail;
     private LocalDate birthDate;
-
     @ManyToMany
     @JoinTable(
             name = "student_university", // ilişkiyi temsil eden ara tablo
@@ -27,10 +26,16 @@ public class Student extends BaseEntity{
     )
     //@JsonManagedReference
     private Set<University> university = new HashSet<>();
-    private boolean verify;
-
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Rental> rentalList;
+    private boolean verification = false;
+
+    public void setVerification(boolean verification) {
+        this.verification = verification;
+    }
+    public boolean getVerification() {
+        return verification;
+    }
 
     public String getName(){
         return name;
@@ -64,27 +69,15 @@ public class Student extends BaseEntity{
     public void setUniversity(Set<University> university) {
         this.university = university;
     }
-    public boolean getVerify() {
-        return verify;
-    }
-    public void setVerify(boolean verify) {
-        this.verify = verify;
-    }
     public LocalDate getBirthDate() {
         return birthDate;
     }
     public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
-
-    public boolean isVerify() {
-        return verify;
-    }
-
     public List<Rental> getRentalList() {
         return rentalList;
     }
-
     public void setRentalList(List<Rental> rentalList) {
         this.rentalList = rentalList;
     }

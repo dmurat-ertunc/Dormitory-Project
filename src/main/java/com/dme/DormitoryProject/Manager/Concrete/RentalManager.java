@@ -5,8 +5,6 @@ import com.dme.DormitoryProject.dtos.rentalDtos.RentalDTO;
 import com.dme.DormitoryProject.dtos.rentalDtos.RentalMapper;
 import com.dme.DormitoryProject.dtos.sportAreaDtos.SportAreaDTO;
 import com.dme.DormitoryProject.dtos.sportAreaDtos.SportAreaMapper;
-import com.dme.DormitoryProject.dtos.staffDtos.StaffDTO;
-import com.dme.DormitoryProject.dtos.staffDtos.StaffMapper;
 import com.dme.DormitoryProject.entity.*;
 import com.dme.DormitoryProject.repository.*;
 import com.dme.DormitoryProject.response.ErrorResult;
@@ -14,15 +12,14 @@ import com.dme.DormitoryProject.response.Result;
 import com.dme.DormitoryProject.response.SuccesResult;
 import com.dme.DormitoryProject.response.SuccessDataResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class RentalManager implements IRentalService {
@@ -34,12 +31,19 @@ public class RentalManager implements IRentalService {
     private ISportAreaDao sportAreaDao;
 
     @Autowired
-    public RentalManager(IRentalDao rentalDao, ILgoDao lgoDao, ILogLevelDao logLevelDao, IStudentDao studentDao, ISportAreaDao sportAreaDao) {
+    public RentalManager(IRentalDao rentalDao, ILgoDao lgoDao, ILogLevelDao logLevelDao,
+                         IStudentDao studentDao, ISportAreaDao sportAreaDao) {
         this.rentalDao = rentalDao;
         this.lgoDao = lgoDao;
         this.logLevelDao = logLevelDao;
         this.studentDao = studentDao;
         this.sportAreaDao = sportAreaDao;
+
+    }
+
+    private LocalDateTime localDateTime(){
+        LocalDateTime currentLocalTime = LocalDateTime.now();
+        return currentLocalTime;
     }
 
     public void LogLevelSave(long id,String message){
@@ -126,16 +130,13 @@ public class RentalManager implements IRentalService {
             }
             List<Rental> rentals = rentalDao.findAll();
             for(Rental rental1 : rentals){
-                if ((rentalDTO.getStartTime().isAfter(rental1.getStartTime()) || Objects.equals(rentalDTO.getStartTime(),rental1.getStartTime()))
-                        && rentalDTO.getStartTime().isBefore(rental1.getEndTime())
-                        && Objects.equals(rentalDTO.getRentalDate(),rental1.getRentalDate())
-                        && Objects.equals(rental1.getSportArea().getId(),rentalDTO.getSportAreaId())) {
+                if (emptyField(rentalDTO.getStartTime(),rentalDTO.getEndTime(),rentalDTO.getRentalDate()) == null) {
                     LogLevelSave(1, "Bu alan daha önce kiralanmış");
                     return new ErrorResult("Bu alan daha önce kiralanmış",false);
                 }
             }
             rentalDao.save(dtoToEntity(rentalDTO));
-            LogLevelSave(3,"Kiralama ekleme işlemi başarılır");
+            LogLevelSave(3,"Kiralama ekleme işlemi başarılı");
             return new SuccessDataResult("Kiralama ekleme işlemi başarılı",true,rentalDTO);
         } catch (Exception e) {
             LogLevelSave(1, "Kiralama ekleme işlemi başarısız");

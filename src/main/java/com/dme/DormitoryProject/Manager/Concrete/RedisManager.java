@@ -2,6 +2,7 @@ package com.dme.DormitoryProject.Manager.Concrete;
 
 import com.dme.DormitoryProject.Manager.Abstract.IRedisService;
 import com.dme.DormitoryProject.dtos.studentDtos.StudentDTO;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -44,5 +45,9 @@ public class RedisManager implements IRedisService {
     public StudentDTO getStudentData(){
         String key = "studentData";
         return (StudentDTO) redisTemplate.opsForValue().get(key);
+    }
+    @Override
+    public void waitData(Object data){
+        String key;
     }
 }

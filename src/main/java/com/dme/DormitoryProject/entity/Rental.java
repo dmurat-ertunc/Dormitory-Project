@@ -12,7 +12,6 @@ public class Rental extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "sportAreaId", nullable = false)
     private SportArea sportArea;
-
     private LocalDate rentalDate;
     private LocalTime startTime;
     private LocalTime endTime;
@@ -23,7 +22,6 @@ public class Rental extends BaseEntity{
     public SportArea getSportArea() {
         return sportArea;
     }
-
     public void setSportArea(SportArea sportArea) {
         this.sportArea = sportArea;
     }
@@ -48,7 +46,6 @@ public class Rental extends BaseEntity{
     public Student getStudent() {
         return student;
     }
-
     public void setStudent(Student student) {
         this.student = student;
     }

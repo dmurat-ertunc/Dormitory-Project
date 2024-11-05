@@ -45,6 +45,7 @@ public class SecurityConfig {
                         .requestMatchers("api/sportAreas/**").hasAnyRole("STAFF","MANAGER")
                         .requestMatchers("api/staffs/**").hasAnyRole("STAFF","MANAGER")
                         .requestMatchers("api/students/**").hasRole(("STAFF"))
+                        .requestMatchers("api/universities/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());

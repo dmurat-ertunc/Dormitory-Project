@@ -14,6 +14,10 @@ public class Manager extends BaseEntity{
     private String mail;
     @OneToMany(mappedBy = "manager", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Staff> staffList;
+    private String phoneNumber;
+    private String title;
+    private int salary;
+
 
     public List<Staff> getStaffList() {
         return staffList;
@@ -70,10 +74,6 @@ public class Manager extends BaseEntity{
     public void setSalary(int salary) {
         this.salary = salary;
     }
-
-    private String phoneNumber;
-    private String title;
-    private int salary;
 
 
 }

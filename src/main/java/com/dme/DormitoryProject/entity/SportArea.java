@@ -18,11 +18,9 @@ public class SportArea extends BaseEntity{
     public List<Rental> getRentalList() {
         return rentalList;
     }
-
     public void setRentalList(List<Rental> rentalList) {
         this.rentalList = rentalList;
     }
-
     public String getSporType(){
         return sporType;
     }

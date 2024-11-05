@@ -21,7 +21,7 @@ public class RentalMapper {
         rentalDTO.setStudentName(rental.getStudent().getName());
         rentalDTO.setStudentSurName(rental.getStudent().getSurName());
         rentalDTO.setStudenTcNo(rental.getStudent().getTcNo());
-        rentalDTO.setStudentVerify(rental.getStudent().getVerify());
+        rentalDTO.setStudentVerify(rental.getStudent().getVerification());
 
         return rentalDTO;
     }

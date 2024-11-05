@@ -144,7 +144,7 @@ public class StudentManager implements IStudentService{
     public Result mailVerification(Long id, String mailCode){
         Student student = studentDao.getById(id);
         if(redisService.getData(id) == Integer.parseInt(mailCode)){
-            student.setVerify(true);
+            student.setVerification(true);
             studentDao.save(student);
             return new SuccesResult("Doğrulama işlemi başarılı",true);
         }
