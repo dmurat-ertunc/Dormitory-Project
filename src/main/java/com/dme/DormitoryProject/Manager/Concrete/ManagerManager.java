@@ -97,7 +97,11 @@ public class ManagerManager implements IManagerService {
     @Override
     public Result saveManager(ManagerDTO managerDTO, String passwword){
         try {
-            userService.saveUser(managerDTO,"ROLE_MANAGER",passwword);
+            if (managerDTO.getTitle().contains("Genel")){
+                userService.saveUser(managerDTO,"ROLE_MANAGERADMIN",passwword);
+            }else {
+                userService.saveUser(managerDTO,"ROLE_MANAGER",passwword);
+            }
             managerDao.save(dtoToEntity(managerDTO));
             LogLevelSave(3,"Yönetici ekleme işlemi başarılı");
             return new SuccessDataResult("Yönetici ekleme işlemi başarılı",true,managerDTO);

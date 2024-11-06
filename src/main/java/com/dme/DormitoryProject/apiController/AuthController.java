@@ -52,8 +52,11 @@ public class AuthController {
                         loginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtGenerator.generateToken(authentication);
-//        Cookie cookie = new Cookie("asd","zxa");
-//        cookie.setToken(token);
+        Cookie jwtCookie = new Cookie("jwtToken",token);
+        jwtCookie.setHttpOnly(true); // JavaScript tarafından erişim engellenir
+        jwtCookie.setSecure(true); // HTTPS kullanıyorsanız etkinleştirin
+        jwtCookie.setMaxAge(3600000); // Süreyi belirleyin (saniye cinsinden)
+        jwtCookie.setPath("/"); // Cookie'nin erişilebilir olduğu yol
         return new ResponseEntity<>(new AuthResponseDTO(token), HttpStatus.OK);
     }
 
