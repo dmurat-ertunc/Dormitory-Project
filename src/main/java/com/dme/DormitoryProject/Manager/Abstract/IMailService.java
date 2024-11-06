@@ -8,5 +8,7 @@ import java.time.LocalTime;
 public interface IMailService {
     void sendMail(String mail,Long code);
     String sendMultiMediaMail();
-    void permitMailSending(String mail, String sportArea, LocalTime startTime, LocalTime endTime);
+    void permitRentalMailSending(String mail, String sportArea, LocalTime startTime, LocalTime endTime);
+    void rejectedRentalMailSending(String mail, String sportArea, LocalTime startTime, LocalTime endTime);
+
 }

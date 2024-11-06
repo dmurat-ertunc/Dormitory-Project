@@ -15,6 +15,7 @@ import com.dme.DormitoryProject.repository.IStudentDao;
 import com.dme.DormitoryProject.repository.IStudentRequestRentalDao;
 import com.dme.DormitoryProject.response.ErrorResult;
 import com.dme.DormitoryProject.response.Result;
+import com.dme.DormitoryProject.response.SuccesResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +47,7 @@ public class StudentRequestRentalRentalManager implements IStudentRequestRentalS
         studentRequestRentalDao.save(dtoToEntity(studentRequestRentalDTO));
     }
     @Override
-    public Result permitRequest(Long id){
+    public Result permitRentalRequest(Long id){
         StudentRequestRental studentRequestRental = studentRequestRentalDao.getById(id);
         studentRequestRental.setStatus(RequestStatus.Approved);
         studentRequestRentalDao.save(studentRequestRental);
@@ -62,14 +63,26 @@ public class StudentRequestRentalRentalManager implements IStudentRequestRentalS
             rental.setEndTime(studentRequestRental.getEndTime());
             rental.setRentalDate(studentRequestRental.getRentalDate());
             rental.setStartTime(studentRequestRental.getStartTime());
-            rental.setStudent(rental.getStudent());
+            rental.setStudent(studentRequestRental.getStudent());
             rental.setSportArea(studentRequestRental.getSportArea());
             rentalDao.save(rental);
-            mailService.permitMailSending(studentRequestRental.getStudent().getMail(),studentRequestRental.getSportArea().getSporType()
+            mailService.permitRentalMailSending(studentRequestRental.getStudent().getMail(),studentRequestRental.getSportArea().getSporType()
                     ,studentRequestRental.getStartTime(),studentRequestRental.getEndTime());
             return true;
         }catch (Exception e){
             return false;
+        }
+    }
+    public Result rejectedRentalRequest(Long id){
+        try {
+            StudentRequestRental studentRequestRental = studentRequestRentalDao.getById(id);
+            studentRequestRental.setStatus(RequestStatus.Rejected);
+            studentRequestRentalDao.save(studentRequestRental);
+            mailService.rejectedRentalMailSending(studentRequestRental.getStudent().getMail(),studentRequestRental.getSportArea().getSporType()
+                    ,studentRequestRental.getStartTime(),studentRequestRental.getEndTime());
+            return new SuccesResult("İstek reddedildi, red maili gönderildi",true);
+        } catch (Exception e) {
+            return new ErrorResult("Hata oluştu",false);
         }
     }
 }

@@ -31,11 +31,20 @@ public class MailManager implements IMailService {
         mailSender.send(simpleMailMessage);
     }
     @Override
-    public void permitMailSending(String mail, String sportArea, LocalTime startTime, LocalTime endTime){
+    public void permitRentalMailSending(String mail, String sportArea, LocalTime startTime, LocalTime endTime){
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setFrom("cengdme@gmail.com");
         simpleMailMessage.setTo(mail);
         simpleMailMessage.setText(String.valueOf(sportArea + " alanı " + startTime + " ile " + endTime + " isteğiniz doğrultusunda onaylanmıştır"));
+        simpleMailMessage.setSubject("İstek Cevabı");
+        mailSender.send(simpleMailMessage);
+    }
+    @Override
+    public void rejectedRentalMailSending(String mail, String sportArea, LocalTime startTime, LocalTime endTime){
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setFrom("cengdme@gmail.com");
+        simpleMailMessage.setTo(mail);
+        simpleMailMessage.setText(String.valueOf(sportArea + " alanı " + startTime + " ile " + endTime + " isteğiniz reddeilmiştir"));
         simpleMailMessage.setSubject("İstek Cevabı");
         mailSender.send(simpleMailMessage);
     }

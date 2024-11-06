@@ -6,5 +6,6 @@ import com.dme.DormitoryProject.response.Result;
 
 public interface IStudentRequestRentalService {
     void addRequest(StudentRequestRentalDTO studentRequestRentalDTO);
-    Result permitRequest(Long id);
+    Result permitRentalRequest(Long id);
+    Result rejectedRentalRequest(Long id);
 }

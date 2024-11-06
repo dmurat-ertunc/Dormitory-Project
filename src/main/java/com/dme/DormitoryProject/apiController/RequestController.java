@@ -19,9 +19,13 @@ public class RequestController {
         this.studentRequestRentalService=studentRequestRentalService;
     }
 
-    @PutMapping("permitRequest/{id}")
-    public Result permitRequest(@PathVariable Long id){
-        return this.studentRequestRentalService.permitRequest(id);
+    @PutMapping("permitRentalRequest/{id}")
+    public Result permitRentalRequest(@PathVariable Long id){
+        return this.studentRequestRentalService.permitRentalRequest(id);
+    }
+    @PutMapping("rejectedRentalRequest/{id}")
+    public Result rejectedRentalRequest(@PathVariable Long id){
+        return this.studentRequestRentalService.rejectedRentalRequest(id);
     }
 
 }
