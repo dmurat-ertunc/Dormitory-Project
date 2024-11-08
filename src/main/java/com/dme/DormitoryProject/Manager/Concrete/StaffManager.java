@@ -98,7 +98,7 @@ public class StaffManager implements IStaffService {
     public Result saveStaff(StaffDTO staffDTO,String password){
         try{
             staffDao.save(dtoToEntity(staffDTO));
-            userService.saveUser(staffDTO,"ROLE_STAFF",password);
+            userService.saveDormitoryUser(staffDTO,"ROLE_STAFF",password,staffDTO.getName(), staffDTO.getSurName());
             LogLevelSave(3,"Personel kaydetme işlemi başarılır");
             return new SuccessDataResult("Personel ekleme işlemi başarılı",true,staffDTO);
         } catch (Exception e) {

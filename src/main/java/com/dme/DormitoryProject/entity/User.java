@@ -1,5 +1,6 @@
 package com.dme.DormitoryProject.entity;
 
+import com.dme.DormitoryProject.enums.UserType;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -16,6 +17,10 @@ public class User {
     private String userName;
     private String mail;
     private String password;
+    private String name;
+    private String surName;
+    @Enumerated(EnumType.STRING)
+    private UserType userType;
     @ManyToMany
     @JoinTable(
             name = "user_role",
@@ -26,6 +31,30 @@ public class User {
 
     public User(){
 
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSurName() {
+        return surName;
+    }
+
+    public void setSurName(String surName) {
+        this.surName = surName;
+    }
+
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
     }
 
     public List<Roles> getRoles() {

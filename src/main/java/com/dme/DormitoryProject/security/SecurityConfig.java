@@ -34,21 +34,27 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
-                .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthEntryPoint))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeRequests(auth -> auth
-                        .requestMatchers("api/auth/**").permitAll() // `antMatchers` yerine `requestMatchers` kullanılıyor
-                        .requestMatchers("api/departments/**").hasRole("MANAGER")
-                        //.requestMatchers("api/rentals/**").hasAnyRole("MANAGER","STAFF")
-                        .requestMatchers("api/rentals/addRentalRequest").hasRole("STUDENT")
-                        .requestMatchers("api/rentals/getAll").hasRole("STUDENT")
-                        .requestMatchers("api/request/**").hasRole("MANAGER")
-                        .requestMatchers("api/managers/**").permitAll()
-                        .requestMatchers("api/students/**").permitAll()
-                        .anyRequest().authenticated()
+                //.csrf(csrf -> csrf.disable())
+                //.exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthEntryPoint))
+                //.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeRequests(
+                        //auth -> auth
+//                        .requestMatchers("api/auth/**").permitAll() // `antMatchers` yerine `requestMatchers` kullanılıyor
+//                        .requestMatchers("api/departments/**").hasRole("MANAGER")
+//                        .requestMatchers("api/google/**").permitAll()
+//                        //.requestMatchers("api/rentals/**").hasAnyRole("MANAGER","STAFF")
+//                        .requestMatchers("api/rentals/addRentalRequest").hasRole("STUDENT")
+//                        .requestMatchers("api/rentals/getAll").hasRole("STUDENT")
+//                        .requestMatchers("api/request/**").hasRole("MANAGER")
+//                        .requestMatchers("api/managers/**").permitAll()
+//                        .requestMatchers("api/students/**").permitAll()
+                         // .anyRequest().permitAll()
+                        //.anyRequest().authenticated()
                 )
-                .httpBasic(Customizer.withDefaults());
+                .anyRequest().authenticated()
+                .and()
+                .oauth2Login(Customizer.withDefaults());
+                //.httpBasic(Customizer.withDefaults());
 
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();

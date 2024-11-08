@@ -123,7 +123,7 @@ public class StudentManager implements IStudentService{
                 }
                 try {
                     studentDTO.setVerify(false);
-                    userService.saveUser(studentDTO,"ROLE_STUDENT",password);
+                    userService.saveDormitoryUser(studentDTO,"ROLE_STUDENT",password,studentDTO.getName(),studentDTO.getSurName());
                     studentDao.save(dtoToEntity(studentDTO));
                     LogLevelSave(3,"Öğrenci ekleme işlemi başarılı");
                     return new SuccessDataResult("Öğrenci ekleme işlemi başarılı",true,studentDTO);

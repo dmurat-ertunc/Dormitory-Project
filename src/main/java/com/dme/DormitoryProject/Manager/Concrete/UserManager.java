@@ -6,6 +6,7 @@ import com.dme.DormitoryProject.dtos.staffDtos.StaffDTO;
 import com.dme.DormitoryProject.dtos.studentDtos.StudentDTO;
 import com.dme.DormitoryProject.entity.Roles;
 import com.dme.DormitoryProject.entity.User;
+import com.dme.DormitoryProject.enums.UserType;
 import com.dme.DormitoryProject.repository.IRoleDao;
 import com.dme.DormitoryProject.repository.IUserDao;
 import org.apache.poi.ss.formula.functions.T;
@@ -34,21 +35,12 @@ public class UserManager implements IUserService<T> {
 
 
     private String mailToUsername(String mail) {
-        // E-posta adresini doğrulama (isteğe bağlı)
         if (mail == null || !mail.contains("@")) {
             throw new IllegalArgumentException("Geçersiz e-posta adresi");
         }
-
-        // E-posta adresinin '@' kısmından önceki bölümünü al
         String username = mail.split("@")[0];
-
-        // Noktaları kaldır
         String formattedUsername = username.replace(".", "");
-
-        // E-posta adresinin uzantısını al
         String domain = mail.split("@")[1].split("\\.")[0]; // ".com" veya diğer uzantılardan önceki kısmı alır
-
-        // Dinamik olarak sonuca domain ekle
         String formattedEmail = formattedUsername + domain;
 
         return formattedEmail;
@@ -67,16 +59,49 @@ public class UserManager implements IUserService<T> {
     }
 
     @Override
-    public void saveUser(Object dto, String role,String password) {
+    public void saveDormitoryUser(Object dto, String role,String password,String name, String surName) {
+        User user = new User();
         String username = mailToUsername(findDto(dto));
 
-        User user = new User();
         user.setUsernName(username);
+        user.setName(name);
+        user.setSurName(surName);
         user.setPassword(passwordEncoder.encode(password));
         user.setMail(findDto(dto));
         Roles roles = roleDao.findByName(role).get();
         user.setRoles(Collections.singletonList(roles));
 
         userDao.save(user);
+    }
+
+    @Override
+    public void saveGoogleUser(String name, String surName,String mail) {
+        User user = new User();
+        List<User> userList = userDao.findAll();
+        Random random = new Random();
+        int pswrd = 0;
+        boolean isUnique = false;
+
+        while (!isUnique) {
+            pswrd = 10000 + random.nextInt(90000);
+            isUnique = true;
+            for (User user1 : userList) {
+                if (Objects.equals(user.getPassword(), pswrd)) {
+                    isUnique = false;
+                    break;
+                }
+            }
+        }
+        user.setPassword(passwordEncoder.encode(Integer.toString(pswrd)));
+        user.setMail(mail);
+        user.setUserType(UserType.Google_User);
+        user.setName(name);
+        user.setSurName(surName);
+        user.setUsernName(mailToUsername(mail));
+        Roles roles = roleDao.findByName("ROLE_DEFAULT").get();
+        user.setRoles(Collections.singletonList(roles));
+
+        userDao.save(user);
+
     }
 }
