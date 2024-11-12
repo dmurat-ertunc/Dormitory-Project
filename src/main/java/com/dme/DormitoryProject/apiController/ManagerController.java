@@ -24,7 +24,6 @@ public class ManagerController {
     }
 
     @GetMapping("getAll")
-    @PermitAll
     public Result getAll() {
         return this.managerService.getAll();
     }

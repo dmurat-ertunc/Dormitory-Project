@@ -14,7 +14,7 @@ public class ManagerDTO {
     @NotEmpty(message = "Mail alanı boş bırakılamaz")
     @NotNull(message = "Mail alanı boş bırakılmaz")
     @Email(message = "Mail alanını uygun formatta giriniz")
-    @MailUniqueCheck
+    //@MailUniqueCheck
     @Column(unique = true)
     private String mail;
     @NotEmpty(message = "İsim alanı boş bırakılamaz")
@@ -27,7 +27,6 @@ public class ManagerDTO {
     @Pattern(regexp = "^0\\d{10}$", message = "Telefon numarası 0 ile başlamalı ve 11 karakter olmalıdır.")
     @NotEmpty(message = "Telefon numarası alanı boş bırakılamaz")
     @NotNull(message = "Telefon numarası alanı boş bırakılmaz")
-    @Column(unique = true)
     private String phoneNumber;
     @NotNull(message = "Maaş alanı boş bırakılmaz")
     private int salary;

@@ -14,6 +14,7 @@ public class Manager extends BaseEntity{
     private String mail;
     @OneToMany(mappedBy = "manager", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Staff> staffList;
+    @Column(unique = true)
     private String phoneNumber;
     private String title;
     private int salary;
