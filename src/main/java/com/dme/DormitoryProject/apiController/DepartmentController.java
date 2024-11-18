@@ -1,6 +1,6 @@
 package com.dme.DormitoryProject.apiController;
 
-import com.dme.DormitoryProject.Manager.Abstract.IDepartmentService;
+import com.dme.DormitoryProject.business.services.IDepartmentService;
 import com.dme.DormitoryProject.dtos.departmentDtos.DepartmentDTO;
 import com.dme.DormitoryProject.entity.Department;
 import com.dme.DormitoryProject.response.Result;

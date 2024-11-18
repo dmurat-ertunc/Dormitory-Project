@@ -1,11 +1,9 @@
-package com.dme.DormitoryProject.Manager.Concrete;
+package com.dme.DormitoryProject.business.manager;
 
-import ch.qos.logback.classic.spi.LoggerContextListener;
-import com.dme.DormitoryProject.Manager.Abstract.IMailService;
-import com.dme.DormitoryProject.Manager.Abstract.IRedisService;
-import com.dme.DormitoryProject.Manager.Abstract.IStudentService;
-import com.dme.DormitoryProject.Manager.Abstract.IUserService;
-import com.dme.DormitoryProject.dtos.mailVerification.MailVerificationDTO;
+import com.dme.DormitoryProject.business.services.IRedisService;
+import com.dme.DormitoryProject.business.services.IStudentService;
+import com.dme.DormitoryProject.business.services.IUserService;
+import com.dme.DormitoryProject.base.BaseClass;
 import com.dme.DormitoryProject.dtos.studentDtos.StudentDTO;
 import com.dme.DormitoryProject.dtos.studentDtos.StudentMapper;
 import com.dme.DormitoryProject.entity.*;
@@ -15,18 +13,13 @@ import com.dme.DormitoryProject.response.ErrorResult;
 import com.dme.DormitoryProject.response.Result;
 import com.dme.DormitoryProject.response.SuccesResult;
 import com.dme.DormitoryProject.response.SuccessDataResult;
-import org.hibernate.validator.internal.util.logging.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.time.LocalDate;
 import java.util.*;
 
 @Service
-public class StudentManager implements IStudentService{
+public class StudentManager extends BaseClass implements IStudentService{
 
     private IStudentDao studentDao;
     private IRentalDao rentalDao;
@@ -34,38 +27,19 @@ public class StudentManager implements IStudentService{
     private ILogLevelDao logLevelDao;
     private IUniversityDao universityDao;
     private IRedisService redisService;
-    private IMailService mailService;
     private IUserService userService;
 
     @Autowired
     public StudentManager(IStudentDao studentDao, IRentalDao rentalDao,
                           ILgoDao lgoDao, ILogLevelDao logLevelDao,IUniversityDao universityDao,
-                          IRedisService redisService, IMailService mailService, IUserService userService) {
+                          IRedisService redisService, IUserService userService) {
         this.studentDao = studentDao;
         this.rentalDao = rentalDao;
         this.lgoDao = lgoDao;
         this.logLevelDao = logLevelDao;
         this.universityDao = universityDao;
         this.redisService=redisService;
-        this.mailService=mailService;
         this.userService=userService;
-    }
-    public List<StudentDTO> entityToDtoList(List<Student> students){
-        List<StudentDTO> studentDTOS = new ArrayList<>();
-
-        for (Student student : students) {
-            StudentDTO dto = StudentMapper.toDto(student);
-            studentDTOS.add(dto);
-        }
-        return studentDTOS;
-    }
-
-    public StudentDTO entityToDtoObject(Student student){
-        return StudentMapper.toDto(student);
-    }
-
-    public Student dtoToEntity(StudentDTO studentDTO){
-        return StudentMapper.toEntity(studentDTO,universityDao);
     }
 
     public void LogLevelSave(long id,String message){
@@ -81,7 +55,7 @@ public class StudentManager implements IStudentService{
     @Override
     public Result getAll(){
         try {
-            List<StudentDTO> studentDTOS = entityToDtoList(studentDao.findAll());
+            List<StudentDTO> studentDTOS = entityToDtoList(studentDao.findAll(),StudentMapper::toDto);
             LogLevelSave(2,"Tüm öğrenciler listelendi");
             return new SuccessDataResult("Tüm öğrenciler listelendi",true,studentDTOS);
         }catch (Exception e){
@@ -93,7 +67,7 @@ public class StudentManager implements IStudentService{
     @Override
     public Result findStudentById(Long id){
         try{
-            StudentDTO studentDTO = entityToDtoObject(studentDao.getById(id));
+            StudentDTO studentDTO = entityToDto(studentDao.getById(id),StudentMapper::toDto);
             LogLevelSave(2,"İd değerine göre öğrenci listelendi");
 
             return new SuccessDataResult("İd değerine göre öğrenci listelendi",true,studentDTO);
@@ -117,14 +91,14 @@ public class StudentManager implements IStudentService{
             boolean isRealPerson = client.TCKimlikNoDogrula(tcNo,studentDTO.getName(),studentDTO.getSurName(),year);
             if(isRealPerson){
                 List<Student> students = studentDao.findAll();
-                if (control(students,studentDTO,"getMail") || control(students,studentDTO,"getTcNo")){
+                if (uniqueControl(students,studentDTO,"getMail") || uniqueControl(students,studentDTO,"getTcNo")){
                     LogLevelSave(1,"Mail veya kimlik nummarası benzersiz olmalıdır");
-                    return new ErrorResult("Mail veya kimlik numarası benzersiz olmaıl",false);
+                    return new ErrorResult("Mail veya kimlik numarası benzersiz olmalıdır",false);
                 }
                 try {
                     studentDTO.setVerify(false);
                     userService.saveDormitoryUser(studentDTO,"ROLE_STUDENT",password,studentDTO.getName(),studentDTO.getSurName());
-                    studentDao.save(dtoToEntity(studentDTO));
+                    studentDao.save(dtoToEntity(studentDTO,StudentMapper::toEntity));
                     LogLevelSave(3,"Öğrenci ekleme işlemi başarılı");
                     return new SuccessDataResult("Öğrenci ekleme işlemi başarılı",true,studentDTO);
                 }catch (Exception e){
@@ -141,8 +115,14 @@ public class StudentManager implements IStudentService{
     @Override
     public Result sendMail(Long id){
         Student student = studentDao.getById(id);
+        Mail mail = new Mail();
+
         redisService.setData(id);
-        mailService.sendMail(student.getMail(), redisService.getData(id));
+        mail.setFromMail("cengdme@gmail.com");
+        mail.setToMail(student.getMail());
+        mail.setText("Doğrulama kodu: " + String.valueOf(redisService.getData(id)));
+        mail.setSubject("Doğrulama Kodu");
+        sendMail(mail);
         return new SuccesResult("Mail adresine doğrulama kodu gönderildi",true);
     }
 
@@ -162,7 +142,7 @@ public class StudentManager implements IStudentService{
         List<Student> students = studentDao.findByUniversity_Id(id);
         if (students !=  null && !students.isEmpty()){
             LogLevelSave(3, "Girilen üniversitede eğitim alan öğrenciler listelendi");
-            return new SuccessDataResult("Girilen üniversitede eğitim alan öğrenciler listelendi",true,entityToDtoList(students));
+            return new SuccessDataResult("Girilen üniversitede eğitim alan öğrenciler listelendi",true,entityToDtoList(students,StudentMapper::toDto));
         }
         LogLevelSave(1,"Bu üniversiteye ait öğrenci bulunamadı");
         return new ErrorResult("Bu üniversiteye ait öğrenci bulunamadı",false);
@@ -178,25 +158,30 @@ public class StudentManager implements IStudentService{
         DBQKPSPublicSoap client = new DBQKPSPublicSoap();
         Integer year = studentDTO.getBirthDate().getYear();
         Long tcNo = Long.parseLong(studentDTO.getTcNo());
+        Map<String,String> updateUser = new HashMap<>();
+
         try {
             boolean isRealPerson = client.TCKimlikNoDogrula(tcNo,studentDTO.getName(),studentDTO.getSurName(),year);
             if (isRealPerson){
                 Student editStudent = studentDao.getById(id);
                 List<Student> students = studentDao.findAll();
                 students.remove(editStudent);
-                if (control(students,studentDTO,"getTcNo") ||  control(students,studentDTO,"getMail")){
+                if (uniqueControl(students,studentDTO,"getTcNo") ||  uniqueControl(students,studentDTO,"getMail")){
                     LogLevelSave(1,"Mail veya kimlik nummarası benzersiz olmalıdır");
-                    return new ErrorResult("Mail veya kimlik numarası benzersiz olmaıl",false);
+                    return new ErrorResult("Mail veya kimlik numarası benzersiz olmalıdır",false);
                 }
                 try {
-                   editStudent.setName(studentDTO.getName());
-                   editStudent.setTcNo(studentDTO.getTcNo());
-                   editStudent.setBirthDate(studentDTO.getBirthDate());
-                   editStudent.setSurName(studentDTO.getSurName());
-                   editStudent.setMail(studentDTO.getMail());
+                   updateUser.put("mail",studentDTO.getMail());
+                   updateUser.put("name",studentDTO.getName());
+                   updateUser.put("surName",studentDTO.getSurName());
+                   userService.updateDormitoryUser(updateUser);
+
+                   Student student = dtoToEntity(studentDTO,StudentMapper::toEntity);
+                   student.setId(editStudent.getId());
+                   editStudent=student;
                    studentDao.save(editStudent);
                    LogLevelSave(3,"Öğrenci güncelleme işlemi başarılı");
-                   return new SuccessDataResult("Öğrenci güncelleme işlemi başarılı", true,entityToDtoObject(editStudent));
+                   return new SuccessDataResult("Öğrenci güncelleme işlemi başarılı", true,entityToDto(editStudent,StudentMapper::toDto));
                } catch (Exception e) {
                    LogLevelSave(1,"Bu id değerine ait bir öğrenci bulunamadı.");
                    return new ErrorResult("Bu id değerine göre öğrenci bulunamadı",false);
@@ -226,6 +211,7 @@ public class StudentManager implements IStudentService{
                 LogLevelSave(3,"Öğrenci silindi ve öğrencinin kiraladığı alanlar silindi");
                 return new SuccesResult("Öğrenci silindi ve öğrencinin kiraladığı alanlar silindi",true);
             }
+            userService.deleteDormitoryUser(deleteStudent.getMail());
             deleteStudent.setDeleted(true);
             studentDao.save(deleteStudent);
             LogLevelSave(3,"Öğrenci silme İşlemi başarılı.");
@@ -235,29 +221,6 @@ public class StudentManager implements IStudentService{
             return new ErrorResult("Bu id değerine göre öğrenci bulunamadı",false);
         }
     }
-
-    public boolean control(List<Student> students,StudentDTO studentDTO,String metot){
-        try {
-            // StudentDTO nesnesindeki ilgili metodu çağırarak değeri al
-            Method dtoMethod = studentDTO.getClass().getMethod(metot);
-            Object dtoValue = dtoMethod.invoke(studentDTO);
-            for (Student student : students) {
-                Method studentMethod = student.getClass().getMethod(metot);
-                Object studentValue = studentMethod.invoke(student);
-                if (studentValue.equals(dtoValue)) {
-                    LogLevelSave(1,"Aynı " + metot + "değerine sahip öğrenci bulunda");
-                    return true;
-                }
-            }
-        } catch (NoSuchMethodException e) {
-            System.err.println("Belirtilen metot bulunamadı: " + e.getMessage());
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-
 }
 
 

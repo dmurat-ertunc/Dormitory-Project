@@ -1,10 +1,10 @@
-package com.dme.DormitoryProject.Manager.Concrete;
+package com.dme.DormitoryProject.business.manager;
 
-import com.dme.DormitoryProject.Manager.Abstract.IManagerService;
-import com.dme.DormitoryProject.Manager.Abstract.IUserService;
+import com.dme.DormitoryProject.business.services.IManagerService;
+import com.dme.DormitoryProject.business.services.IUserService;
+import com.dme.DormitoryProject.base.BaseClass;
 import com.dme.DormitoryProject.dtos.managerDtos.ManagerDTO;
 import com.dme.DormitoryProject.dtos.managerDtos.ManagerMapper;
-import com.dme.DormitoryProject.dtos.studentDtos.StudentDTO;
 import com.dme.DormitoryProject.entity.*;
 import com.dme.DormitoryProject.exception.GlobalExceptionHandler;
 import com.dme.DormitoryProject.repository.ILgoDao;
@@ -16,18 +16,14 @@ import com.dme.DormitoryProject.response.Result;
 import com.dme.DormitoryProject.response.SuccesResult;
 import com.dme.DormitoryProject.response.SuccessDataResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Service
-public class ManagerManager implements IManagerService {
+public class ManagerManager extends BaseClass implements IManagerService {
     private IManagerDao managerDao;
     private ILgoDao logDao;
     private ILogLevelDao logLevelDao;
@@ -53,25 +49,12 @@ public class ManagerManager implements IManagerService {
         log.setMessage(message);
         logDao.save(log);
     }
-    public List<ManagerDTO> entityToDtoList(List<Manager> managers){
-        List<ManagerDTO> managerDTOS = new ArrayList<>();
-        for (Manager manager : managers) {
-            ManagerDTO dto = ManagerMapper.toDTO(manager);
-            managerDTOS.add(dto);
-        }
-        return managerDTOS;
-    }
-    public ManagerDTO entityToDtoObject(Manager manager){
-        return ManagerMapper.toDTO(manager);
-    }
-    public Manager dtoToEntity(ManagerDTO managerDTO){
-        return ManagerMapper.toEntitiy(managerDTO);
-    }
+
     @Override
     public Result getAll(){
         try {
             List<Manager> managerList = managerDao.findAll();
-            List<ManagerDTO> managerDTOList = entityToDtoList(managerList);
+            List<ManagerDTO> managerDTOList = entityToDtoList(managerList,ManagerMapper::toDTO);
             return new SuccessDataResult("Tüm yöneticileri listeleme işlemi başarılı",true,managerDTOList);
         } catch (Exception e) {
             return new ErrorResult("Tüm yöneticileri listeleme işlemi başarısız",false);
@@ -82,7 +65,7 @@ public class ManagerManager implements IManagerService {
         try {
             Manager findManager = managerDao.getById(id);
             LogLevelSave(3,"İd değerine göre yönetici işlemi başarılı");
-            return new SuccessDataResult("İd değerine göre yönetici verisi, başarılı bir şekilde döndürüldü",true, entityToDtoObject(findManager));
+            return new SuccessDataResult("İd değerine göre yönetici verisi, başarılı bir şekilde döndürüldü",true, entityToDto(findManager,ManagerMapper::toDTO));
         } catch (Exception e) {
             // Eğer varlık bulunamadıysa, bu blok çalışır
             LogLevelSave(1, "Bu id değerine ait bir yönetici bulunamadı.");
@@ -94,7 +77,7 @@ public class ManagerManager implements IManagerService {
         List<Manager> managers = managerDao.findBySalaryGreaterThan(salary);
         if (managers !=  null && !managers.isEmpty()){
             LogLevelSave(3, "Belirtilen miktardan fazla maaş alan yöneticileri başarılı şekilde listelendi");
-            return new SuccessDataResult("Belirtilen miktardan fazla maaş alan yöneticileri başarılı şekilde listelendi",true,entityToDtoList(managers));
+            return new SuccessDataResult("Belirtilen miktardan fazla maaş alan yöneticileri başarılı şekilde listelendi",true,entityToDtoList(managers,ManagerMapper::toDTO));
         }
         LogLevelSave(1,"Belirtilen miktardan fazla maaş alan yönetici bulunamadı");
         return new ErrorResult("Belirtilen miktardan fazla maaş alan yönetici bulunamadı",false);
@@ -103,7 +86,7 @@ public class ManagerManager implements IManagerService {
     public Result saveManager(ManagerDTO managerDTO, String passwword){
         try {
             List<Manager> managers = managerDao.findAll();
-            if (control(managers,managerDTO,"getMail") || control(managers,managerDTO,"getPhoneNumber")){
+            if (uniqueControl(managers,managerDTO,"getMail") || uniqueControl(managers,managerDTO,"getPhoneNumber")){
                 LogLevelSave(1,"Mail veya telefon nummarası benzersiz olmalıdır");
                 return new ErrorResult("Mail veya telefon numarası benzersiz olmaıl",false);
             }
@@ -112,7 +95,7 @@ public class ManagerManager implements IManagerService {
             }else {
                 userService.saveDormitoryUser(managerDTO,"ROLE_MANAGER",passwword, managerDTO.getName(),managerDTO.getSurName());
             }
-            managerDao.save(dtoToEntity(managerDTO));
+            managerDao.save(dtoToEntity(managerDTO, ManagerMapper::toEntitiy));
             LogLevelSave(3,"Yönetici ekleme işlemi başarılı");
             return new SuccessDataResult("Yönetici ekleme işlemi başarılı",true,managerDTO);
         }catch (Exception e) {
@@ -128,7 +111,7 @@ public class ManagerManager implements IManagerService {
             List<Manager> managers = managerDao.findAll();
 
             managers.remove(editManager);
-            if (control(managers,managerDTO,"getPhoneNumber") ||  control(managers,managerDTO,"getMail")){
+            if (uniqueControl(managers,managerDTO,"getPhoneNumber") ||  uniqueControl(managers,managerDTO,"getMail")){
                 LogLevelSave(1,"Mail veya telefon nummarası benzersiz olmalıdır");
                 return new ErrorResult("Mail veya telefon numarası benzersiz olmaıl",false);
             }
@@ -137,16 +120,14 @@ public class ManagerManager implements IManagerService {
             updateUser.put("surName",managerDTO.getSurName());
             userService.updateDormitoryUser(updateUser);
 
-            editManager = managerDao.getById(id);
-            editManager.setName(managerDTO.getName());
-            editManager.setMail(managerDTO.getMail());
-            editManager.setPhoneNumber(managerDTO.getPhoneNumber());
-            editManager.setSalary(managerDTO.getSalary());
-            editManager.setSurName(managerDTO.getSurName());
-            editManager.setTitle(managerDTO.getTitle());
+//            managerDTO.setId(editManager.getId());
+//            editManager = dtoToEntity(managerDTO);
+            Manager manager = dtoToEntity(managerDTO,ManagerMapper::toEntitiy);
+            manager.setId(editManager.getId());
+            editManager = manager;
             LogLevelSave(3,"Yöentici güncelleme işlemi başarılı");
             managerDao.save(editManager);
-            return new SuccessDataResult("Yönetici güncelleme  işlemi başarılı",true,entityToDtoObject(editManager));
+            return new SuccessDataResult("Yönetici güncelleme  işlemi başarılı",true,entityToDto(editManager,ManagerMapper::toDTO));
         }
         catch (Exception e) {
             // Eğer varlık bulunamadıysa, bu blok çalışır
@@ -175,25 +156,5 @@ public class ManagerManager implements IManagerService {
             LogLevelSave(1, "Bu id değerine ait bir yönetici bulunamadı.");
             return new ErrorResult("Bu id değerinde yönetici bulunamadı",false);
         }
-    }
-    public boolean control(List<Manager> managers, ManagerDTO managerDTO, String metot){
-        try {
-            // StudentDTO nesnesindeki ilgili metodu çağırarak değeri al
-            Method dtoMethod = managerDTO.getClass().getMethod(metot);
-            Object dtoValue = dtoMethod.invoke(managerDTO);
-            for (Manager manager : managers) {
-                Method studentMethod = manager.getClass().getMethod(metot);
-                Object studentValue = studentMethod.invoke(manager);
-                if (studentValue.equals(dtoValue)) {
-                    LogLevelSave(1,"Aynı " + metot + "değerine sahip yönetici bulundu");
-                    return true;
-                }
-            }
-        } catch (NoSuchMethodException e) {
-            System.err.println("Belirtilen metot bulunamadı: " + e.getMessage());
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        return false;
     }
 }

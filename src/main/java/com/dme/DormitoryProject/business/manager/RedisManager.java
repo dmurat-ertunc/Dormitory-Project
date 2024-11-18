@@ -1,13 +1,11 @@
-package com.dme.DormitoryProject.Manager.Concrete;
+package com.dme.DormitoryProject.business.manager;
 
-import com.dme.DormitoryProject.Manager.Abstract.IRedisService;
+import com.dme.DormitoryProject.business.services.IRedisService;
 import com.dme.DormitoryProject.dtos.studentDtos.StudentDTO;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 

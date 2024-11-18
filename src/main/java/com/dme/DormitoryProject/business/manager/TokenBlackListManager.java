@@ -1,6 +1,6 @@
-package com.dme.DormitoryProject.Manager.Concrete;
+package com.dme.DormitoryProject.business.manager;
 
-import com.dme.DormitoryProject.Manager.Abstract.ITokenBlackListService;
+import com.dme.DormitoryProject.business.services.ITokenBlackListService;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;

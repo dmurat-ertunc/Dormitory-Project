@@ -54,6 +54,7 @@ public class SecurityConfig {
                                 .requestMatchers("api/request/**").hasRole("MANAGER")
                                 .requestMatchers("api/managers/**").permitAll()
                                 .requestMatchers("api/students/**").permitAll()
+                                .requestMatchers("api/entryExit/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());

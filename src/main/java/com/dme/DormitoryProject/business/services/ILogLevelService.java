@@ -1,4 +1,4 @@
-package com.dme.DormitoryProject.Manager.Abstract;
+package com.dme.DormitoryProject.business.services;
 
 import com.dme.DormitoryProject.dtos.logLevelDtos.LogLevelDTO;
 import com.dme.DormitoryProject.entity.LogLevel;

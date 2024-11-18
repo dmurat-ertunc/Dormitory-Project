@@ -1,6 +1,6 @@
 package com.dme.DormitoryProject;
 
-import com.dme.DormitoryProject.Manager.Abstract.IDepartmentService;
+import com.dme.DormitoryProject.business.services.IDepartmentService;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;

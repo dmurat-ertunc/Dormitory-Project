@@ -1,6 +1,7 @@
-package com.dme.DormitoryProject.Manager.Concrete;
+package com.dme.DormitoryProject.business.manager;
 
-import com.dme.DormitoryProject.Manager.Abstract.IUserService;
+import com.dme.DormitoryProject.business.services.IUserService;
+import com.dme.DormitoryProject.dtos.auth.PasswordChangeDTO;
 import com.dme.DormitoryProject.dtos.managerDtos.ManagerDTO;
 import com.dme.DormitoryProject.dtos.staffDtos.StaffDTO;
 import com.dme.DormitoryProject.dtos.studentDtos.StudentDTO;
@@ -9,9 +10,15 @@ import com.dme.DormitoryProject.entity.User;
 import com.dme.DormitoryProject.enums.UserType;
 import com.dme.DormitoryProject.repository.IRoleDao;
 import com.dme.DormitoryProject.repository.IUserDao;
+import com.dme.DormitoryProject.response.ErrorResult;
+import com.dme.DormitoryProject.response.Result;
+import com.dme.DormitoryProject.response.SuccesResult;
+import com.dme.DormitoryProject.security.CustomUserDetailService;
 import org.apache.poi.ss.formula.functions.T;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +27,8 @@ import java.util.*;
 @Service
 public class UserManager implements IUserService<T> {
 
+    @Autowired
+    private CustomUserDetailService customUserDetailsService;
     private IUserDao userDao;
     private IRoleDao roleDao;
     private PasswordEncoder passwordEncoder;
@@ -34,7 +43,7 @@ public class UserManager implements IUserService<T> {
     @Override
     public void saveDormitoryUser(Object dto, String role,String password,String name, String surName) {
         User user = new User();
-        String username = mailToUsername(findDto(dto));
+        String username = mailConvertToUsername(findDto(dto));
 
         user.setUsernName(username);
         user.setName(name);
@@ -71,7 +80,7 @@ public class UserManager implements IUserService<T> {
         user.setUserType(UserType.Google_User);
         user.setName(name);
         user.setSurName(surName);
-        user.setUsernName(mailToUsername(mail));
+        user.setUsernName(mailConvertToUsername(mail));
         Roles roles = roleDao.findByName("ROLE_DEFAULT").get();
         user.setRoles(Collections.singletonList(roles));
 
@@ -99,11 +108,36 @@ public class UserManager implements IUserService<T> {
         user.setName(name);
         user.setSurName(surName);
         user.setMail(mail);
-        user.setUsernName(mailToUsername(mail));
+        user.setUsernName(mailConvertToUsername(mail));
 
     }
 
-    private String mailToUsername(String mail) {
+    @Override
+    public Result passwordChangeDormitoryUser(PasswordChangeDTO passwordChangeDTO){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof UserDetails) { // CustomUserDetails, UserDetails'in bir özelleştirilmiş hali olmalı
+            String username = ((UserDetails) principal).getUsername(); // Username değerini al
+            User user = userDao.findUserByUsername(username); // hibernate sql ile username değerine göre user ı al
+            if (!passwordEncoder.matches(passwordChangeDTO.getOldPassword(), user.getPassword())){
+                return new ErrorResult("Eski şifreniz yanlış",false);
+            }
+            if (!Objects.equals(passwordChangeDTO.getNewPassword(),passwordChangeDTO.getNewPasswordAgain())){
+                return new ErrorResult("Yeni şifreler uyuşmuyor",false);
+            }
+            if (Objects.equals(passwordChangeDTO.getNewPassword(),passwordChangeDTO.getOldPassword())){
+                return new ErrorResult("Eski şifre ile yeni şifre aynı olamaz",false);
+            }
+            user.setPassword(passwordEncoder.encode(passwordChangeDTO.getNewPassword()));
+            userDao.save(user);
+        }
+        else {
+            return new ErrorResult("Aktif kullanıcı bulunamadı",false);
+        }
+        return new SuccesResult("Şifre güncelleme işlemi başarılı",true);
+    }
+
+    private String mailConvertToUsername(String mail) {
         if (mail == null || !mail.contains("@")) {
             throw new IllegalArgumentException("Geçersiz e-posta adresi");
         }

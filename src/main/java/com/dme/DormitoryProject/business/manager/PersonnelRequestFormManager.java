@@ -1,6 +1,6 @@
-package com.dme.DormitoryProject.Manager.Concrete;
+package com.dme.DormitoryProject.business.manager;
 
-import com.dme.DormitoryProject.Manager.Abstract.IPersonnelRequestFormService;
+import com.dme.DormitoryProject.business.services.IPersonnelRequestFormService;
 import com.dme.DormitoryProject.base.BaseClass;
 import com.dme.DormitoryProject.dtos.personelRequestFormDtos.PersonelRequestFormDTO;
 import com.dme.DormitoryProject.dtos.personelRequestFormDtos.PersonelRequestFormMapper;
@@ -15,7 +15,6 @@ import com.dme.DormitoryProject.response.SuccessDataResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service

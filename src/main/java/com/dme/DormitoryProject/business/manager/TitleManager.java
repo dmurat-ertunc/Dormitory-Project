@@ -1,6 +1,7 @@
-package com.dme.DormitoryProject.Manager.Concrete;
+package com.dme.DormitoryProject.business.manager;
 
-import com.dme.DormitoryProject.Manager.Abstract.ITitleService;
+import com.dme.DormitoryProject.business.services.ITitleService;
+import com.dme.DormitoryProject.base.BaseClass;
 import com.dme.DormitoryProject.dtos.titleDtos.TitleDTO;
 import com.dme.DormitoryProject.dtos.titleDtos.TitleMapper;
 import com.dme.DormitoryProject.entity.*;
@@ -15,11 +16,10 @@ import com.dme.DormitoryProject.response.SuccessDataResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class TitleManager implements ITitleService {
+public class TitleManager extends BaseClass implements ITitleService {
     private ITitleDao titleDao;
     private IStaffDao staffDao;
     private ILgoDao lgoDao;
@@ -44,26 +44,11 @@ public class TitleManager implements ITitleService {
         log.setDeleted(false);
         lgoDao.save(log);
     }
-    public List<TitleDTO> entityToDtoList(List<Title> titles){
-        List<TitleDTO> titleDTOS = new ArrayList<>();
 
-        for (Title title : titles) {
-            TitleDTO dto = TitleMapper.toDTO(title);
-            titleDTOS.add(dto);
-        }
-        return titleDTOS;
-    }
-    public TitleDTO entityToDtoObject(Title title){
-        return TitleMapper.toDTO(title);
-    }
-
-    public Title dtoToEntity(TitleDTO titleDTO){
-        return TitleMapper.toEntity(titleDTO);
-    }
     @Override
     public Result getAll(){
         try{
-            List<TitleDTO> titlesDto = entityToDtoList(titleDao.findAll());
+            List<TitleDTO> titlesDto = entityToDtoList(titleDao.findAll(),TitleMapper::toDTO);
             LogLevelSave(3,"Tüm ünvanlar listelendi");
             return new SuccessDataResult("Tüm ünvanlar listelendi",true,titlesDto);
         }catch (Exception e){
@@ -75,7 +60,7 @@ public class TitleManager implements ITitleService {
         try {
             Title title = titleDao.getById(id);
             LogLevelSave(3,"İd değerine göre ünvan listelendi");
-            return new SuccessDataResult("İd değerine göre ünvan listelendi",true,entityToDtoObject(title));
+            return new SuccessDataResult("İd değerine göre ünvan listelendi",true,entityToDto(title,TitleMapper::toDTO));
         } catch (Exception e) {
             LogLevelSave(1,"Bu id değerine ait bir ünvan bulunamadı.");
             return new ErrorResult("Bu id değerine ait ünvan bulunamadı",false);
@@ -84,7 +69,7 @@ public class TitleManager implements ITitleService {
     @Override
     public Result saveTitle(TitleDTO titleDTO){
         try {
-            titleDao.save(dtoToEntity(titleDTO));
+            titleDao.save(dtoToEntity(titleDTO,TitleMapper::toEntity));
             LogLevelSave(3,"Ünvan ekleme işlemi başarılı");
             return new SuccessDataResult("Ünvan ekleme işlemi başarılı",true,titleDTO);
         } catch (Exception e) {
@@ -101,7 +86,7 @@ public class TitleManager implements ITitleService {
             editTitle.setName(titleDTO.getName());
             titleDao.save(editTitle);
             LogLevelSave(3,"Ünvan güncelleme işlemi başarılı");
-            return new SuccessDataResult("Ünvan güncelleme  işlemi başarılı",true,entityToDtoObject(editTitle));
+            return new SuccessDataResult("Ünvan güncelleme  işlemi başarılı",true,entityToDto(editTitle,TitleMapper::toDTO));
         }catch (Exception e){
             LogLevelSave(1,"Bu id değerine ait bir ünvan bulunamadı");
             return new ErrorResult("Bu id değerine ait bir ünvan bulunamadı",false);

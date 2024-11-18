@@ -1,6 +1,5 @@
-package com.dme.DormitoryProject.Manager.Abstract;
+package com.dme.DormitoryProject.business.services;
 
-import com.dme.DormitoryProject.dtos.rentalDtos.RentalDTO;
 import com.dme.DormitoryProject.dtos.studentRentalDtos.StudentRequestRentalDTO;
 import com.dme.DormitoryProject.response.Result;
 

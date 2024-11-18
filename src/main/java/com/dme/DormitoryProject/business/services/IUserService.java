@@ -1,4 +1,4 @@
-package com.dme.DormitoryProject.Manager.Abstract;
+package com.dme.DormitoryProject.business.services;
 
 import java.util.Map;
 

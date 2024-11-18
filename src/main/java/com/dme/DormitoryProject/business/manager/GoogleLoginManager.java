@@ -1,21 +1,18 @@
-package com.dme.DormitoryProject.Manager.Concrete;
+package com.dme.DormitoryProject.business.manager;
 
-import com.dme.DormitoryProject.Manager.Abstract.IGoogleLoginService;
-import com.dme.DormitoryProject.Manager.Abstract.IUserService;
+import com.dme.DormitoryProject.business.services.IGoogleLoginService;
+import com.dme.DormitoryProject.business.services.IUserService;
 import com.dme.DormitoryProject.repository.IUserDao;
 import com.dme.DormitoryProject.response.ErrorResult;
 import com.dme.DormitoryProject.response.Result;
 import com.dme.DormitoryProject.response.SuccessDataResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+
 @Service
 public class GoogleLoginManager implements IGoogleLoginService {
     private IUserDao userDao;

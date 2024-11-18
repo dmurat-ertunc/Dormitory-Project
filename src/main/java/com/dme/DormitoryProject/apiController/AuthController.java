@@ -1,13 +1,13 @@
-package com.dme.DormitoryProject.apiController;
+package com.dme.DormitoryProject.controller;
 
-import com.dme.DormitoryProject.Manager.Abstract.ITokenBlackListService;
+import com.dme.DormitoryProject.business.services.ITokenBlackListService;
+import com.dme.DormitoryProject.business.services.IUserService;
 import com.dme.DormitoryProject.dtos.auth.AuthResponseDTO;
+import com.dme.DormitoryProject.dtos.auth.PasswordChangeDTO;
 import com.dme.DormitoryProject.dtos.login.LoginDTO;
-import com.dme.DormitoryProject.dtos.register.RegisterDTO;
-import com.dme.DormitoryProject.entity.Roles;
-import com.dme.DormitoryProject.entity.User;
 import com.dme.DormitoryProject.repository.IRoleDao;
 import com.dme.DormitoryProject.repository.IUserDao;
+import com.dme.DormitoryProject.response.Result;
 import com.dme.DormitoryProject.security.JWTGenerator;
 import jakarta.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +20,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-
 @RestController
 @RequestMapping("api/auth")
 public class AuthController {
@@ -31,17 +29,19 @@ public class AuthController {
     private PasswordEncoder passwordEncoder;
     private JWTGenerator jwtGenerator;
     private ITokenBlackListService tokenBlackListService;
+    private IUserService userService;
 
     @Autowired
     public AuthController(AuthenticationManager authenticationManager, IUserDao userDao,
                           IRoleDao roleDao, PasswordEncoder passwordEncoder, JWTGenerator jwtGenerator,
-                          ITokenBlackListService tokenBlackListService) {
+                          ITokenBlackListService tokenBlackListService, IUserService userService) {
         this.authenticationManager = authenticationManager;
         this.userDao = userDao;
         this.roleDao = roleDao;
         this.passwordEncoder = passwordEncoder;
         this.jwtGenerator = jwtGenerator;
         this.tokenBlackListService=tokenBlackListService;
+        this.userService=userService;
     }
 
     @PostMapping("login")
@@ -58,6 +58,10 @@ public class AuthController {
         jwtCookie.setMaxAge(3600000); // Süreyi belirleyin (saniye cinsinden)
         jwtCookie.setPath("/"); // Cookie'nin erişilebilir olduğu yol
         return new ResponseEntity<>(new AuthResponseDTO(token), HttpStatus.OK);
+    }
+    @PostMapping("passwordChange")
+    public Result passwordChange(@RequestBody PasswordChangeDTO passwordChangeDTO){
+        return this.userService.passwordChangeDormitoryUser(passwordChangeDTO);
     }
 
     @PostMapping("logout")

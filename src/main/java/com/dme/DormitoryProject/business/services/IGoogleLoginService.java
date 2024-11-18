@@ -1,7 +1,6 @@
-package com.dme.DormitoryProject.Manager.Abstract;
+package com.dme.DormitoryProject.business.services;
 
 import com.dme.DormitoryProject.response.Result;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.security.Principal;
 

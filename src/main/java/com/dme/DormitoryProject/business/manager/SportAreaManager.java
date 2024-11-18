@@ -1,8 +1,7 @@
-package com.dme.DormitoryProject.Manager.Concrete;
+package com.dme.DormitoryProject.business.manager;
 
-import com.dme.DormitoryProject.Manager.Abstract.ISporAreaService;
-import com.dme.DormitoryProject.dtos.managerDtos.ManagerDTO;
-import com.dme.DormitoryProject.dtos.managerDtos.ManagerMapper;
+import com.dme.DormitoryProject.business.services.ISporAreaService;
+import com.dme.DormitoryProject.base.BaseClass;
 import com.dme.DormitoryProject.dtos.sportAreaDtos.SportAreaDTO;
 import com.dme.DormitoryProject.dtos.sportAreaDtos.SportAreaMapper;
 import com.dme.DormitoryProject.entity.*;
@@ -15,18 +14,13 @@ import com.dme.DormitoryProject.response.Result;
 import com.dme.DormitoryProject.response.SuccesResult;
 import com.dme.DormitoryProject.response.SuccessDataResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 @Service
-public class SportAreaManager implements ISporAreaService {
+public class SportAreaManager extends BaseClass implements ISporAreaService {
 
     private ISportAreaDao sportAreaDao;
     private ILgoDao lgoDao;
@@ -52,27 +46,11 @@ public class SportAreaManager implements ISporAreaService {
         lgoDao.save(log);
     }
 
-    public List<SportAreaDTO> entityToDtoList(List<SportArea> sportAreas){
-        List<SportAreaDTO> sportAreaDTOS = new ArrayList<>();
-
-        for (SportArea sportArea : sportAreas) {
-            SportAreaDTO dto = SportAreaMapper.toDTO(sportArea);
-            sportAreaDTOS.add(dto);
-        }
-        return sportAreaDTOS;
-    }
-    public SportAreaDTO entityToDtoObject(SportArea sportArea){
-        return SportAreaMapper.toDTO(sportArea);
-    }
-
-    public SportArea dtoToEntity(SportAreaDTO sportAreaDTO){
-        return SportAreaMapper.toEntity(sportAreaDTO);
-    }
 
     @Override
     public Result getAll(){
         try {
-            List<SportAreaDTO> sportAreaDTOS = entityToDtoList(sportAreaDao.findAll());
+            List<SportAreaDTO> sportAreaDTOS = entityToDtoList(sportAreaDao.findAll(),SportAreaMapper::toDTO);
             LogLevelSave(2,"Spor türleri listelendi");
             return new SuccessDataResult("Spor türleri listelendi",true,sportAreaDTOS);
         } catch (Exception e) {
@@ -84,7 +62,7 @@ public class SportAreaManager implements ISporAreaService {
     @Override
     public Result getById(Long id){
         try {
-            SportAreaDTO sportAreaDTO = entityToDtoObject(sportAreaDao.getById(id));
+            SportAreaDTO sportAreaDTO = entityToDto(sportAreaDao.getById(id),SportAreaMapper::toDTO);
             LogLevelSave(2,"Id değerine göre spor türü listelendi");
             return new SuccessDataResult("Id değerine göre spor türü listelendi",true,sportAreaDTO);
         } catch (Exception e) {
@@ -95,7 +73,7 @@ public class SportAreaManager implements ISporAreaService {
     @Override
     public Result saveSportArea(SportAreaDTO sportAreaDTO){
         try {
-            sportAreaDao.save(dtoToEntity(sportAreaDTO));
+            sportAreaDao.save(dtoToEntity(sportAreaDTO,SportAreaMapper::toEntity));
             LogLevelSave(3,"Spor türü ekleme işlemi başarılı");
             return new SuccessDataResult("Spor türü ekleme işlemi başarılı",true,sportAreaDTO);
         } catch (Exception e) {
@@ -111,7 +89,7 @@ public class SportAreaManager implements ISporAreaService {
             editSportArea.setSporType(sportAreaDTO.getSportType());
             sportAreaDao.save(editSportArea);
             LogLevelSave(3,"Spor alanı güncelleme işlemi başarılı");
-            return new SuccessDataResult("Spor alanı güncelleme  işlemi başarılı",true,entityToDtoObject(editSportArea));
+            return new SuccessDataResult("Spor alanı güncelleme  işlemi başarılı",true,entityToDto(editSportArea,SportAreaMapper::toDTO));
         }catch (Exception e){
             LogLevelSave(1,"Bu id değerine ait bir spor alanı bulunamadı");
             return new ErrorResult("Bu id değerine ait bir spor alanı bulunamadı",false);

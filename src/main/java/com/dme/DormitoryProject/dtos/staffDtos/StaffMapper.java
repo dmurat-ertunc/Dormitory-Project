@@ -1,20 +1,23 @@
 package com.dme.DormitoryProject.dtos.staffDtos;
 
-import com.dme.DormitoryProject.Manager.Concrete.DepartmentManager;
-import com.dme.DormitoryProject.dtos.departmentDtos.DepartmentMapper;
-import com.dme.DormitoryProject.entity.Department;
-import com.dme.DormitoryProject.entity.Manager;
 import com.dme.DormitoryProject.entity.Staff;
 import com.dme.DormitoryProject.repository.IDepartmentDao;
 import com.dme.DormitoryProject.repository.IManagerDao;
-import com.dme.DormitoryProject.repository.IStudentDao;
 import com.dme.DormitoryProject.repository.ITitleDao;
+import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+@Component
 public class StaffMapper {
+    private static IDepartmentDao departmentDao;
+    private static IManagerDao managerDao;
+    private static ITitleDao titleDao;
+
+    public StaffMapper(IDepartmentDao departmentDao, IManagerDao managerDao, ITitleDao titleDao){
+        this.departmentDao=departmentDao;
+        this.managerDao=managerDao;
+        this.titleDao=titleDao;
+    }
+
     public static StaffDTO toDTO(Staff staff){
         StaffDTO staffDTO = new StaffDTO();
 
@@ -37,9 +40,8 @@ public class StaffMapper {
 
         return staffDTO;
     }
-    public  static Staff toEntity(StaffDTO staffDTO, IDepartmentDao departmentDao, IManagerDao managerDao, ITitleDao titleDao){
+    public static Staff toEntity(StaffDTO staffDTO){
         Staff staff = new Staff();
-
 
         staff.setMail(staffDTO.getMail());
         staff.setName(staffDTO.getName());
@@ -48,7 +50,7 @@ public class StaffMapper {
         staff.setSurName(staffDTO.getSurName());
         staff.setDepartment(departmentDao.getById(staffDTO.getDepartmentId()));
         staff.setTitle(titleDao.getById(staffDTO.getTitleId()));
-        staff.setManager(managerDao.getById(staffDTO.getTitleId()));
+        staff.setManager(managerDao.getById(staffDTO.getManagerId()));
 
         return staff;
     }

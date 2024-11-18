@@ -1,6 +1,7 @@
-package com.dme.DormitoryProject.Manager.Concrete;
+package com.dme.DormitoryProject.business.manager;
 
-import com.dme.DormitoryProject.Manager.Abstract.IDepartmentService;
+import com.dme.DormitoryProject.business.services.IDepartmentService;
+import com.dme.DormitoryProject.base.BaseClass;
 import com.dme.DormitoryProject.dtos.departmentDtos.DepartmentDTO;
 import com.dme.DormitoryProject.dtos.departmentDtos.DepartmentMapper;
 import com.dme.DormitoryProject.entity.*;
@@ -15,16 +16,12 @@ import com.dme.DormitoryProject.response.SuccessDataResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import java.text.Collator;
-import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
-public class DepartmentManager implements IDepartmentService{
+public class DepartmentManager extends BaseClass implements IDepartmentService{
 
     private static final Logger log = LoggerFactory.getLogger(DepartmentManager.class);
     private IDepartmentDao departmentDao;
@@ -49,28 +46,10 @@ public class DepartmentManager implements IDepartmentService{
         lgoDao.save(log);
     }
 
-    public List<DepartmentDTO> entityToDtoList(List<Department> departments){
-        List<DepartmentDTO> departmentDTOS = new ArrayList<>();
-
-        for (Department department : departments) {
-            DepartmentDTO dto = DepartmentMapper.toDTO(department);
-            departmentDTOS.add(dto);
-        }
-        return departmentDTOS;
-    }
-
-    public DepartmentDTO entityToDtoObject(Department department){
-        return DepartmentMapper.toDTO(department);
-    }
-
-    public Department dtoToEntity(DepartmentDTO departmentDTO){
-        return DepartmentMapper.toEntity(departmentDTO);
-    }
-
     @Override
     public Result getAll(){
         try {
-            List<DepartmentDTO> departmentDTOS = entityToDtoList(departmentDao.findAll());
+            List<DepartmentDTO> departmentDTOS = entityToDtoList(departmentDao.findAll(),DepartmentMapper::toDTO);
             logLevelSave(2,"Tüm departmanlar listelendi");
             return new SuccessDataResult("Tüm departmanlar listelendi",true,departmentDTOS);
         } catch (Exception e) {
@@ -83,7 +62,7 @@ public class DepartmentManager implements IDepartmentService{
         try {
             Department findDepartment = departmentDao.getById(id);
             logLevelSave(3,"İd değerine göre departman listeleme işlemi başarılı");
-            return new SuccessDataResult("İd değerine göre departman verisi, başarılı bir şekilde döndürüldü",true, entityToDtoObject(findDepartment));
+            return new SuccessDataResult("İd değerine göre departman verisi, başarılı bir şekilde döndürüldü",true, entityToDto(findDepartment,DepartmentMapper::toDTO));
         } catch (Exception e) {
             // Eğer varlık bulunamadıysa, bu blok çalışır
             logLevelSave(1, "Bu id değerine ait bir departman bulunamadı.");
@@ -93,7 +72,7 @@ public class DepartmentManager implements IDepartmentService{
     @Override
     public Result saveDepartment(DepartmentDTO departmentDTO){
         try {
-            departmentDao.save(dtoToEntity(departmentDTO));
+            departmentDao.save(dtoToEntity(departmentDTO, DepartmentMapper::toEntity));
             logLevelSave(3,"Departman ekleme işlemi başarılı");
             return new SuccessDataResult("Departman ekleme işlemi başarılı",true,departmentDTO);
         }catch (Exception e) {
@@ -109,7 +88,7 @@ public class DepartmentManager implements IDepartmentService{
             editDepartment.setName(departmentDTO.getName());
             departmentDao.save(editDepartment);
             logLevelSave(3,"Departman güncelleme işlemi başarılı");
-            return new SuccessDataResult("Departman güncelleme işlemi başarılı",true,entityToDtoObject(editDepartment));
+            return new SuccessDataResult("Departman güncelleme işlemi başarılı",true,entityToDto(editDepartment,DepartmentMapper::toDTO));
         }catch (Exception e){
             logLevelSave(1,"Bu id değerine ait departman bulunamadı");
             return new ErrorResult("Bu id değerine ait departman bulunamadı",false);
@@ -142,7 +121,7 @@ public class DepartmentManager implements IDepartmentService{
         List<Department> departments = departmentDao.findByNameStartingWith(prefix);
         if (departments !=  null && !departments.isEmpty()){
             logLevelSave(3, "Baş harfi değerine göre departman veya departmanlar başarılı şekilde listelendi");
-            return new SuccessDataResult("Baş harfi değerine göre departman veya departmanlar başarılı şekilde listelendi",true,entityToDtoList(departments));
+            return new SuccessDataResult("Baş harfi değerine göre departman veya departmanlar başarılı şekilde listelendi",true,entityToDtoList(departments,DepartmentMapper::toDTO));
         }
         logLevelSave(1,"Bu harf ile başlayan departman departman bulunamadı");
         return new ErrorResult("Bu harf ile başlayan departman departman bulunamadı",false);

@@ -1,6 +1,6 @@
 package com.dme.DormitoryProject.apiController;
 
-import com.dme.DormitoryProject.Manager.Abstract.ISporAreaService;
+import com.dme.DormitoryProject.business.services.ISporAreaService;
 import com.dme.DormitoryProject.dtos.sportAreaDtos.SportAreaDTO;
 import com.dme.DormitoryProject.entity.SportArea;
 import com.dme.DormitoryProject.response.Result;

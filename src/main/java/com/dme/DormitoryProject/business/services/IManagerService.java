@@ -1,10 +1,7 @@
-package com.dme.DormitoryProject.Manager.Abstract;
+package com.dme.DormitoryProject.business.services;
 
 import com.dme.DormitoryProject.dtos.managerDtos.ManagerDTO;
-import com.dme.DormitoryProject.entity.Manager;
 import com.dme.DormitoryProject.response.Result;
-
-import java.util.Optional;
 
 public interface IManagerService {
     Result getAll();

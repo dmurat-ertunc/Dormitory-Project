@@ -1,6 +1,6 @@
 package com.dme.DormitoryProject.apiController;
 
-import com.dme.DormitoryProject.Manager.Abstract.IRentalService;
+import com.dme.DormitoryProject.business.services.IRentalService;
 import com.dme.DormitoryProject.dtos.rentalDtos.RentalDTO;
 import com.dme.DormitoryProject.dtos.studentRentalDtos.StudentRequestRentalDTO;
 import com.dme.DormitoryProject.entity.Rental;

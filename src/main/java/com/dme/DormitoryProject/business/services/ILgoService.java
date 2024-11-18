@@ -1,4 +1,4 @@
-package com.dme.DormitoryProject.Manager.Abstract;
+package com.dme.DormitoryProject.business.services;
 
 import com.dme.DormitoryProject.dtos.lgoDtos.LgoDTO;
 import com.dme.DormitoryProject.entity.Lgo;

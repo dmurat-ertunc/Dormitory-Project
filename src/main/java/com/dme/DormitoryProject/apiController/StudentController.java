@@ -1,21 +1,15 @@
-package com.dme.DormitoryProject.apiController;
+package com.dme.DormitoryProject.controller;
 
 
-import com.dme.DormitoryProject.Manager.Abstract.IStudentService;
-import com.dme.DormitoryProject.Manager.Concrete.StudentManager;
-import com.dme.DormitoryProject.dtos.mailVerification.MailVerificationDTO;
+import com.dme.DormitoryProject.business.services.IStudentService;
 import com.dme.DormitoryProject.dtos.studentDtos.StudentDTO;
 import com.dme.DormitoryProject.entity.Student;
 import com.dme.DormitoryProject.response.Result;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("api/students")

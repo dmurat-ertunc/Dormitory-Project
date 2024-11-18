@@ -1,17 +1,11 @@
-package com.dme.DormitoryProject.Manager.Abstract;
+package com.dme.DormitoryProject.business.services;
 
 import com.dme.DormitoryProject.dtos.rentalDtos.RentalDTO;
 import com.dme.DormitoryProject.dtos.studentRentalDtos.StudentRequestRentalDTO;
-import com.dme.DormitoryProject.entity.Rental;
-import com.dme.DormitoryProject.entity.Staff;
-import com.dme.DormitoryProject.entity.StudentRequestRental;
 import com.dme.DormitoryProject.response.Result;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
-import java.util.Optional;
 
 public interface IRentalService {
     Result getAll();

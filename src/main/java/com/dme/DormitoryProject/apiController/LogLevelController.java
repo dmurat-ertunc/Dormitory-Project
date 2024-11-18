@@ -1,6 +1,6 @@
 package com.dme.DormitoryProject.apiController;
 
-import com.dme.DormitoryProject.Manager.Abstract.ILogLevelService;
+import com.dme.DormitoryProject.business.services.ILogLevelService;
 import com.dme.DormitoryProject.dtos.logLevelDtos.LogLevelDTO;
 import com.dme.DormitoryProject.entity.LogLevel;
 import org.apache.juli.logging.Log;

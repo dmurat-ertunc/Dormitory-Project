@@ -1,28 +1,22 @@
-package com.dme.DormitoryProject.Manager.Concrete;
+package com.dme.DormitoryProject.business.manager;
 
-import com.dme.DormitoryProject.Manager.Abstract.ILogLevelService;
+import com.dme.DormitoryProject.business.services.ILogLevelService;
+import com.dme.DormitoryProject.base.BaseClass;
 import com.dme.DormitoryProject.dtos.logLevelDtos.LogLevelDTO;
 import com.dme.DormitoryProject.dtos.logLevelDtos.LogLevelMapper;
-import com.dme.DormitoryProject.dtos.managerDtos.ManagerDTO;
-import com.dme.DormitoryProject.dtos.managerDtos.ManagerMapper;
 import com.dme.DormitoryProject.entity.Lgo;
 import com.dme.DormitoryProject.entity.LogLevel;
-import com.dme.DormitoryProject.entity.Manager;
-import com.dme.DormitoryProject.entity.Staff;
 import com.dme.DormitoryProject.repository.ILgoDao;
 import com.dme.DormitoryProject.repository.ILogLevelDao;
-import org.apache.juli.logging.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
-public class LogLevelManager implements ILogLevelService {
+public class LogLevelManager extends BaseClass implements ILogLevelService {
 
     private ILogLevelDao logLevelDao;
     private ILgoDao lgoDao;

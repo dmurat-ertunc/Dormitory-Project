@@ -1,6 +1,6 @@
 package com.dme.DormitoryProject.apiController;
 
-import com.dme.DormitoryProject.Manager.Abstract.IUniversityService;
+import com.dme.DormitoryProject.business.services.IUniversityService;
 import com.dme.DormitoryProject.dtos.universityDtos.UniversityDTO;
 import com.dme.DormitoryProject.entity.University;
 import com.dme.DormitoryProject.response.Result;

@@ -1,11 +1,10 @@
-package com.dme.DormitoryProject.Manager.Concrete;
+package com.dme.DormitoryProject.business.manager;
 
-import com.dme.DormitoryProject.Manager.Abstract.IMailService;
-import com.dme.DormitoryProject.Manager.Abstract.IRentalService;
-import com.dme.DormitoryProject.Manager.Abstract.IStudentRequestRentalService;
-import com.dme.DormitoryProject.dtos.rentalDtos.RentalDTO;
+import com.dme.DormitoryProject.business.services.IStudentRequestRentalService;
+import com.dme.DormitoryProject.base.BaseClass;
 import com.dme.DormitoryProject.dtos.studentRentalDtos.StudentRequestMapper;
 import com.dme.DormitoryProject.dtos.studentRentalDtos.StudentRequestRentalDTO;
+import com.dme.DormitoryProject.entity.Mail;
 import com.dme.DormitoryProject.entity.Rental;
 import com.dme.DormitoryProject.entity.StudentRequestRental;
 import com.dme.DormitoryProject.enums.RequestStatus;
@@ -20,31 +19,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class StudentRequestRentalRentalManager implements IStudentRequestRentalService {
+public class StudentRequestRentalRentalManager extends BaseClass implements IStudentRequestRentalService {
     private IStudentRequestRentalDao studentRequestRentalDao;
     private IStudentDao studentDao;
     private ISportAreaDao sportAreaDao;
     private IRentalDao rentalDao;
-    private IMailService mailService;
+
 
 
     @Autowired
     public StudentRequestRentalRentalManager(IStudentRequestRentalDao studentRequestRentalDao, ISportAreaDao sportAreaDao,
-                                             IStudentDao studentDao, IRentalDao rentalDao, IMailService mailService){
+                                             IStudentDao studentDao, IRentalDao rentalDao){
         this.studentRequestRentalDao=studentRequestRentalDao;
         this.studentDao=studentDao;
         this.sportAreaDao=sportAreaDao;
         this.rentalDao=rentalDao;
-        this.mailService=mailService;
+
     }
 
-    private StudentRequestRental dtoToEntity(StudentRequestRentalDTO studentRequestRentalDTO){
-        return StudentRequestMapper.toEntity(studentRequestRentalDTO,studentDao,sportAreaDao);
-    }
 
     @Override
     public void addRequest(StudentRequestRentalDTO studentRequestRentalDTO) {
-        studentRequestRentalDao.save(dtoToEntity(studentRequestRentalDTO));
+        studentRequestRentalDao.save(dtoToEntity(studentRequestRentalDTO,StudentRequestMapper::toEntity));
     }
     @Override
     public Result permitRentalRequest(Long id){
@@ -60,26 +56,43 @@ public class StudentRequestRentalRentalManager implements IStudentRequestRentalS
     private boolean saveRental(StudentRequestRental studentRequestRental){
         try {
             Rental rental = new Rental();
+            Mail mail = new Mail();
+
             rental.setEndTime(studentRequestRental.getEndTime());
             rental.setRentalDate(studentRequestRental.getRentalDate());
             rental.setStartTime(studentRequestRental.getStartTime());
             rental.setStudent(studentRequestRental.getStudent());
             rental.setSportArea(studentRequestRental.getSportArea());
             rentalDao.save(rental);
-            mailService.permitRentalMailSending(studentRequestRental.getStudent().getMail(),studentRequestRental.getSportArea().getSporType()
-                    ,studentRequestRental.getStartTime(),studentRequestRental.getEndTime());
+
+            mail.setFromMail("cengdme@gmail.com");
+            mail.setToMail(studentRequestRental.getStudent().getMail());
+            mail.setSubject("İstek Cevabı");
+            mail.setText(String.valueOf(studentRequestRental.getSportArea().getSporType() + " alanı "
+                    + studentRequestRental.getRentalDate() + " tarihinde "
+                    + studentRequestRental.getStartTime() + " ile " + studentRequestRental.getEndTime() + "" +
+                    "arasında isteğiniz doğrultusunda onaylanmıştır"));
             return true;
         }catch (Exception e){
             return false;
         }
     }
+    @Override
     public Result rejectedRentalRequest(Long id){
         try {
             StudentRequestRental studentRequestRental = studentRequestRentalDao.getById(id);
+            Mail mail = new Mail();
+
             studentRequestRental.setStatus(RequestStatus.Rejected);
             studentRequestRentalDao.save(studentRequestRental);
-            mailService.rejectedRentalMailSending(studentRequestRental.getStudent().getMail(),studentRequestRental.getSportArea().getSporType()
-                    ,studentRequestRental.getStartTime(),studentRequestRental.getEndTime());
+
+            mail.setFromMail("cengdme@gmail.com");
+            mail.setToMail(studentRequestRental.getStudent().getMail());
+            mail.setSubject("İstek Cevabı");
+            mail.setText(String.valueOf(studentRequestRental.getSportArea().getSporType() + " alanı "
+                    + studentRequestRental.getRentalDate() + " tarihinde "
+                    + studentRequestRental.getStartTime() + " ile " + studentRequestRental.getEndTime() + "" +
+                    "arasında isteğiniz doğrultusunda reddedilmiştir"));
             return new SuccesResult("İstek reddedildi, red maili gönderildi",true);
         } catch (Exception e) {
             return new ErrorResult("Hata oluştu",false);

@@ -1,7 +1,8 @@
-package com.dme.DormitoryProject.Manager.Concrete;
+package com.dme.DormitoryProject.business.manager;
 
-import com.dme.DormitoryProject.Manager.Abstract.IRentalService;
-import com.dme.DormitoryProject.Manager.Abstract.IStudentRequestRentalService;
+import com.dme.DormitoryProject.business.services.IRentalService;
+import com.dme.DormitoryProject.business.services.IStudentRequestRentalService;
+import com.dme.DormitoryProject.base.BaseClass;
 import com.dme.DormitoryProject.dtos.rentalDtos.RentalDTO;
 import com.dme.DormitoryProject.dtos.rentalDtos.RentalMapper;
 import com.dme.DormitoryProject.dtos.sportAreaDtos.SportAreaDTO;
@@ -24,7 +25,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class RentalManager implements IRentalService {
+public class RentalManager extends BaseClass implements IRentalService {
 
     private IRentalDao rentalDao;
     private ILgoDao lgoDao;
@@ -62,43 +63,11 @@ public class RentalManager implements IRentalService {
         log.setMessage(message);
         lgoDao.save(log);
     }
-    public List<RentalDTO> entityToDtoList(List<Rental> rentals){
-        List<RentalDTO> rentalDTOS = new ArrayList<>();
-
-        for (Rental rental : rentals) {
-            RentalDTO dto = RentalMapper.toDTO(rental);
-            rentalDTOS.add(dto);
-        }
-        return rentalDTOS;
-    }
-    public List<SportAreaDTO> entityToDtoListSportArea(List<SportArea> sportAreas){
-        List<SportAreaDTO> sportAreaDTOS = new ArrayList<>();
-
-        for (SportArea sportArea : sportAreas) {
-            SportAreaDTO dto = SportAreaMapper.toDTO(sportArea);
-            sportAreaDTOS.add(dto);
-            String a = new String("1");
-            String b = "1";
-
-
-        }
-        return sportAreaDTOS;
-    }
-    public RentalDTO entityToDtoObject(Rental rental){
-        return RentalMapper.toDTO(rental);
-    }
-    public SportAreaDTO entityToDtoObjectSportArea(SportArea sportArea){
-        return SportAreaMapper.toDTO(sportArea);
-    }
-
-    public Rental dtoToEntity(RentalDTO rentalDTO){
-        return RentalMapper.toEntity(rentalDTO,studentDao,sportAreaDao);
-    }
 
     @Override
     public Result getAll(){
         try{
-            List<RentalDTO> rentalDTOS = entityToDtoList(rentalDao.findAll());
+            List<RentalDTO> rentalDTOS = entityToDtoList(rentalDao.findAll(),RentalMapper::toDTO);
             LogLevelSave(2,"Kiralamalar listelendi");
             return new SuccessDataResult("Tüm kiralamalar listelendi",true,rentalDTOS);
         } catch (Exception e) {
@@ -109,7 +78,7 @@ public class RentalManager implements IRentalService {
     @Override
     public Result getById(Long id){
         try {
-            RentalDTO rentalDTO= entityToDtoObject(rentalDao.getById(id));
+            RentalDTO rentalDTO= entityToDto(rentalDao.getById(id),RentalMapper::toDTO);
             LogLevelSave(2,"İd değerine göre kiralama listelendi");
             return new SuccessDataResult("İd değerine göre kiralama listelendi",true,rentalDTO);
         } catch (Exception e) {
@@ -122,7 +91,7 @@ public class RentalManager implements IRentalService {
         List<Rental> rentals = rentalDao.findByStartTimeAfter(startTime);
         if (rentals !=  null && !rentals.isEmpty()){
             LogLevelSave(3, "Girilen saatten sonra olan kiralamalar k-listelendi");
-            return new SuccessDataResult("Girilen saatten sonra olan kiralamalar k-listelendi",true,entityToDtoList(rentals));
+            return new SuccessDataResult("Girilen saatten sonra olan kiralamalar k-listelendi",true,entityToDtoList(rentals,RentalMapper::toDTO));
         }
         LogLevelSave(1,"Kiralama bulunamadı");
         return new ErrorResult("Kiralama bulunamadı",false);
@@ -151,7 +120,7 @@ public class RentalManager implements IRentalService {
     public Result updateRental(Long id, RentalDTO rentalDTO){
         try{
             Rental editRental = rentalDao.getById(id);
-            Rental rental = dtoToEntity(rentalDTO);
+            Rental rental = dtoToEntity(rentalDTO,RentalMapper::toEntity);
             if (rental.getSportArea().getIsDeleted() || rental.getStudent().isDeleted()){
                 LogLevelSave(1,"Kiralama güncelleme işleminde, ilişki olacağı tablo kaldırılmış.");
                 return new ErrorResult("Kiralama güncelleme işleminde, ilişki olacağı tablo kaldırılmış.",false);
@@ -196,7 +165,7 @@ public class RentalManager implements IRentalService {
 
     @Override
     public Result emptyField(LocalTime startTime, LocalTime endTime, LocalDate date){
-        List<SportAreaDTO> sportAreaDTOS = entityToDtoListSportArea(rentalDao.findOverlappingRentals(startTime,endTime,date));
+        List<SportAreaDTO> sportAreaDTOS = entityToDtoList(rentalDao.findOverlappingRentals(startTime,endTime,date),SportAreaMapper::toDTO);
         return new SuccessDataResult("Girilen saatler arasında boş olan sahalar",true,sportAreaDTOS);
     }
 }
