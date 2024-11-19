@@ -1,4 +1,4 @@
-package com.dme.DormitoryProject.controller;
+package com.dme.DormitoryProject.controllers;
 
 import com.dme.DormitoryProject.business.services.IGoogleLoginService;
 import com.dme.DormitoryProject.response.Result;
