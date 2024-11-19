@@ -28,10 +28,10 @@ public class JsonFileReader {
         }
     }
 
-    public static String getMessage(String statusCode, String lang) {
+    public static String getMessage(String statusCode, String language) {
         // Get the message based on status code and language
-        if (statusCodes.containsKey(statusCode) && statusCodes.get(statusCode).containsKey(lang)) {
-            return statusCodes.get(statusCode).get(lang);
+        if (statusCodes.containsKey(statusCode) && statusCodes.get(statusCode).containsKey(language)) {
+            return statusCodes.get(statusCode).get(language);
         } else {
             return "Message not found";  // Default message in case of error
         }
