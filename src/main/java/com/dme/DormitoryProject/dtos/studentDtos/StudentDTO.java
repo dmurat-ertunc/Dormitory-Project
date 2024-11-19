@@ -1,85 +1,75 @@
-package com.dme.DormitoryProject.dtos.studentDtos;
+package com.dme.DormitoryProject.entity;
 
-import jakarta.persistence.Column;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.*;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-public class StudentDTO implements Serializable {
-    private Long id;
-    @NotNull(message = "Öğrenci isim alanı boş bırakılamaz")
-    @NotEmpty(message = "Öğrenci isim alanı boş bırakılamaz")
+
+@Entity
+@Table(name = "studentTbl")
+public class Student extends BaseEntity{
+
     private String name;
-    @NotNull(message = "Öğrenci soyisim alanı boş bırakılamaz")
-    @NotEmpty(message = "Öğrenci soyisim alanı boş bırakılamaz")
     private String surName;
-    @NotNull(message = "Öğrenci kimlik numarası alanı boş bırakılamaz")
-    @NotEmpty(message = "Öğrenci kimlik numarası alanı boş bırakılamaz")
-    @Size(min = 11, max = 11, message = "Değer 11 haneli olmalıdır.")
     private String tcNo;
-    @NotNull(message = "Öğrenci mail alanı boş bırakılamaz")
-    @NotEmpty(message = "Öğrenci mail alanı boş bırakılamaz")
     private String mail;
-    @NotNull(message = "Öğrenci doğum tarihi alanı boş bırakılamaz")
     private LocalDate birthDate;
-    @NotNull(message = "Öğrenci üniversitesi boş bırakılamaz")
-    @NotEmpty(message = "Öğrenci üniversitesi boş bırakılamaz")
-    private Set<Long> universityIds = new HashSet<>(); // Üniversite ID'leri
-    private Set<String> universityName = new HashSet<>();
-    private boolean verify;
+    @ManyToMany
+    @JoinTable(
+            name = "student_university", // ilişkiyi temsil eden ara tablo
+            joinColumns = @JoinColumn(name = "student_id"), // öğrenci ile ilgili sütun
+            inverseJoinColumns = @JoinColumn(name = "univercity_id") // üniversiteyi ile ilgili sütun
+    )
+    //@JsonManagedReference
+    private Set<University> university = new HashSet<>();
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Rental> rentalList;
+    private boolean verification = false;
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<StudentRequestRental> studentRequestRentalList;
+    @Column(nullable = true)
+    private int score = 100;
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<EntryExit> entryExits;
 
-    public StudentDTO(Long id, String name, String surName, String tcNo, String mail, LocalDate birthDate, Set<String> universityName, Set<Long> universityIds, boolean verify) {
-        this.id = id;
-        this.name = name;
-        this.surName = surName;
-        this.tcNo = tcNo;
-        this.mail = mail;
-        this.birthDate = birthDate;
-        this.universityName = universityName;
-        this.universityIds = universityIds;
-        this.verify = verify;
+    public void setVerification(boolean verification) {
+        this.verification = verification;
     }
-
-    public StudentDTO(){
-
+    public boolean getVerification() {
+        return verification;
     }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
+    public String getName(){
         return name;
     }
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String name){
+        this.name=name;
     }
-    public String getSurName() {
+    public String getSurName(){
         return surName;
     }
-    public void setSurName(String surName) {
-        this.surName = surName;
+    public void setSurName(String surName){
+        this.surName=surName;
     }
-    public String getTcNo() {
+    public String getTcNo(){
         return tcNo;
     }
-    public void setTcNo(String tcNo) {
-        this.tcNo = tcNo;
+    public void setTcNo(String tcNo){
+        this.tcNo=tcNo;
     }
-    public String getMail() {
+    public String getMail(){
         return mail;
     }
-    public void setMail(String mail) {
-        this.mail = mail;
+    public void setMail(String mail){
+        this.mail=mail;
+    }
+    public Set<University> getUniversity() {
+        return university;
+    }
+    public void setUniversity(Set<University> university) {
+        this.university = university;
     }
     public LocalDate getBirthDate() {
         return birthDate;
@@ -87,22 +77,21 @@ public class StudentDTO implements Serializable {
     public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
-    public Set<Long> getUniversityIds() {
-        return universityIds;
+    public List<Rental> getRentalList() {
+        return rentalList;
     }
-    public void setUniversityIds(Set<Long> universityIds) {
-        this.universityIds = universityIds;
+    public void setRentalList(List<Rental> rentalList) {
+        this.rentalList = rentalList;
     }
-    public Set<String> getUniversityName() {
-        return universityName;
+    public int getScore() {
+        return score;
     }
-    public void setUniversityName(Set<String> universityName) {
-        this.universityName = universityName;
-    }
-    public boolean isVerify() {
-        return verify;
-    }
-    public void setVerify(boolean verify) {
-        this.verify = verify;
+    public void setScore(int score) {
+        this.score = score;
     }
 }
+
+
+
+//@OneToOne(cascade = CascadeType.ALL)   //Bir kullanıcı kaydedildiğinde veya silindiğinde, ilişkili adres entity'si de aynı işlemi geçirecektir.
+//@JoinColumn(name = "universityId", referencedColumnName = "id") //Studebt tablosunda, University tablosundaki id sütununu referans alan universityId isimli bir yabancı anahtar oluşturur.
