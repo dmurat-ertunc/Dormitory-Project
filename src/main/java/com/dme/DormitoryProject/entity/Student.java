@@ -30,6 +30,10 @@ public class Student extends BaseEntity{
     private boolean verification = false;
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<StudentRequestRental> studentRequestRentalList;
+    @Column(nullable = true)
+    private int score = 100;
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<EntryExit> entryExits;
 
     public void setVerification(boolean verification) {
         this.verification = verification;
@@ -78,6 +82,12 @@ public class Student extends BaseEntity{
     }
     public void setRentalList(List<Rental> rentalList) {
         this.rentalList = rentalList;
+    }
+    public int getScore() {
+        return score;
+    }
+    public void setScore(int score) {
+        this.score = score;
     }
 }
 
