@@ -13,6 +13,7 @@ import com.dme.DormitoryProject.repository.IStudentDao;
 import com.dme.DormitoryProject.response.ErrorResult;
 import com.dme.DormitoryProject.response.Result;
 import com.dme.DormitoryProject.response.SuccessDataResult;
+import com.dme.DormitoryProject.statusCode.JsonFileReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -25,8 +26,6 @@ import java.util.Optional;
 
 @Service
 public class EntryExitManager extends BaseClass implements IEntryExitService {
-
-    File jsonFile = new File("src/main/resources/statusCode/statusCode.json");
 
     private IEntryExitDao entryExitDao;
     private IStudentDao studentDao;
@@ -41,7 +40,7 @@ public class EntryExitManager extends BaseClass implements IEntryExitService {
     public Result getAll(){
         try {
             List<EntryExitDTO> entryExits = entityToDtoList(entryExitDao.findAll(), EntryExitMapper::toDto);
-            return new SuccessDataResult("Tüm giriş çıkışlar listelendi.",true,entryExits);
+            return new SuccessDataResult(JsonFileReader.getMessage("200","en"),true,entryExits);
         } catch (Exception e) {
             return new ErrorResult("Bir hata oluştu",false);
         }

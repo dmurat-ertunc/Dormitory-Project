@@ -1,19 +1,19 @@
 {
   "200": {
     "en": "OK",
-    "tr": "Tamam"
+    "tr": "Listeleme başarılı"
   },
   "201": {
-    "en": "Created",
-    "tr": "Oluşturuldu"
+    "en": "Created successfull",
+    "tr": "Ekleme başarılı"
   },
-  "400": {
-    "en": "Bad Request",
-    "tr": "Geçersiz İstek"
+  "202": {
+    "en": "Updated successfull",
+    "tr": "Güncelleme başarılı"
   },
-  "401": {
-    "en": "Unauthorized",
-    "tr": "Yetkisiz"
+  "203": {
+    "en": "Deleted successfull",
+    "tr": "Silme başarılı"
   },
   "403": {
     "en": "Forbidden",
