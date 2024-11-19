@@ -6,8 +6,19 @@ import com.dme.DormitoryProject.entity.StudentRequestRental;
 import com.dme.DormitoryProject.repository.ISportAreaDao;
 import com.dme.DormitoryProject.repository.IStudentDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class StudentRequestMapper {
+
+    private static IStudentDao studentDao;
+    private static ISportAreaDao sportAreaDao;
+
+    public StudentRequestMapper(ISportAreaDao sportAreaDao, IStudentDao studentDao){
+        this.sportAreaDao=sportAreaDao;
+        this.studentDao=studentDao;
+    }
+
     public static StudentRequestRentalDTO toDTO(StudentRequestRental studentRequestRental){
         StudentRequestRentalDTO studentRequestRentalDTO = new StudentRequestRentalDTO();
 
@@ -29,7 +40,7 @@ public class StudentRequestMapper {
         return studentRequestRentalDTO;
     }
 
-    public static StudentRequestRental toEntity(StudentRequestRentalDTO studentRequestRentalDTO, IStudentDao studentDao, ISportAreaDao sportAreaDao){
+    public static StudentRequestRental toEntity(StudentRequestRentalDTO studentRequestRentalDTO){
         StudentRequestRental studentRequestRental = new StudentRequestRental();
 
         studentRequestRental.setEndTime(studentRequestRentalDTO.getEndTime());
