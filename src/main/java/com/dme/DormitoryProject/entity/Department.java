@@ -12,6 +12,8 @@ public class Department extends BaseEntity{
     private String name;
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Staff> staffList;
+    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<PersonnelRequestForm> personnelRequestForms;
 
     public String getName() {
         return name;
@@ -24,5 +26,11 @@ public class Department extends BaseEntity{
     }
     public void setStaffList(List<Staff> staffList) {
         this.staffList = staffList;
+    }
+    public List<PersonnelRequestForm> getPersonnelRequestForms() {
+        return personnelRequestForms;
+    }
+    public void setPersonnelRequestForms(List<PersonnelRequestForm> personnelRequestForms) {
+        this.personnelRequestForms = personnelRequestForms;
     }
 }
