@@ -3,12 +3,20 @@ package com.dme.DormitoryProject.dtos.universityDtos;
 import com.dme.DormitoryProject.entity.Student;
 import com.dme.DormitoryProject.entity.University;
 import com.dme.DormitoryProject.repository.IStudentDao;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Component
 public class UniversityMapper {
+    private static IStudentDao studentDao;
+
+    public UniversityMapper(IStudentDao studentDao){
+        this.studentDao=studentDao;
+    }
+
     public static UniversityDTO toDTO(University university) {
         UniversityDTO dto = new UniversityDTO();
         dto.setId(university.getId());
@@ -30,7 +38,7 @@ public class UniversityMapper {
         return dto;
     }
 
-    public static University toEntity(UniversityDTO dto, IStudentDao studentDao) {
+    public static University toEntity(UniversityDTO dto) {
         University university = new University();
         university.setName(dto.getName());
         university.setmail(dto.getMail());
