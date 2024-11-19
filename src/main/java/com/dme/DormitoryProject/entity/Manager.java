@@ -18,6 +18,11 @@ public class Manager extends BaseEntity{
     private String phoneNumber;
     private String title;
     private int salary;
+    @OneToMany(mappedBy = "manager", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<PersonnelRequestForm> personnelRequestForms;
+    @OneToMany(mappedBy = "requestorManager", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<PersonnelRequestForm> personnelRequestForms2;
+
 
 
     public List<Staff> getStaffList() {
@@ -74,6 +79,14 @@ public class Manager extends BaseEntity{
 
     public void setSalary(int salary) {
         this.salary = salary;
+    }
+
+    public List<PersonnelRequestForm> getManagers() {
+        return personnelRequestForms;
+    }
+
+    public void setManagers(List<PersonnelRequestForm> personnelRequestForms) {
+        this.personnelRequestForms = personnelRequestForms;
     }
 
 
