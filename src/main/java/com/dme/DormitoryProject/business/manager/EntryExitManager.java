@@ -4,11 +4,16 @@ import com.dme.DormitoryProject.base.BaseClass;
 import com.dme.DormitoryProject.business.services.IEntryExitService;
 import com.dme.DormitoryProject.dtos.entryExit.EntryExitDTO;
 import com.dme.DormitoryProject.dtos.entryExit.EntryExitMapper;
+import com.dme.DormitoryProject.dtos.punishment.PunishmentDTO;
+import com.dme.DormitoryProject.dtos.punishment.PunishmentMapper;
 import com.dme.DormitoryProject.dtos.studentDtos.StudentMapper;
 import com.dme.DormitoryProject.entity.EntryExit;
+import com.dme.DormitoryProject.entity.Punishments;
 import com.dme.DormitoryProject.entity.Student;
 import com.dme.DormitoryProject.enums.EntryExit.EntryOrExit;
+import com.dme.DormitoryProject.enums.punishment.PunishmentType;
 import com.dme.DormitoryProject.repository.IEntryExitDao;
+import com.dme.DormitoryProject.repository.IPunishmentDao;
 import com.dme.DormitoryProject.repository.IStudentDao;
 import com.dme.DormitoryProject.response.ErrorResult;
 import com.dme.DormitoryProject.response.Result;
@@ -29,11 +34,13 @@ public class EntryExitManager extends BaseClass implements IEntryExitService {
 
     private IEntryExitDao entryExitDao;
     private IStudentDao studentDao;
+    private IPunishmentDao punishmentDao;
 
     @Autowired
-    public EntryExitManager(IEntryExitDao entryExitDao, IStudentDao studentDao){
+    public EntryExitManager(IEntryExitDao entryExitDao, IStudentDao studentDao, IPunishmentDao punishmentDao){
         this.entryExitDao=entryExitDao;
         this.studentDao=studentDao;
+        this.punishmentDao=punishmentDao;
     }
 
     @Override
@@ -42,7 +49,7 @@ public class EntryExitManager extends BaseClass implements IEntryExitService {
             List<EntryExitDTO> entryExits = entityToDtoList(entryExitDao.findAll(), EntryExitMapper::toDto);
             return new SuccessDataResult(JsonFileReader.getMessage("200","en"),true,entryExits);
         } catch (Exception e) {
-            return new ErrorResult("Bir hata oluştu",false);
+            return new ErrorResult(JsonFileReader.getMessage("501","tr"),false);
         }
     }
 
@@ -57,6 +64,7 @@ public class EntryExitManager extends BaseClass implements IEntryExitService {
             return new ErrorResult("Öğrenci zaten içerde",false);
         }
         if (checkEntryTimeControl()){
+            addPenaltyStudent(student,PunishmentType.Geç_Kaldı);
             int newScore = student.getScore() - 10;
             student.setScore(newScore);
             studentDao.save(student);
@@ -88,12 +96,12 @@ public class EntryExitManager extends BaseClass implements IEntryExitService {
         if (entryExit.get().getEntryExit() == EntryOrExit.Exit){
             return "outside";
         }
-        return "Bir hata oluştu";
+        return JsonFileReader.getMessage("501","tr");
     }
 
     private boolean checkEntryTimeControl(){
-        //LocalTime currentTime = LocalTime.of(23,30,00);
-        LocalTime currentTime = LocalTime.now();
+        LocalTime currentTime = LocalTime.of(23,30,00);
+        //LocalTime currentTime = LocalTime.now();
         LocalTime startTime = LocalTime.of(23, 0); // 23:00:00
         LocalTime endTime = LocalTime.of(6, 0);   // 06:00:00
 
@@ -114,6 +122,17 @@ public class EntryExitManager extends BaseClass implements IEntryExitService {
                 studentDao.save(student);
             }
         }
+        for (Student student : didntComeStudents){
+            addPenaltyStudent(student,PunishmentType.Gelmedi);
+        }
+    }
 
+    private void addPenaltyStudent(Student student, PunishmentType punishmentType){
+        PunishmentDTO punishmentDto = new PunishmentDTO();
+        punishmentDto.setStudentId(student.getId());
+        punishmentDto.setPenaltyScore(-20);
+        punishmentDto.setPunishmentTime(LocalTime.of(6, 0));
+        punishmentDto.setPunishmentType(punishmentType);
+        punishmentDao.save(dtoToEntity(punishmentDto, PunishmentMapper::toEntity));
     }
 }

@@ -26,5 +26,9 @@
   "500": {
     "en": "Internal Server Error",
     "tr": "Sunucu Hatası"
+  },
+  "501": {
+    "en": "An error occured",
+    "tr": "Bir hata oluştu"
   }
 }
