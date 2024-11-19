@@ -1,0 +1,30 @@
+{
+  "200": {
+    "en": "OK",
+    "tr": "Tamam"
+  },
+  "201": {
+    "en": "Created",
+    "tr": "Oluşturuldu"
+  },
+  "400": {
+    "en": "Bad Request",
+    "tr": "Geçersiz İstek"
+  },
+  "401": {
+    "en": "Unauthorized",
+    "tr": "Yetkisiz"
+  },
+  "403": {
+    "en": "Forbidden",
+    "tr": "Yasaklandı"
+  },
+  "404": {
+    "en": "Not Found",
+    "tr": "Bulunamadı"
+  },
+  "500": {
+    "en": "Internal Server Error",
+    "tr": "Sunucu Hatası"
+  }
+}

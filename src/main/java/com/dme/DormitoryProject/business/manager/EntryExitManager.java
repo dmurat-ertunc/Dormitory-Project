@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,8 @@ import java.util.Optional;
 
 @Service
 public class EntryExitManager extends BaseClass implements IEntryExitService {
+
+    File jsonFile = new File("src/main/resources/statusCode/statusCode.json");
 
     private IEntryExitDao entryExitDao;
     private IStudentDao studentDao;
@@ -99,7 +102,7 @@ public class EntryExitManager extends BaseClass implements IEntryExitService {
         return isNotInRange;
     }
 
-    @Scheduled(cron = "30 02 14 * * ?")
+    @Scheduled(cron = "30 20 11 * * ?")
     private void whichStudentOutside(){
         List<Student> studentList = studentDao.findAll();
         List<Student> didntComeStudents = new ArrayList<>();
@@ -112,5 +115,6 @@ public class EntryExitManager extends BaseClass implements IEntryExitService {
                 studentDao.save(student);
             }
         }
+
     }
 }
