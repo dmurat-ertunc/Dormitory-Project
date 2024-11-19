@@ -16,4 +16,6 @@ public interface IUserDao extends JpaRepository<User,Long> {
     String findUserNameByEmail(@Param("mail") String mail);
     @Query("SELECT u FROM User u WHERE u.mail = :mail")
     User findUserByEmail(@Param("mail") String mail);
+    @Query("SELECT u FROM User u WHERE u.userName = :username")
+    User findUserByUsername(@Param("username") String username);
 }
