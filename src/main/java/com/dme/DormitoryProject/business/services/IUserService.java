@@ -1,5 +1,8 @@
 package com.dme.DormitoryProject.business.services;
 
+import com.dme.DormitoryProject.dtos.auth.PasswordChangeDTO;
+import com.dme.DormitoryProject.response.Result;
+
 import java.util.Map;
 
 public interface IUserService<T> {
@@ -7,4 +10,5 @@ public interface IUserService<T> {
     void saveGoogleUser(String name, String surName,String mail);
     void deleteDormitoryUser(String mail);
     void updateDormitoryUser(Map<String,String> updateUser);
+    Result passwordChangeDormitoryUser(PasswordChangeDTO passwordChangeDTO);
 }
