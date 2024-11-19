@@ -68,7 +68,7 @@ public class EntryExitManager extends BaseClass implements IEntryExitService {
 
     @Override
     public Result exit(Long id) {
-        if (inOrOutControl(id).equals( "outside")){
+        if (inOrOutControl(id)  == "outside"){
             return new ErrorResult("Öğrenci zaten dışarıda",false);
         }
         EntryExit entryExit = new EntryExit();
