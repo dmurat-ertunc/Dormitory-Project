@@ -115,6 +115,12 @@ public class RentalManager extends BaseClass implements IRentalService {
             Student student = studentDao.findByMail(user.getMail());// otantike olan student'ın verileri
 
             if (student.getScore() < 20){
+                Mail mail = new Mail();
+                mail.setFromMail("cengdme@gmail.com");
+                mail.setToMail(student.getMail());
+                mail.setSubject("Saha Kirlama Talebi");
+                mail.setText("Saha kiralama isteğiniz yetersiz puandan dolayı reddeilmiştir");
+                sendMail(mail);
                 return new ErrorResult(JsonFileReader.getMessage("566","tr"),false);
             }
 
