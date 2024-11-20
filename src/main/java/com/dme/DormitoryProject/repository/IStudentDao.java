@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 @Repository
 public interface IStudentDao extends JpaRepository<Student,Long> {
@@ -24,6 +25,8 @@ public interface IStudentDao extends JpaRepository<Student,Long> {
     @Query("SELECT s FROM Student s WHERE s.id = :id")
     Student findStudentById(@Param("id") Long id);
     Student findByMail(String mail);
+    @Query("SELECT DISTINCT s FROM Student s LEFT JOIN s.punishments p WHERE p IS NULL OR p.punishmentTime < :thirtyDaysAgo")
+    List<Student> findStudentsWithNoPunishmentsInLast30Days(@Param("thirtyDaysAgo") LocalDateTime thirtyDaysAgo);
 
 
 }
