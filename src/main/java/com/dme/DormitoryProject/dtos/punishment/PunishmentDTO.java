@@ -6,6 +6,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -13,6 +14,7 @@ import java.time.LocalTime;
 public class PunishmentDTO {
     private Long id;
     private LocalTime punishmentTime;
+    @NotNull(message = "Ceza alan öğrenci girilmesi zorunlu")
     private Long studentId;
     private LocalDate studentBirthDate;
     private String studentMail;
@@ -20,6 +22,7 @@ public class PunishmentDTO {
     private String studentSurName;
     private String studentTcNo;
     private boolean studentVerify;
+    @NotNull(message = "Ceza türü girilmesi zorunlu")
     private Long punishmentDefinitionsId;
     private String punismentDefinitionsDescription;
     private int punismentDefinitionsPenaltyScore;
