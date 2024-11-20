@@ -64,7 +64,7 @@ public class EntryExitManager extends BaseClass implements IEntryExitService {
             return new ErrorResult("Öğrenci zaten içerde",false);
         }
         if (checkEntryTimeControl()){
-            addPenaltyStudent(student,PunishmentType.Geç_Kaldı);
+            addPenaltyStudent(student,PunishmentType.Geç_Kaldı,-10,LocalTime.now());
             int newScore = student.getScore() - 10;
             student.setScore(newScore);
             studentDao.save(student);
@@ -100,8 +100,8 @@ public class EntryExitManager extends BaseClass implements IEntryExitService {
     }
 
     private boolean checkEntryTimeControl(){
-        LocalTime currentTime = LocalTime.of(23,30,00);
-        //LocalTime currentTime = LocalTime.now();
+        //LocalTime currentTime = LocalTime.of(23,30,00);
+        LocalTime currentTime = LocalTime.now();
         LocalTime startTime = LocalTime.of(23, 0); // 23:00:00
         LocalTime endTime = LocalTime.of(6, 0);   // 06:00:00
 
@@ -109,7 +109,7 @@ public class EntryExitManager extends BaseClass implements IEntryExitService {
         return isNotInRange;
     }
 
-    @Scheduled(cron = "30 20 11 * * ?")
+    @Scheduled(cron = "40 03 09 * * ?")
     private void whichStudentOutside(){
         List<Student> studentList = studentDao.findAll();
         List<Student> didntComeStudents = new ArrayList<>();
@@ -123,15 +123,15 @@ public class EntryExitManager extends BaseClass implements IEntryExitService {
             }
         }
         for (Student student : didntComeStudents){
-            addPenaltyStudent(student,PunishmentType.Gelmedi);
+            addPenaltyStudent(student,PunishmentType.Gelmedi,-20,LocalTime.of(6,0,0));
         }
     }
 
-    private void addPenaltyStudent(Student student, PunishmentType punishmentType){
+    private void addPenaltyStudent(Student student, PunishmentType punishmentType, int penaltScore, LocalTime time){
         PunishmentDTO punishmentDto = new PunishmentDTO();
         punishmentDto.setStudentId(student.getId());
-        punishmentDto.setPenaltyScore(-20);
-        punishmentDto.setPunishmentTime(LocalTime.of(6, 0));
+        punishmentDto.setPenaltyScore(penaltScore);
+        punishmentDto.setPunishmentTime(time);
         punishmentDto.setPunishmentType(punishmentType);
         punishmentDao.save(dtoToEntity(punishmentDto, PunishmentMapper::toEntity));
     }

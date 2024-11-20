@@ -3,7 +3,9 @@ package com.dme.DormitoryProject.dtos.punishment;
 import com.dme.DormitoryProject.entity.Punishments;
 import com.dme.DormitoryProject.repository.IStudentDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class PunishmentMapper {
 
     @Autowired
@@ -39,7 +41,7 @@ public class PunishmentMapper {
         punishments.setPunishmentTime(punishmentDTO.getPunishmentTime());
         punishments.setPunishmentType(punishmentDTO.getPunishmentType());
         punishments.setPenaltyScore(punishmentDTO.getPenaltyScore());
-        punishments.setStudent(studentDao.getById(punishmentDTO.getStudentId()));
+        punishments.setStudent(studentDao.findStudentById(punishmentDTO.getStudentId()));
 
         return punishments;
     }
