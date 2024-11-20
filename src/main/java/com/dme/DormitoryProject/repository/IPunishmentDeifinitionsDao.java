@@ -5,5 +5,7 @@ import com.dme.DormitoryProject.entity.PunishmentDefinitions;
 import com.dme.DormitoryProject.entity.Punishments;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface IPunishmentDeifinitionsDao extends JpaRepository<PunishmentDefinitions,Long> {
 }

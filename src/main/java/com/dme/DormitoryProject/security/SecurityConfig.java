@@ -57,6 +57,7 @@ public class SecurityConfig {
                                 .requestMatchers("api/entryExit/**").permitAll()
                                 .requestMatchers("api/requests/**").permitAll()
                                 .requestMatchers("api/punishment/**").permitAll()
+                                .requestMatchers("api/punishmentDefinitions/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());
