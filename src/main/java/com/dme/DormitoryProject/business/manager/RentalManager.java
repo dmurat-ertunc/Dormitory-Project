@@ -3,6 +3,7 @@ package com.dme.DormitoryProject.business.manager;
 import com.dme.DormitoryProject.business.services.IRentalService;
 import com.dme.DormitoryProject.business.services.IStudentRequestRentalService;
 import com.dme.DormitoryProject.base.BaseClass;
+import com.dme.DormitoryProject.dtos.personelRequestFormDtos.PersonelRequestFormMapper;
 import com.dme.DormitoryProject.dtos.rentalDtos.RentalDTO;
 import com.dme.DormitoryProject.dtos.rentalDtos.RentalMapper;
 import com.dme.DormitoryProject.dtos.sportAreaDtos.SportAreaDTO;
@@ -14,7 +15,11 @@ import com.dme.DormitoryProject.response.ErrorResult;
 import com.dme.DormitoryProject.response.Result;
 import com.dme.DormitoryProject.response.SuccesResult;
 import com.dme.DormitoryProject.response.SuccessDataResult;
+import com.dme.DormitoryProject.statusCode.JsonFileReader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -34,12 +39,13 @@ public class RentalManager extends BaseClass implements IRentalService {
     private ISportAreaDao sportAreaDao;
     private IStudentRequestRentalService studentRequestRentalService;
     private IStudentRequestRentalDao studentRequestRentalDao;
+    private IUserDao userDao;
 
     @Autowired
     public RentalManager(IRentalDao rentalDao, ILgoDao lgoDao, ILogLevelDao logLevelDao,
                          IStudentDao studentDao, ISportAreaDao sportAreaDao,
                          IStudentRequestRentalService studentRequestRentalService,
-                         IStudentRequestRentalDao studentRequestRentalDao) {
+                         IStudentRequestRentalDao studentRequestRentalDao, IUserDao userDao) {
         this.rentalDao = rentalDao;
         this.lgoDao = lgoDao;
         this.logLevelDao = logLevelDao;
@@ -47,6 +53,7 @@ public class RentalManager extends BaseClass implements IRentalService {
         this.sportAreaDao = sportAreaDao;
         this.studentRequestRentalService = studentRequestRentalService;
         this.studentRequestRentalDao = studentRequestRentalDao;
+        this.userDao=userDao;
     }
 
     private LocalDateTime localDateTime(){
@@ -99,22 +106,37 @@ public class RentalManager extends BaseClass implements IRentalService {
 
     @Override
     public Result addRentalRequest(StudentRequestRentalDTO studentRequestRentalDTO){
-        List<SportArea> sportAreaList = new ArrayList<>();
-        List<SportArea> sportAreaList2 = new ArrayList<>();
-        sportAreaList = rentalDao.findOverlappingRentals(studentRequestRentalDTO.getStartTime(),studentRequestRentalDTO.getEndTime(),studentRequestRentalDTO.getRentalDate());
-        for (SportArea sportArea : sportAreaList){
-            if (sportArea.getId() == studentRequestRentalDTO.getSportAreaId()){
-                return new  ErrorResult("Bu saha bu saatler içinde dolu",false);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof UserDetails) { // CustomUserDetails, UserDetails'in bir özelleştirilmiş hali olmalı
+            String username = ((UserDetails) principal).getUsername(); // Username değerini al
+
+            User user = userDao.findUserByUsername(username);
+            Student student = studentDao.findByMail(user.getMail());// otantike olan student'ın verileri
+
+            if (student.getScore() < 20){
+                return new ErrorResult(JsonFileReader.getMessage("566","tr"),false);
             }
-        }
-        sportAreaList2 = studentRequestRentalDao.findOverlappingRentals(studentRequestRentalDTO.getStartTime(),studentRequestRentalDTO.getEndTime(),studentRequestRentalDTO.getRentalDate());
-        for (SportArea sportArea : sportAreaList){
-            if (sportArea.getId() == studentRequestRentalDTO.getSportAreaId()){
-                return new  ErrorResult("Bu sahaya bu saatler için zaten istek atılmış, başka bir saat aralığı belirleyin",false);
+
+            List<SportArea> sportAreaList = new ArrayList<>();
+            List<SportArea> sportAreaList2 = new ArrayList<>();
+            sportAreaList = rentalDao.findOverlappingRentals(studentRequestRentalDTO.getStartTime(),studentRequestRentalDTO.getEndTime(),studentRequestRentalDTO.getRentalDate());
+            for (SportArea sportArea : sportAreaList){
+                if (sportArea.getId() == studentRequestRentalDTO.getSportAreaId()){
+                    return new  ErrorResult("Bu saha bu saatler içinde dolu",false);
+                }
             }
+            sportAreaList2 = studentRequestRentalDao.findOverlappingRentals(studentRequestRentalDTO.getStartTime(),studentRequestRentalDTO.getEndTime(),studentRequestRentalDTO.getRentalDate());
+            for (SportArea sportArea : sportAreaList){
+                if (sportArea.getId() == studentRequestRentalDTO.getSportAreaId()){
+                    return new  ErrorResult("Bu sahaya bu saatler için zaten istek atılmış, başka bir saat aralığı belirleyin",false);
+                }
+            }
+            studentRequestRentalDTO.setStudentId(student.getId());
+            studentRequestRentalService.addRequest(studentRequestRentalDTO);
+            return new SuccesResult("Kiralama isteğiniz gönderildi, onaylanması halinde mail olarak size bildirilecektir",true);
         }
-        studentRequestRentalService.addRequest(studentRequestRentalDTO);
-        return new SuccesResult("Kiralama isteğiniz gönderildi, onaylanması halinde mail olarak size bildirilecektir",true);
+        return new ErrorResult(JsonFileReader.getMessage("403","tr"),false);
     }
     @Override
     public Result updateRental(Long id, RentalDTO rentalDTO){

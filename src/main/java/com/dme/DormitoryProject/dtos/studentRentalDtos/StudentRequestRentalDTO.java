@@ -21,8 +21,6 @@ public class StudentRequestRentalDTO {
     @NotEmpty(message = "Kiralama bitiş saati alanı boş bırakılamaz")
     @NotNull(message = "Kiralama bitiş saati alanı boş bırakılamaz")
     private LocalTime endTime;
-    @NotEmpty(message = "Kiralamanın bir öğrenci tarafından yapılması gerekmektedir")
-    @NotNull(message = "Kiralamanın bir öğrenci tarafından yapılması gerekmektedir")
     private Long studentId; // Student varlığının id'si
     private LocalDate studentBirthDate;
     private String studentMail;

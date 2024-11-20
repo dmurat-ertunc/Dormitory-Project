@@ -17,9 +17,13 @@
   },
   "403": {
     "en": "Forbidden",
-    "tr": "Yasaklandı"
+    "tr": "Yetki hatası"
   },
   "404": {
+    "en": "Not Found",
+    "tr": "Bulunamadı"
+  },
+  "405": {
     "en": "Not Found",
     "tr": "Bulunamadı"
   },
@@ -30,5 +34,29 @@
   "501": {
     "en": "An error occured",
     "tr": "Bir hata oluştu"
+  },
+  "561": {
+    "en": "An error occured",
+    "tr": "Öğrenci zaten içeride"
+  },
+  "562": {
+    "en": "An error occured",
+    "tr": "Öğrenci zaten dışarıda"
+  },
+  "563": {
+    "en": "An error occured",
+    "tr": "Öğrenci giriş yaptı"
+  },
+  "564": {
+    "en": "An error occured",
+    "tr": "Öğrenci giriş yaptı ancak geç kaldı"
+  },
+  "565": {
+  "en": "An error occured",
+  "tr": "Öğrenci çıkış yaptı"
+  },
+  "566": {
+    "en": "An error occured",
+    "tr": "Öğrenci puanı yetersiz"
   }
 }

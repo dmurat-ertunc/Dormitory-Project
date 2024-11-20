@@ -58,17 +58,17 @@ public class EntryExitManager extends BaseClass implements IEntryExitService {
         EntryExit entryExit = new EntryExit();
         entryExit.setStudent(studentDao.getById(id));
         Student student = studentDao.getById(id);
-        String message = "Öğrenci giriş yaptı.";
+        String message = JsonFileReader.getMessage("563","tr");
 
-        if (!(entryExitDao.existByStudentId(id).isEmpty()) && inOrOutControl(id) == "inside"){
-            return new ErrorResult("Öğrenci zaten içerde",false);
+        if (!(entryExitDao.existByStudentId(id).isEmpty()) && inOrOutControl(id).equals(JsonFileReader.getMessage("561","tr"))){
+            return new ErrorResult(JsonFileReader.getMessage("561","tr"),false);
         }
         if (checkEntryTimeControl()){
-            addPenaltyStudent(student,LocalTime.now());
+            addPenaltyStudent(student,LocalTime.now(),7L);
             int newScore = student.getScore() - 10;
             student.setScore(newScore);
             studentDao.save(student);
-            message = "Öğrenci giriş yaptı ancak geç kaldı.";
+            message = JsonFileReader.getMessage("564","tr");
         }
 
         entryExit.setEntryExit(EntryOrExit.Entry);
@@ -78,30 +78,30 @@ public class EntryExitManager extends BaseClass implements IEntryExitService {
 
     @Override
     public Result exit(Long id) {
-        if (inOrOutControl(id)  == "outside"){
-            return new ErrorResult("Öğrenci zaten dışarıda",false);
+        if (inOrOutControl(id).equals(JsonFileReader.getMessage("562","tr"))){
+            return new ErrorResult(JsonFileReader.getMessage("562","tr"),false);
         }
         EntryExit entryExit = new EntryExit();
         entryExit.setStudent(studentDao.getById(id));
         entryExit.setEntryExit(EntryOrExit.Exit);
         entryExitDao.save(entryExit);
-        return new SuccessDataResult("Öğrenci çıkış yaptı",true,entityToDto(studentDao.getById(id), StudentMapper::toDto));
+        return new SuccessDataResult(JsonFileReader.getMessage("565","tr"),true,entityToDto(studentDao.getById(id), StudentMapper::toDto));
     }
 
     private String inOrOutControl(Long id){
         Optional<EntryExit> entryExit = entryExitDao.findLatestEntryExitByStudentId(id);
         if (entryExit.get().getEntryExit() == EntryOrExit.Entry){
-            return "inside";
+            return JsonFileReader.getMessage("561","tr");
         }
         if (entryExit.get().getEntryExit() == EntryOrExit.Exit){
-            return "outside";
+            return JsonFileReader.getMessage("562","tr");
         }
         return JsonFileReader.getMessage("501","tr");
     }
 
     private boolean checkEntryTimeControl(){
-        //LocalTime currentTime = LocalTime.of(23,30,00);
-        LocalTime currentTime = LocalTime.now();
+        LocalTime currentTime = LocalTime.of(23,30,00);
+        //LocalTime currentTime = LocalTime.now();
         LocalTime startTime = LocalTime.of(23, 0); // 23:00:00
         LocalTime endTime = LocalTime.of(6, 0);   // 06:00:00
 
@@ -109,7 +109,7 @@ public class EntryExitManager extends BaseClass implements IEntryExitService {
         return isNotInRange;
     }
 
-    @Scheduled(cron = "40 03 09 * * ?")
+    @Scheduled(cron = "00 00 06 * * ?")
     private void whichStudentOutside(){
         List<Student> studentList = studentDao.findAll();
         List<Student> didntComeStudents = new ArrayList<>();
@@ -123,12 +123,13 @@ public class EntryExitManager extends BaseClass implements IEntryExitService {
             }
         }
         for (Student student : didntComeStudents){
-            addPenaltyStudent(student,LocalTime.of(6,0,0));
+            addPenaltyStudent(student,LocalTime.of(6,0,0),8L);
         }
     }
 
-    private void addPenaltyStudent(Student student, LocalTime time){
+    private void addPenaltyStudent(Student student, LocalTime time,Long id){
         PunishmentDTO punishmentDto = new PunishmentDTO();
+        punishmentDto.setPunishmentDefinitionsId(id);
         punishmentDto.setStudentId(student.getId());
         punishmentDto.setPunishmentTime(time);
         punishmentDao.save(dtoToEntity(punishmentDto, PunishmentMapper::toEntity));

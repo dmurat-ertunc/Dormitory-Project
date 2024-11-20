@@ -47,10 +47,8 @@ public class SecurityConfig {
                                 .requestMatchers("api/auth/**").permitAll() // `antMatchers` yerine `requestMatchers` kullanılıyor
                                 .requestMatchers("api/departments/**").permitAll()
                                 .requestMatchers("api/google/**").permitAll()
-                                .requestMatchers("api/staffs/**").hasRole("DEFAULT")
-                                .requestMatchers("api/rentals/**").hasAnyRole("MANAGER","STAFF")
-                                .requestMatchers("api/rentals/addRentalRequest").hasRole("STUDENT")
-                                .requestMatchers("api/rentals/getAll").hasRole("STUDENT")
+                                .requestMatchers("api/staffs/**").permitAll()
+                                .requestMatchers("api/rentals/**").hasAnyRole("MANAGER","STAFF","STUDENT")
                                 .requestMatchers("api/request/**").hasRole("MANAGER")
                                 .requestMatchers("api/managers/**").permitAll()
                                 .requestMatchers("api/students/**").permitAll()
