@@ -64,7 +64,7 @@ public class EntryExitManager extends BaseClass implements IEntryExitService {
             return new ErrorResult("Öğrenci zaten içerde",false);
         }
         if (checkEntryTimeControl()){
-            addPenaltyStudent(student,PunishmentType.Geç_Kaldı,-10,LocalTime.now());
+            addPenaltyStudent(student,LocalTime.now());
             int newScore = student.getScore() - 10;
             student.setScore(newScore);
             studentDao.save(student);
@@ -123,16 +123,14 @@ public class EntryExitManager extends BaseClass implements IEntryExitService {
             }
         }
         for (Student student : didntComeStudents){
-            addPenaltyStudent(student,PunishmentType.Gelmedi,-20,LocalTime.of(6,0,0));
+            addPenaltyStudent(student,LocalTime.of(6,0,0));
         }
     }
 
-    private void addPenaltyStudent(Student student, PunishmentType punishmentType, int penaltScore, LocalTime time){
+    private void addPenaltyStudent(Student student, LocalTime time){
         PunishmentDTO punishmentDto = new PunishmentDTO();
         punishmentDto.setStudentId(student.getId());
-        punishmentDto.setPenaltyScore(penaltScore);
         punishmentDto.setPunishmentTime(time);
-        punishmentDto.setPunishmentType(punishmentType);
         punishmentDao.save(dtoToEntity(punishmentDto, PunishmentMapper::toEntity));
     }
 }

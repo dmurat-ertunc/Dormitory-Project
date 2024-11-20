@@ -12,10 +12,7 @@ import java.time.LocalTime;
 
 public class PunishmentDTO {
     private Long id;
-    @Enumerated(EnumType.STRING)
-    private PunishmentType punishmentType;
     private LocalTime punishmentTime;
-    private int penaltyScore;
     private Long studentId;
     private LocalDate studentBirthDate;
     private String studentMail;
@@ -23,19 +20,21 @@ public class PunishmentDTO {
     private String studentSurName;
     private String studentTcNo;
     private boolean studentVerify;
+    private Long punishmentDefinitionsId;
+    private String punismentDefinitionsDescription;
+    private int punismentDefinitionsPenaltyScore;
 
     public PunishmentDTO(){
 
     }
 
-    public PunishmentDTO(Long id,PunishmentType punishmentType, LocalTime punishmentTime,
-                         int penaltyScore, Long studentId, LocalDate studentBirthDate,
+    public PunishmentDTO(Long id, LocalTime punishmentTime,
+                         Long studentId, LocalDate studentBirthDate,
                          String studentMail, String studentName, String studentSurName,
-                         String studentTcNo, boolean studentVerify) {
+                         String studentTcNo, boolean studentVerify, Long punishmentDefinitionsId,
+                         String punismentDefinitionsDescription, int punismentDefinitionsPenaltyScore) {
         this.id=id;
-        this.punishmentType = punishmentType;
         this.punishmentTime = punishmentTime;
-        this.penaltyScore = penaltyScore;
         this.studentId = studentId;
         this.studentBirthDate = studentBirthDate;
         this.studentMail = studentMail;
@@ -43,6 +42,9 @@ public class PunishmentDTO {
         this.studentSurName = studentSurName;
         this.studentTcNo = studentTcNo;
         this.studentVerify = studentVerify;
+        this.punismentDefinitionsDescription=punismentDefinitionsDescription;
+        this.punishmentDefinitionsId=punishmentDefinitionsId;
+        this.punismentDefinitionsPenaltyScore=punismentDefinitionsPenaltyScore;
     }
 
     public Long getId() {
@@ -51,23 +53,11 @@ public class PunishmentDTO {
     public void setId(Long id) {
         this.id = id;
     }
-    public PunishmentType getPunishmentType() {
-        return punishmentType;
-    }
-    public void setPunishmentType(PunishmentType punishmentType) {
-        this.punishmentType = punishmentType;
-    }
     public LocalTime getPunishmentTime() {
         return punishmentTime;
     }
     public void setPunishmentTime(LocalTime punishmentTime) {
         this.punishmentTime = punishmentTime;
-    }
-    public int getPenaltyScore() {
-        return penaltyScore;
-    }
-    public void setPenaltyScore(int penaltyScore) {
-        this.penaltyScore = penaltyScore;
     }
     public Long getStudentId() {
         return studentId;
@@ -110,5 +100,23 @@ public class PunishmentDTO {
     }
     public void setStudentVerify(boolean studentVerify) {
         this.studentVerify = studentVerify;
+    }
+    public Long getPunishmentDefinitionsId() {
+        return punishmentDefinitionsId;
+    }
+    public void setPunishmentDefinitionsId(Long punishmentDefinitionsId) {
+        this.punishmentDefinitionsId = punishmentDefinitionsId;
+    }
+    public String getPunismentDefinitionsDescription() {
+        return punismentDefinitionsDescription;
+    }
+    public void setPunismentDefinitionsDescription(String punismentDefinitionsDescription) {
+        this.punismentDefinitionsDescription = punismentDefinitionsDescription;
+    }
+    public int getPunismentDefinitionsPenaltyScore() {
+        return punismentDefinitionsPenaltyScore;
+    }
+    public void setPunismentDefinitionsPenaltyScore(int punismentDefinitionsPenaltyScore) {
+        this.punismentDefinitionsPenaltyScore = punismentDefinitionsPenaltyScore;
     }
 }
