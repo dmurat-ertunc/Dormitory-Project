@@ -20,6 +20,7 @@ public class BookRental extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "bookId")
     private Book book;
+    private boolean delivered;
 
     public Student getStudent() {
         return student;
@@ -50,5 +51,11 @@ public class BookRental extends BaseEntity {
     }
     public void setDaysRented(String daysRented) {
         this.daysRented = daysRented;
+    }
+    public boolean isDelivered() {
+        return delivered;
+    }
+    public void setDelivered(boolean delivered) {
+        this.delivered = delivered;
     }
 }

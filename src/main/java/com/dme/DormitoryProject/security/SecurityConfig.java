@@ -57,6 +57,7 @@ public class SecurityConfig {
                                 .requestMatchers("api/punishment/**").permitAll()
                                 .requestMatchers("api/punishmentDefinitions/**").permitAll()
                                 .requestMatchers("api/books/**").permitAll()
+                                .requestMatchers("api/bookRentals/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());

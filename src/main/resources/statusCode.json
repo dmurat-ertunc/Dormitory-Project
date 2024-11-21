@@ -15,6 +15,14 @@
     "en": "Deleted successfull",
     "tr": "Silme başarılı"
   },
+  "204": {
+    "en": "Rental successfull",
+    "tr": "Kiralama başarılı"
+  },
+  "205": {
+    "en": "Rental error",
+    "tr": "Önceden kiralanmış başarılı"
+  },
   "403": {
     "en": "Forbidden",
     "tr": "Yetki hatası"

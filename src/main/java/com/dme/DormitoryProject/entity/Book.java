@@ -11,7 +11,7 @@ public class Book extends BaseEntity{
 
     private String name;
     private String type;
-    private boolean isEmpty;
+    private boolean isEmpty=true;
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<BookRental> bookRentals;
 
@@ -31,7 +31,7 @@ public class Book extends BaseEntity{
         return isEmpty;
     }
     public void setEmpty(boolean empty) {
-        isEmpty = true;
+        isEmpty = empty;
     }
     public List<BookRental> getBookRentals() {
         return bookRentals;
