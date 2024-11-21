@@ -40,6 +40,9 @@ public class Student extends BaseEntity{
     private int remainingPermitHours = 30;
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<BookRental> bookRentals;
+    @ManyToOne
+    @JoinColumn(name = "roomId")
+    private Room room;
 
     public String getName() {
         return name;
@@ -124,6 +127,12 @@ public class Student extends BaseEntity{
     }
     public void setBookRentals(List<BookRental> bookRentals) {
         this.bookRentals = bookRentals;
+    }
+    public Room getRoom() {
+        return room;
+    }
+    public void setRoom(Room room) {
+        this.room = room;
     }
 }
 

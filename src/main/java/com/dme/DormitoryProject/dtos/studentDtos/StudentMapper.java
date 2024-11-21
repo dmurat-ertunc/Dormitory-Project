@@ -2,7 +2,9 @@ package com.dme.DormitoryProject.dtos.studentDtos;
 
 import com.dme.DormitoryProject.entity.Student;
 import com.dme.DormitoryProject.entity.University;
+import com.dme.DormitoryProject.repository.IRoomDao;
 import com.dme.DormitoryProject.repository.IUniversityDao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -11,11 +13,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 @Component
 public class StudentMapper {
-
+    @Autowired
     private static IUniversityDao universityDao;
+    @Autowired
+    private static IRoomDao roomDao;
 
-    public StudentMapper(IUniversityDao universityDao){
+    public StudentMapper(IUniversityDao universityDao, IRoomDao roomDao){
         this.universityDao=universityDao;
+        this.roomDao=roomDao;
     }
 
     public static StudentDTO toDto(Student student) {
@@ -31,6 +36,12 @@ public class StudentMapper {
         dto.setMail(student.getMail());
         dto.setBirthDate(student.getBirthDate());
         dto.setVerify(student.getVerification());
+        dto.setRoomId(student.getRoom().getId());
+        dto.setRoomNo(student.getRoom().getRoomNo());
+        dto.setRoomSize(student.getRoom().getRoomSize());
+        dto.setManySize(student.getRoom().getManySize());
+        dto.setPerPersonPrice(student.getRoom().getPerPersonPrice());
+        dto.setFull(student.getRoom().isFull());
 
         // Üniversite ID'lerini setlemek için
         Set<Long> universityIds = student.getUniversity().stream()
@@ -64,6 +75,7 @@ public class StudentMapper {
         student.setMail(dto.getMail());
         student.setBirthDate(dto.getBirthDate());
         student.setVerification(dto.isVerify());
+        student.setRoom(roomDao.getById(dto.getRoomId()));
 
         // Üniversite ID'lerini setlemek için
         Set<University> universities = dto.getUniversityIds().stream()

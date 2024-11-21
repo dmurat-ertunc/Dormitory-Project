@@ -34,20 +34,34 @@ public class StudentDTO implements Serializable {
     private boolean verify;
     private int score;
     private int remainingPermitHours;
+    private Long roomId;
+    private Long roomNo;
+    private int roomSize;
+    private int manySize;
+    private float perPersonPrice;
+    private boolean isFull;
 
-    public StudentDTO(Long id, String name, String surName, String tcNo, String mail, LocalDate birthDate,
-                      Set<String> universityName, Set<Long> universityIds, boolean verify, int score, int remainingPermitHours) {
+    public StudentDTO(Long id, String name, String surName, String tcNo, String mail,
+                      LocalDate birthDate, Set<Long> universityIds, Set<String> universityName,
+                      boolean verify, int score, int remainingPermitHours, Long roomId, int roomSize,
+                      int manySize, float perPersonPrice, boolean isFull, Long roomNo) {
         this.id = id;
         this.name = name;
         this.surName = surName;
         this.tcNo = tcNo;
         this.mail = mail;
         this.birthDate = birthDate;
-        this.universityName = universityName;
         this.universityIds = universityIds;
+        this.universityName = universityName;
         this.verify = verify;
-        this.score=score;
-        this.remainingPermitHours=remainingPermitHours;
+        this.score = score;
+        this.remainingPermitHours = remainingPermitHours;
+        this.roomId = roomId;
+        this.roomSize = roomSize;
+        this.manySize = manySize;
+        this.perPersonPrice = perPersonPrice;
+        this.isFull = isFull;
+        this.roomNo=roomNo;
     }
 
     public StudentDTO(){
@@ -119,5 +133,41 @@ public class StudentDTO implements Serializable {
     }
     public void setRemainingPermitHours(int remainingPermitHours) {
         this.remainingPermitHours = remainingPermitHours;
+    }
+    public Long getRoomId() {
+        return roomId;
+    }
+    public void setRoomId(Long roomId) {
+        this.roomId = roomId;
+    }
+    public Long getRoomNo() {
+        return roomNo;
+    }
+    public void setRoomNo(Long roomNo) {
+        this.roomNo = roomNo;
+    }
+    public int getRoomSize() {
+        return roomSize;
+    }
+    public void setRoomSize(int roomSize) {
+        this.roomSize = roomSize;
+    }
+    public int getManySize() {
+        return manySize;
+    }
+    public void setManySize(int manySize) {
+        this.manySize = manySize;
+    }
+    public float getPerPersonPrice() {
+        return perPersonPrice;
+    }
+    public void setPerPersonPrice(float perPersonPrice) {
+        this.perPersonPrice = perPersonPrice;
+    }
+    public boolean isFull() {
+        return isFull;
+    }
+    public void setFull(boolean full) {
+        isFull = full;
     }
 }
