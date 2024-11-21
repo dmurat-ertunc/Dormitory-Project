@@ -33,9 +33,10 @@ public class StudentDTO implements Serializable {
     private Set<String> universityName = new HashSet<>();
     private boolean verify;
     private int score;
+    private int remainingPermitHours;
 
     public StudentDTO(Long id, String name, String surName, String tcNo, String mail, LocalDate birthDate,
-                      Set<String> universityName, Set<Long> universityIds, boolean verify, int score) {
+                      Set<String> universityName, Set<Long> universityIds, boolean verify, int score, int remainingPermitHours) {
         this.id = id;
         this.name = name;
         this.surName = surName;
@@ -46,6 +47,7 @@ public class StudentDTO implements Serializable {
         this.universityIds = universityIds;
         this.verify = verify;
         this.score=score;
+        this.remainingPermitHours=remainingPermitHours;
     }
 
     public StudentDTO(){
@@ -111,5 +113,11 @@ public class StudentDTO implements Serializable {
     }
     public void setScore(int score) {
         this.score = score;
+    }
+    public int getRemainingPermitHours() {
+        return remainingPermitHours;
+    }
+    public void setRemainingPermitHours(int remainingPermitHours) {
+        this.remainingPermitHours = remainingPermitHours;
     }
 }

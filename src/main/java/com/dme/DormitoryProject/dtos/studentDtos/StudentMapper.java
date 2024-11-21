@@ -44,6 +44,7 @@ public class StudentMapper {
         dto.setUniversityName(univertsiyName);
 
         dto.setScore(student.getScore());
+        dto.setRemainingPermitHours(student.getRemainingPermitHours());
 
 
 
@@ -74,6 +75,7 @@ public class StudentMapper {
         student.setUniversity(universities);
 
         student.setScore(dto.getScore());
+        student.setRemainingPermitHours(dto.getRemainingPermitHours());
 
         return student;
     }
