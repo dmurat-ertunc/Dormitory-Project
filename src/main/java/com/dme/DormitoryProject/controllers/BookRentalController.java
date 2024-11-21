@@ -5,6 +5,7 @@ import com.dme.DormitoryProject.dtos.bookRental.BookRentalDto;
 import com.dme.DormitoryProject.response.Result;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -29,5 +30,9 @@ public class BookRentalController {
     @PostMapping("addRentalBook")
     public Result addRentalBook(@Valid @RequestBody BookRentalDto bookRentalDto){
         return this.bookRentalSerivice.addRentalBook(bookRentalDto);
+    }
+    @PutMapping("bookDelivery/{id}")
+    public Result bookDelivery(@PathVariable Long id){
+        return this.bookRentalSerivice.bookDelivery(id);
     }
 }

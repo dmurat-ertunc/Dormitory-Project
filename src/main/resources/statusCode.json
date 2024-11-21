@@ -21,7 +21,11 @@
   },
   "205": {
     "en": "Rental error",
-    "tr": "Önceden kiralanmış başarılı"
+    "tr": "Önceden kiralanmış "
+  },
+  "206": {
+    "en": "Rental delivery succes",
+    "tr": "Kiralama teslimi başarılı "
   },
   "403": {
     "en": "Forbidden",

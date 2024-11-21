@@ -13,6 +13,7 @@ import com.dme.DormitoryProject.repository.IStudentDao;
 import com.dme.DormitoryProject.repository.IUserDao;
 import com.dme.DormitoryProject.response.ErrorResult;
 import com.dme.DormitoryProject.response.Result;
+import com.dme.DormitoryProject.response.SuccesResult;
 import com.dme.DormitoryProject.response.SuccessDataResult;
 import com.dme.DormitoryProject.statusCode.JsonFileReader;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class BookRentalManager extends BaseClass implements IBookRentalSerivice {
@@ -93,7 +95,36 @@ public class BookRentalManager extends BaseClass implements IBookRentalSerivice 
 
     @Override
     public Result bookDelivery(Long id) {
-        return null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof UserDetails) { // CustomUserDetails, UserDetails'in bir özelleştirilmiş hali olmalı
+            String username = ((UserDetails) principal).getUsername(); // Username değerini al
+
+            User user = userDao.findUserByUsername(username);
+            Student student = studentDao.findByMail(user.getMail());
+
+            BookRental bookRental = bookRentalDao.getById(id);
+            Book book = bookDao.getById(bookRental.getBook().getId());
+
+            if (!(Objects.equals(bookRental.getStudent().getId(),student.getId()))){
+                return new ErrorResult(JsonFileReader.getMessage("501","tr"),false);
+            }
+
+            if(LocalDate.now().isAfter(bookRental.getEndDate())){
+                student.setScore(bookRental.getStudent().getScore() - (int)(ChronoUnit.DAYS.between(LocalDate.now(),bookRental.getEndDate()) * 2L));
+                studentDao.save(student);
+            }
+
+            bookRental.setDelivered(true);
+            bookRental.setDeliveryDate(LocalDate.now());
+            bookRentalDao.save(bookRental);
+
+            book.setEmpty(true);
+            bookDao.save(book);
+
+            return new SuccesResult(JsonFileReader.getMessage("206","tr"),true);
+        }
+        return new ErrorResult(JsonFileReader.getMessage("501","tr"),false);
     }
 
     private boolean bookIsEmptyControl(Long id){
