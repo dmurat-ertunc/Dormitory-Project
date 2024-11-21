@@ -13,6 +13,7 @@ public class BookRental extends BaseEntity {
 
     private LocalDate endDate;
     private LocalDate deliveryDate;
+    private String daysRented;
     @ManyToOne
     @JoinColumn(name = "studentId")
     private Student student;
@@ -43,5 +44,11 @@ public class BookRental extends BaseEntity {
     }
     public void setDeliveryDate(LocalDate deliveryDate) {
         this.deliveryDate = deliveryDate;
+    }
+    public String getDaysRented() {
+        return daysRented;
+    }
+    public void setDaysRented(String daysRented) {
+        this.daysRented = daysRented;
     }
 }

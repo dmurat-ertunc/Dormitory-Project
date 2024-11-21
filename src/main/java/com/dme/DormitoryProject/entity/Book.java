@@ -11,9 +11,9 @@ public class Book extends BaseEntity{
 
     private String name;
     private String type;
-    private boolean isEmpty = true;
+    private boolean isEmpty;
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Book> books;
+    private List<BookRental> bookRentals;
 
     public String getName() {
         return name;
@@ -31,12 +31,12 @@ public class Book extends BaseEntity{
         return isEmpty;
     }
     public void setEmpty(boolean empty) {
-        isEmpty = empty;
+        isEmpty = true;
     }
-    public List<Book> getBooks() {
-        return books;
+    public List<BookRental> getBookRentals() {
+        return bookRentals;
     }
-    public void setBooks(List<Book> books) {
-        this.books = books;
+    public void setBookRentals(List<BookRental> bookRentals) {
+        this.bookRentals = bookRentals;
     }
 }
