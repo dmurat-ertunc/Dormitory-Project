@@ -46,6 +46,16 @@ public class RoomManager extends BaseClass implements IRoomService {
     }
 
     @Override
+    public Result emptyRoom() {
+        try {
+            List<RoomDto> roomDtoList = entityToDtoList(roomDao.emptyRoom(), RoomMapper::toDto);
+            return new SuccessDataResult(JsonFileReader.getMessage("200","tr"),true,roomDtoList);
+        } catch (Exception e) {
+            return new ErrorResult(JsonFileReader.getMessage("501","tr"),false);
+        }
+    }
+
+    @Override
     public Result getByRoomNo(Long roomNo) {
         Map<String , Object> roomAndStudents = new HashMap<>();
         try {
@@ -65,7 +75,6 @@ public class RoomManager extends BaseClass implements IRoomService {
             return new ErrorResult(JsonFileReader.getMessage("501","tr"),false);
         }
     }
-
 
     @Override
     public Result save(RoomDto roomDto) {
@@ -97,5 +106,37 @@ public class RoomManager extends BaseClass implements IRoomService {
         roomDao.save(room);
 
         return new SuccesResult(JsonFileReader.getMessage("207","tr"),true);
+    }
+
+    @Override
+    public Result studentsRoomChange(Long studentId, Long roomNo) {
+        Student student = studentDao.getById(studentId);
+        Room toRoom = roomDao.getByRoomNo(roomNo);
+        Room fromRoom = student.getRoom();
+
+        if (fromRoom == null){
+            return new ErrorResult(JsonFileReader.getMessage("568","tr"),false);
+        }
+        if (toRoom.isFull()){
+            return new ErrorResult(JsonFileReader.getMessage("567","tr"),false);
+        }
+
+        toRoom.setManySize(toRoom.getManySize() + 1);
+
+        if (toRoom.getManySize() == toRoom.getRoomSize()){
+            toRoom.setFull(true);
+        }
+        if (fromRoom.isFull()){
+            fromRoom.setFull(false);
+        }
+
+        fromRoom.setManySize(fromRoom.getManySize() - 1);
+        student.setRoom(toRoom);
+        studentDao.save(student);
+        roomDao.save(toRoom);
+        roomDao.save(fromRoom);
+
+        return new SuccesResult(JsonFileReader.getMessage("202","tr"),true);
+
     }
 }

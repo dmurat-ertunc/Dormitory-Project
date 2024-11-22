@@ -23,6 +23,11 @@ public class RoomController {
         return this.roomService.getAll();
     }
 
+    @GetMapping("emptyRoom")
+    public Result emptyRoom(){
+        return this.roomService.emptyRoom();
+    }
+
     @GetMapping("getByRoomNo")
     public Result getByRoomNo(@RequestParam Long roomNo){
         return this.roomService.getByRoomNo(roomNo);
@@ -36,6 +41,11 @@ public class RoomController {
     @PutMapping("addStudentsToRoom")
     public Result addStudentsToRoom(@RequestParam Long studentId, @RequestParam Long roomNo){
         return this.roomService.addStudentsToRoom(studentId,roomNo);
+    }
+
+    @PutMapping("studentsRoomChange")
+    public Result studentsRoomChange(@RequestParam Long studentId, @RequestParam Long roomNo){
+        return this.roomService.studentsRoomChange(studentId,roomNo);
     }
 
 

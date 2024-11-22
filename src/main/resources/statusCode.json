@@ -82,5 +82,9 @@
   "567": {
     "en": "Room is full",
     "tr": "Oda dolu"
+  },
+  "568": {
+    "en": "Student's has not room.",
+    "tr": "Öğrenci'nin odası zaten bulunmamakta."
   }
 }
