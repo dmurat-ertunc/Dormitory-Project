@@ -1,6 +1,7 @@
 package com.dme.DormitoryProject.business.manager;
 
 import com.dme.DormitoryProject.business.services.IRedisService;
+import com.dme.DormitoryProject.business.services.IRoomService;
 import com.dme.DormitoryProject.business.services.IStudentService;
 import com.dme.DormitoryProject.business.services.IUserService;
 import com.dme.DormitoryProject.base.BaseClass;
@@ -28,11 +29,12 @@ public class StudentManager extends BaseClass implements IStudentService{
     private IUniversityDao universityDao;
     private IRedisService redisService;
     private IUserService userService;
+    private IRoomDao roomDao;
 
     @Autowired
     public StudentManager(IStudentDao studentDao, IRentalDao rentalDao,
-                          ILgoDao lgoDao, ILogLevelDao logLevelDao,IUniversityDao universityDao,
-                          IRedisService redisService, IUserService userService) {
+                          ILgoDao lgoDao, ILogLevelDao logLevelDao, IUniversityDao universityDao,
+                          IRedisService redisService, IUserService userService, IRoomDao roomDao) {
         this.studentDao = studentDao;
         this.rentalDao = rentalDao;
         this.lgoDao = lgoDao;
@@ -40,6 +42,7 @@ public class StudentManager extends BaseClass implements IStudentService{
         this.universityDao = universityDao;
         this.redisService=redisService;
         this.userService=userService;
+        this.roomDao=roomDao;
     }
 
     public void LogLevelSave(long id,String message){
@@ -210,6 +213,14 @@ public class StudentManager extends BaseClass implements IStudentService{
                 studentDao.save(deleteStudent);
                 LogLevelSave(3,"Öğrenci silindi ve öğrencinin kiraladığı alanlar silindi");
                 return new SuccesResult("Öğrenci silindi ve öğrencinin kiraladığı alanlar silindi",true);
+            }
+            if (deleteStudent.getRoom() != null){
+                Room room = roomDao.getById(deleteStudent.getRoom().getId());
+                room.setManySize(room.getManySize() - 1);
+                if (room.isFull()){
+                    room.setFull(false);
+                }
+                roomDao.save(room);
             }
             userService.deleteDormitoryUser(deleteStudent.getMail());
             deleteStudent.setDeleted(true);
