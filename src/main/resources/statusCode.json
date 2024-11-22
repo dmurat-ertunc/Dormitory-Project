@@ -27,6 +27,10 @@
     "en": "Rental delivery succes",
     "tr": "Kiralama teslimi başarılı "
   },
+  "207": {
+    "en": "Student placed in the room",
+    "tr": "Öğrenci odaya yerleştirildi"
+  },
   "403": {
     "en": "Forbidden",
     "tr": "Yetki hatası"
@@ -74,5 +78,9 @@
   "566": {
     "en": "An error occured",
     "tr": "Öğrenci puanı yetersiz"
+  },
+  "567": {
+    "en": "Room is full",
+    "tr": "Oda dolu"
   }
 }

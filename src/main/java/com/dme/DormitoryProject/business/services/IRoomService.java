@@ -7,4 +7,5 @@ public interface IRoomService {
     Result getAll();
     Result getByRoomNo(Long roomNo);
     Result save(RoomDto roomDto);
+    Result addStudentsToRoom(Long studentId, Long roomNo);
 }

@@ -27,9 +27,15 @@ public class RoomController {
     public Result getByRoomNo(@RequestParam Long roomNo){
         return this.roomService.getByRoomNo(roomNo);
     }
+
     @PostMapping("save")
     public Result save(@Valid @RequestBody RoomDto roomDto){
         return this.roomService.save(roomDto);
+    }
+
+    @PutMapping("addStudentsToRoom")
+    public Result addStudentsToRoom(@RequestParam Long studentId, @RequestParam Long roomNo){
+        return this.roomService.addStudentsToRoom(studentId,roomNo);
     }
 
 
