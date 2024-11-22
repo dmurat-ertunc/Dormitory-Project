@@ -1,12 +1,18 @@
 package com.dme.DormitoryProject.dtos.room;
 
+import jakarta.validation.constraints.NotNull;
+
 public class RoomDto {
 
+    @NotNull(message = "Oda numarası alanı boş geçilemez")
     private Long roomNo;
+    @NotNull(message = "Oda maksimum kişi sayısı alanı boş geçilemez")
     private int roomSize;
+    @NotNull(message = "Odada ki kişi sayısı alanı boş geçilemez")
     private int manySize;
+    @NotNull(message = "Odanın aylık kişi başı ücreti alanı boş geçilemez")
     private float perPersonSize;
-    private boolean isFull;
+    private boolean isFull = false;
 
     public RoomDto(){
 

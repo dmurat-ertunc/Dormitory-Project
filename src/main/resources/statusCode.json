@@ -47,6 +47,10 @@
     "en": "An error occured",
     "tr": "Bir hata oluştu"
   },
+  "502": {
+    "en": "Data is not unique",
+    "tr": "Veri benzersiz değil"
+  },
   "561": {
     "en": "An error occured",
     "tr": "Öğrenci zaten içeride"
