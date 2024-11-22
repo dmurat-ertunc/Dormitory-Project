@@ -43,6 +43,8 @@ public class Student extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "roomId")
     private Room room;
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<MealTime> mealTimes;
 
     public String getName() {
         return name;
@@ -133,6 +135,12 @@ public class Student extends BaseEntity{
     }
     public void setRoom(Room room) {
         this.room = room;
+    }
+    public List<MealTime> getMealTimes() {
+        return mealTimes;
+    }
+    public void setMealTimes(List<MealTime> mealTimes) {
+        this.mealTimes = mealTimes;
     }
 }
 

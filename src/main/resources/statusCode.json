@@ -86,5 +86,17 @@
   "568": {
     "en": "Student's has not room.",
     "tr": "Öğrenci'nin odası zaten bulunmamakta."
+  },
+  "601": {
+    "en": "Time is'nt eat time.",
+    "tr": "Yemek saati değil"
+  },
+  "602": {
+    "en": "You used this meal",
+    "tr": "Bu hakkınız kullandınız"
+  },
+  "603": {
+  "en": "OK",
+  "tr": "Afiyet olsun"
   }
 }

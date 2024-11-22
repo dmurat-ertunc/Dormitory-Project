@@ -59,6 +59,7 @@ public class SecurityConfig {
                                 .requestMatchers("api/books/**").permitAll()
                                 .requestMatchers("api/bookRentals/**").permitAll()
                                 .requestMatchers("api/rooms/**").permitAll()
+                                .requestMatchers("api/mealTime/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());
