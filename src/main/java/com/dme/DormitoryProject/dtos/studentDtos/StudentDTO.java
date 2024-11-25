@@ -40,11 +40,12 @@ public class StudentDTO implements Serializable {
     private int manySize;
     private float perPersonPrice;
     private boolean isFull;
+    private boolean throwMongo;
 
     public StudentDTO(Long id, String name, String surName, String tcNo, String mail,
                       LocalDate birthDate, Set<Long> universityIds, Set<String> universityName,
                       boolean verify, int score, int remainingPermitHours, Long roomId, int roomSize,
-                      int manySize, float perPersonPrice, boolean isFull, Long roomNo) {
+                      int manySize, float perPersonPrice, boolean isFull, Long roomNo, boolean throwMongo) {
         this.id = id;
         this.name = name;
         this.surName = surName;
@@ -62,6 +63,7 @@ public class StudentDTO implements Serializable {
         this.perPersonPrice = perPersonPrice;
         this.isFull = isFull;
         this.roomNo=roomNo;
+        this.throwMongo=throwMongo;
     }
 
     public StudentDTO(){
@@ -169,5 +171,11 @@ public class StudentDTO implements Serializable {
     }
     public void setFull(boolean full) {
         isFull = full;
+    }
+    public boolean isThrowMongo() {
+        return throwMongo;
+    }
+    public void setThrowMongo(boolean throwMongo) {
+        this.throwMongo = throwMongo;
     }
 }

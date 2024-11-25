@@ -56,6 +56,7 @@ public class StudentMapper {
 
         dto.setScore(student.getScore());
         dto.setRemainingPermitHours(student.getRemainingPermitHours());
+        dto.setThrowMongo(student.isThrowMongo());
 
 
 
@@ -88,6 +89,7 @@ public class StudentMapper {
 
         student.setScore(dto.getScore());
         student.setRemainingPermitHours(dto.getRemainingPermitHours());
+        student.setThrowMongo(dto.isThrowMongo());
 
         return student;
     }

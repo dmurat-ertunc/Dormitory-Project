@@ -45,6 +45,8 @@ public class Student extends BaseEntity{
     private Room room;
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<MealTime> mealTimes;
+    @Column(nullable = true)
+    private boolean throwMongo = false;
 
     public String getName() {
         return name;
@@ -141,6 +143,12 @@ public class Student extends BaseEntity{
     }
     public void setMealTimes(List<MealTime> mealTimes) {
         this.mealTimes = mealTimes;
+    }
+    public boolean isThrowMongo() {
+        return throwMongo;
+    }
+    public void setThrowMongo(boolean throwMongo) {
+        this.throwMongo = throwMongo;
     }
 }
 
