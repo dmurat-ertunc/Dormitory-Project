@@ -1,7 +1,9 @@
 package com.dme.DormitoryProject.business.services;
 
 import com.dme.DormitoryProject.dtos.studentDtos.StudentDTO;
+import com.dme.DormitoryProject.dtos.studentGetPermission.StudentGetPermissionDTO;
 import com.dme.DormitoryProject.entity.Student;
+import com.dme.DormitoryProject.entity.StudentGetPermission;
 import com.dme.DormitoryProject.response.Result;
 
 import java.util.List;
@@ -18,4 +20,5 @@ public interface IStudentService {
     Result mailVerification(Long id, String mailCode);
     Result sendMail(Long id);
     Result findUniversityId(Long id);
+    Result permissionRequest(StudentGetPermissionDTO studentGetPermissionDTO);
 }

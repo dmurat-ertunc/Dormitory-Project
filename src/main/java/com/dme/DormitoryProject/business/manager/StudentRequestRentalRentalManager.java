@@ -72,6 +72,7 @@ public class StudentRequestRentalRentalManager extends BaseClass implements IStu
                     + studentRequestRental.getRentalDate() + " tarihinde "
                     + studentRequestRental.getStartTime() + " ile " + studentRequestRental.getEndTime() + "" +
                     "arasında isteğiniz doğrultusunda onaylanmıştır"));
+            sendMail(mail);
             return true;
         }catch (Exception e){
             return false;
@@ -93,6 +94,7 @@ public class StudentRequestRentalRentalManager extends BaseClass implements IStu
                     + studentRequestRental.getRentalDate() + " tarihinde "
                     + studentRequestRental.getStartTime() + " ile " + studentRequestRental.getEndTime() + "" +
                     "arasında isteğiniz doğrultusunda reddedilmiştir"));
+            sendMail(mail);
             return new SuccesResult("İstek reddedildi, red maili gönderildi",true);
         } catch (Exception e) {
             return new ErrorResult("Hata oluştu",false);

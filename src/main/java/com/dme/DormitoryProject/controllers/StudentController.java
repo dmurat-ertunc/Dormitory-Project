@@ -3,6 +3,7 @@ package com.dme.DormitoryProject.controllers;
 
 import com.dme.DormitoryProject.business.services.IStudentService;
 import com.dme.DormitoryProject.dtos.studentDtos.StudentDTO;
+import com.dme.DormitoryProject.dtos.studentGetPermission.StudentGetPermissionDTO;
 import com.dme.DormitoryProject.entity.Student;
 import com.dme.DormitoryProject.response.Result;
 import jakarta.validation.Valid;
@@ -68,6 +69,10 @@ public class StudentController {
     @PutMapping("delete/{id}")
     public Result deleteStudent(@PathVariable Long id){
         return this.studentService.deleteStudent(id);
+    }
+    @PostMapping("permissionRequest")
+    public Result permissionRequest(@Valid @RequestBody StudentGetPermissionDTO studentGetPermissionDTO){
+        return this.studentService.permissionRequest(studentGetPermissionDTO);
     }
 
 

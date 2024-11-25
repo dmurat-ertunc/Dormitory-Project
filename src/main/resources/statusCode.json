@@ -31,6 +31,10 @@
     "en": "Student placed in the room",
     "tr": "Öğrenci odaya yerleştirildi"
   },
+  "208": {
+    "en": "Permission request is sent",
+    "tr": "İzin talebi gönderildi"
+  },
   "403": {
     "en": "Forbidden",
     "tr": "Yetki hatası"

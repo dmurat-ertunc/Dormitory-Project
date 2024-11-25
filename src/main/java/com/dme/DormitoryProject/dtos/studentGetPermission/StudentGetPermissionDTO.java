@@ -1,10 +1,14 @@
 package com.dme.DormitoryProject.dtos.studentGetPermission;
 
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDate;
 
 public class StudentGetPermissionDTO {
 
+    @NotNull(message = "İzin başlangıç saati boş bırakılamaz")
     private LocalDate startDate;
+    @NotNull(message = "İzin bitiş saati boş bırakılamaz")
     private LocalDate endDate;
     private boolean approval;
     private Long studentId;

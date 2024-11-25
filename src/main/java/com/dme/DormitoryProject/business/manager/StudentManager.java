@@ -5,8 +5,11 @@ import com.dme.DormitoryProject.business.services.IRoomService;
 import com.dme.DormitoryProject.business.services.IStudentService;
 import com.dme.DormitoryProject.business.services.IUserService;
 import com.dme.DormitoryProject.base.BaseClass;
+import com.dme.DormitoryProject.dtos.personelRequestFormDtos.PersonelRequestFormMapper;
 import com.dme.DormitoryProject.dtos.studentDtos.StudentDTO;
 import com.dme.DormitoryProject.dtos.studentDtos.StudentMapper;
+import com.dme.DormitoryProject.dtos.studentGetPermission.StudentGetPermissionDTO;
+import com.dme.DormitoryProject.dtos.studentGetPermission.StudentGetPermissionMapper;
 import com.dme.DormitoryProject.entity.*;
 import com.dme.DormitoryProject.mernis.DBQKPSPublicSoap;
 import com.dme.DormitoryProject.repository.*;
@@ -14,7 +17,11 @@ import com.dme.DormitoryProject.response.ErrorResult;
 import com.dme.DormitoryProject.response.Result;
 import com.dme.DormitoryProject.response.SuccesResult;
 import com.dme.DormitoryProject.response.SuccessDataResult;
+import com.dme.DormitoryProject.statusCode.JsonFileReader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -30,11 +37,14 @@ public class StudentManager extends BaseClass implements IStudentService{
     private IRedisService redisService;
     private IUserService userService;
     private IRoomDao roomDao;
+    private IUserDao userDao;
+    private IStudentGetPermissionDao studentGetPermissionDao;
 
     @Autowired
     public StudentManager(IStudentDao studentDao, IRentalDao rentalDao,
                           ILgoDao lgoDao, ILogLevelDao logLevelDao, IUniversityDao universityDao,
-                          IRedisService redisService, IUserService userService, IRoomDao roomDao) {
+                          IRedisService redisService, IUserService userService, IRoomDao roomDao,
+                          IUserDao userDao, IStudentGetPermissionDao studentGetPermissionDao) {
         this.studentDao = studentDao;
         this.rentalDao = rentalDao;
         this.lgoDao = lgoDao;
@@ -43,6 +53,8 @@ public class StudentManager extends BaseClass implements IStudentService{
         this.redisService=redisService;
         this.userService=userService;
         this.roomDao=roomDao;
+        this.userDao=userDao;
+        this.studentGetPermissionDao=studentGetPermissionDao;
     }
 
     public void LogLevelSave(long id,String message){
@@ -231,6 +243,25 @@ public class StudentManager extends BaseClass implements IStudentService{
             LogLevelSave(1,"Bu id değerine ait bir öğrenci bulunamadı.");
             return new ErrorResult("Bu id değerine göre öğrenci bulunamadı",false);
         }
+    }
+
+    @Override
+    public Result permissionRequest(StudentGetPermissionDTO studentGetPermissionDTO){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof UserDetails) { // CustomUserDetails, UserDetails'in bir özelleştirilmiş hali olmalı
+            String username = ((UserDetails) principal).getUsername(); // Username değerini al
+
+            User user = userDao.findUserByUsername(username);
+            Student student = studentDao.findByMail(user.getMail());
+
+            studentGetPermissionDTO.setStudentId(student.getId());
+            studentGetPermissionDao.save(dtoToEntity(studentGetPermissionDTO, StudentGetPermissionMapper::toEntity));
+
+            return new SuccesResult(JsonFileReader.getMessage("208","tr"),true);
+        }
+        studentGetPermissionDao.save(dtoToEntity(studentGetPermissionDTO, StudentGetPermissionMapper::toEntity));
+        return new SuccesResult(JsonFileReader.getMessage("208","tr"),true);
     }
 }
 
