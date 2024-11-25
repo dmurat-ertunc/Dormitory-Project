@@ -22,7 +22,7 @@ public class DeletedStudentManager implements IDeletedStudentService {
         this.deletedStundentDao=deletedStundentDao;
     }
 
-    @Scheduled(cron = "50 03 13 * * ?")
+    @Scheduled(cron = "00 21 14 * * ?")
     @Override
     public void addDeletedStudent() {
         List<Student> deletedStudentList = studentDao.deletedStudent();
@@ -36,6 +36,9 @@ public class DeletedStudentManager implements IDeletedStudentService {
             deletedStudent.setSurName(student.getSurName());
             deletedStudent.setTcNo(student.getTcNo());
 
+            student.setThrowMongo(true);
+
+            studentDao.save(student);
             deletedStundentDao.save(deletedStudent);
 
         }

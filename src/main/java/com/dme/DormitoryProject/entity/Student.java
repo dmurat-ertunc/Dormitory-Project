@@ -47,6 +47,8 @@ public class Student extends BaseEntity{
     private List<MealTime> mealTimes;
     @Column(nullable = true)
     private boolean throwMongo = false;
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<StudentGetPermission> studentGetPermissions;
 
     public String getName() {
         return name;
