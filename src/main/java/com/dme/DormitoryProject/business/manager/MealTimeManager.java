@@ -34,7 +34,7 @@ public class MealTimeManager implements IMealTimeSerivce {
     public Result entryDiningHall(Long id) {
         Student student = studentDao.getById(id);
         LocalTime momentaryTime = LocalTime.now();
-        int momentaryHour = 7;
+        int momentaryHour = momentaryTime.getHour();
         switch (momentaryHour){
             case 7,8 -> {
                 entryDiningHall(id,Meals.Kahvaltı);
