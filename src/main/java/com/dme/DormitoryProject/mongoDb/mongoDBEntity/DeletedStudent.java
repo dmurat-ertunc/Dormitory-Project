@@ -1,20 +1,29 @@
 package com.dme.DormitoryProject.mongoDb.mongoDBEntity;
 
-import com.dme.DormitoryProject.entity.BaseEntity;
 import jakarta.persistence.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 
-@Document(collation = "deletedStudent")
-public class DeletedStundet{
+@Document(collection = "deletedStudent")
+public class DeletedStudent {
     @Id
-    private String id; // MongoDB otomatik bir ID atar
+    private String id;// MongoDB otomatik bir ID atar
+    private Long studentId;
     private String name;
     private String surName;
     private String email;
     private String tcNo;
     private LocalDate birthDate;
+
+
+    public Long getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(Long studentId) {
+        this.studentId = studentId;
+    }
 
     public String getId() {
         return id;
