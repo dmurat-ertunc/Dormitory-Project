@@ -1,51 +1,45 @@
-package com.dme.DormitoryProject.entity;
+package com.dme.DormitoryProject.mongoDb.mongoDBEntity;
 
+import com.dme.DormitoryProject.entity.*;
 import jakarta.persistence.*;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
-@Entity
-@Table(name = "studentTbl")
-public class Student extends BaseEntity{
-
+@Document(collection = "student")
+public class StudentMg extends BaseEntityMg{
+    private Long studentId;
     private String name;
     private String surName;
     private String tcNo;
     private String mail;
     private LocalDate birthDate;
-    @ManyToMany
-    @JoinTable(
-            name = "student_university", // ilişkiyi temsil eden ara tablo
-            joinColumns = @JoinColumn(name = "student_id"), // öğrenci ile ilgili sütun
-            inverseJoinColumns = @JoinColumn(name = "univercity_id") // üniversiteyi ile ilgili sütun
-    )
-    //@JsonManagedReference
+    @DBRef
     private Set<University> university = new HashSet<>();
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    @DBRef
     private List<Rental> rentalList;
     private boolean verification = false;
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @DBRef
     private List<StudentRequestRental> studentRequestRentalList;
     @Column(nullable = true)
     private int score = 100;
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @DBRef
     private List<EntryExit> entryExits;
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @DBRef
     private List<Punishments> punishments;
     @Column(nullable = true)
     private int remainingPermitHours = 30;
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @DBRef
     private List<BookRental> bookRentals;
-    @ManyToOne
-    @JoinColumn(name = "roomId")
+    @DBRef
     private Room room;
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @DBRef
     private List<MealTime> mealTimes;
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @DBRef
     private List<StudentGetPermission> studentGetPermissions;
 
     public String getName() {
@@ -145,9 +139,11 @@ public class Student extends BaseEntity{
         this.mealTimes = mealTimes;
     }
 
+    public Long getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(Long studentId) {
+        this.studentId = studentId;
+    }
 }
-
-
-
-//@OneToOne(cascade = CascadeType.ALL)   //Bir kullanıcı kaydedildiğinde veya silindiğinde, ilişkili adres entity'si de aynı işlemi geçirecektir.
-//@JoinColumn(name = "universityId", referencedColumnName = "id") //Studebt tablosunda, University tablosundaki id sütununu referans alan universityId isimli bir yabancı anahtar oluşturur.

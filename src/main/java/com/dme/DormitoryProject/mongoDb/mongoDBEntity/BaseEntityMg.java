@@ -1,20 +1,17 @@
-package com.dme.DormitoryProject.entity;
+package com.dme.DormitoryProject.mongoDb.mongoDBEntity;
 
 import jakarta.persistence.*;
+import org.bson.codecs.pojo.annotations.BsonId;
 
 import java.time.LocalDate;
-
 @MappedSuperclass
-public class BaseEntity {
-
+public class BaseEntityMg {
     LocalDate date = LocalDate.now();
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @BsonId
+    private String id;
     private boolean isDeleted = false;
     private LocalDate addDate = date;
-    @Column(nullable = true)
     private boolean throwMongo = false;
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;
@@ -22,10 +19,10 @@ public class BaseEntity {
     public boolean isDeleted() {
         return isDeleted;
     }
-    public long getId(){
+    public String getId(){
         return id;
     }
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
     public boolean getIsDeleted(){
@@ -41,6 +38,6 @@ public class BaseEntity {
         return throwMongo;
     }
     public void setThrowMongo(boolean throwMongo) {
-        this.throwMongo = throwMongo;
-    }
+        this.throwMongo = throwMongo;}
+
 }
