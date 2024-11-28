@@ -2,6 +2,7 @@ package com.dme.DormitoryProject.repository;
 
 import com.dme.DormitoryProject.entity.Rental;
 import com.dme.DormitoryProject.entity.SportArea;
+import com.dme.DormitoryProject.entity.StudentRequestRental;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,6 +23,10 @@ public interface IRentalDao extends JpaRepository<Rental,Long> {
     List<SportArea> findOverlappingRentals(@Param("startTime") LocalTime startTime,
                                            @Param("endTime") LocalTime endTime,
                                            @Param("rentalDate") LocalDate rentalDate);
+
+    List<Rental> findByStudentId(Long id);
+    List<Rental> findBySportAreaId(Long id);
+
 
 
 //    SELECT s FROM SportArea s " +

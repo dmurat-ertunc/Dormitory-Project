@@ -21,4 +21,6 @@ public interface IStudentRequestRentalDao extends JpaRepository<StudentRequestRe
     List<SportArea> findOverlappingRentals(@Param("startTime") LocalTime startTime,
                                            @Param("endTime") LocalTime endTime,
                                            @Param("rentalDate") LocalDate rentalDate);
+    List<StudentRequestRental> findByStudentId(Long id);
+    List<StudentRequestRental> findBySportAreaId(Long id);
 }

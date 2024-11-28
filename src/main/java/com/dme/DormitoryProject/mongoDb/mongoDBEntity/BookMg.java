@@ -15,6 +15,14 @@ public class BookMg extends BaseEntityMg{
     @DBRef
     private List<BookRental> bookRentals;
 
+    public Long getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(Long bookId) {
+        this.bookId = bookId;
+    }
+
     public String getName() {
         return name;
     }

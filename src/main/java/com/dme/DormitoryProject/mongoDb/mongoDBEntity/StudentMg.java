@@ -146,4 +146,12 @@ public class StudentMg extends BaseEntityMg{
     public void setStudentId(Long studentId) {
         this.studentId = studentId;
     }
+
+    public List<StudentGetPermission> getStudentGetPermissions() {
+        return studentGetPermissions;
+    }
+
+    public void setStudentGetPermissions(List<StudentGetPermission> studentGetPermissions) {
+        this.studentGetPermissions = studentGetPermissions;
+    }
 }
