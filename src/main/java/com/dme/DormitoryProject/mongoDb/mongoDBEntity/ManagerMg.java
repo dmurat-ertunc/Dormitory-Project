@@ -19,15 +19,11 @@ public class ManagerMg extends BaseEntityMg{
     private String mail;
     @DBRef
     private List<Staff> staffList;
-    @DBRef
     private String phoneNumber;
     private String title;
     private int salary;
     @DBRef
     private List<PersonnelRequestForm> personnelRequestForms;
-    @DBRef
-    private List<PersonnelRequestForm> personnelRequestForms2;
-
 
 
     public List<Staff> getStaffList() {
@@ -83,5 +79,13 @@ public class ManagerMg extends BaseEntityMg{
     }
     public void setManagerId(Long managerId) {
         this.managerId = managerId;
+    }
+
+    public List<PersonnelRequestForm> getPersonnelRequestForms() {
+        return personnelRequestForms;
+    }
+
+    public void setPersonnelRequestForms(List<PersonnelRequestForm> personnelRequestForms) {
+        this.personnelRequestForms = personnelRequestForms;
     }
 }

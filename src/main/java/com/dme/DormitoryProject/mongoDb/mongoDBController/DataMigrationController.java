@@ -17,8 +17,8 @@ public class DataMigrationController {
     }
 
     @PutMapping("migrationTable")
-    public ResponseEntity<String> migrationTable(@RequestParam String tableName){
-        dataMigration.migrateTable(tableName);
+    public ResponseEntity<String> migrationTable(){
+        dataMigration.migrateTable();
         return ResponseEntity.ok("Akttarım başarılı");
     }
 }

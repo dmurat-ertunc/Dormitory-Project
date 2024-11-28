@@ -9,5 +9,9 @@ import java.util.List;
 public interface IStaffDao extends JpaRepository<Staff,Long> {
     @Query("SELECT d FROM Staff d WHERE d.isDeleted = false")
     List<Staff> findAll();
+    List<Staff> findByDepartmentId(Long id);
+    List<Staff> findByManagerId(Long id);
+    List<Staff> findByTitleId(Long id);
+
 
 }

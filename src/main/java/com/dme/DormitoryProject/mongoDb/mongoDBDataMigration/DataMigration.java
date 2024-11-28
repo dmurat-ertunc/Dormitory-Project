@@ -1,14 +1,26 @@
 package com.dme.DormitoryProject.mongoDb.mongoDBDataMigration;
 
+import com.dme.DormitoryProject.dtos.studentDtos.StudentDTO;
 import com.dme.DormitoryProject.mongoDb.mongoDBRepository.*;
+import com.dme.DormitoryProject.repository.IStudentDao;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import org.bson.Document;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.transaction.Transactional;
+import org.apache.poi.ss.formula.functions.T;
 import org.reflections.Reflections;
 import org.springframework.aot.hint.annotation.Reflective;
 import org.springframework.stereotype.Service;
 
+
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -31,11 +43,12 @@ public class DataMigration {
     private ISportAreaMgDao sportAreaMgDao;
     private IStaffMgDao staffMgDao;
     private IStudentGetPermissionMgDao studentGetPermissionMgDao;
-    private IStudentMgDao saveAll;
+    private IStudentMgDao studentMgDao;
     private IStudentRequestRentalMgDao studentRequestRentalMgDao;
     private ITitleMgDao titleMgDao;
     private IUniversityMgDao universityMgDao;
     private IUserMgDao userMgDao;
+    private IStudentDao studentDao;
 
     public DataMigration(IBookMgDao bookMgDao, IBookRentalMgDao bookRentalMgDao,
                          IDepartmentMgDao departmentMgDao, IEntryExitMgDao entryExitMgDao,
@@ -47,7 +60,7 @@ public class DataMigration {
                          ISportAreaMgDao sportAreaMgDao, IStaffMgDao staffMgDao,
                          IStudentGetPermissionMgDao studentGetPermissionMgDao, IStudentMgDao saveAll,
                          IStudentRequestRentalMgDao studentRequestRentalMgDao, ITitleMgDao titleMgDao,
-                         IUniversityMgDao universityMgDao, IUserMgDao userMgDao) {
+                         IUniversityMgDao universityMgDao, IUserMgDao userMgDao, IStudentDao studentDao) {
         this.bookMgDao = bookMgDao;
         this.bookRentalMgDao = bookRentalMgDao;
         this.departmentMgDao = departmentMgDao;
@@ -66,27 +79,45 @@ public class DataMigration {
         this.sportAreaMgDao = sportAreaMgDao;
         this.staffMgDao = staffMgDao;
         this.studentGetPermissionMgDao = studentGetPermissionMgDao;
-        this.saveAll = saveAll;
+        this.studentMgDao = saveAll;
         this.studentRequestRentalMgDao = studentRequestRentalMgDao;
         this.titleMgDao = titleMgDao;
         this.universityMgDao = universityMgDao;
         this.userMgDao = userMgDao;
+        this.studentDao=studentDao;
     }
 
     @Transactional
-    public void migrateTable(String tableName) {
-//        List<PostgresEntity> postgresData = postgresRepository.findAll();
-//
-//        List<MongoEntity> mongoData = postgresData.stream().map(postgresEntity -> {
-//            MongoEntity mongoEntity = new MongoEntity();
-//            mongoEntity.setDataField1(postgresEntity.getDataField1());
-//            mongoEntity.setDataField2(postgresEntity.getDataField2());
-//            return mongoEntity;
-//        }).collect(Collectors.toList());
-//
-//        mongoRepository.saveAll(mongoData);
+    public void migrateTable() {
+
         getTableName();
+        Map<String,String> entityName = getEntityName();
+
+        for (Map.Entry<String, String> entry : entityName.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            System.out.println("Entity: " + key + ", Name: " + value);
+
+            Class<?> userEntityClass = getEntityClassByName(entry.getValue());
+
+            List<?> test =  studentDao.findAll();
+            //test.get(0).getClass().getName()
+
+            System.out.println(userEntityClass);
+        }
+
         System.out.println("Veriler başarıyla MongoDB'ye aktarıldı.");
+    }
+
+    public Class<?> getEntityClassByName(String entityName){
+        try {
+            Class<?> clazz = Class.forName("com.dme.DormitoryProject.entity."+entityName);
+            return clazz;
+        } catch (ClassNotFoundException e) {
+            // Eğer sınıf bulunamazsa, bu blok çalışır
+            System.out.println("Sınıf bulunamadı: " + e.getMessage());
+            return null;
+        }
     }
 
     private String getTableName(){
@@ -116,18 +147,20 @@ public class DataMigration {
         return null;
     }
 
-    private void sdsasad(){
+    private Map<String, String> getEntityName(){
         Map<String, String> tableToEntityMap = new HashMap<>();
 
         try {
             // Belirli bir paketteki sınıfları tara
-            Reflections reflections = new Reflections("com.example.entities");
+            Reflections reflections = new Reflections("com.dme.DormitoryProject.entity");
             for (Class<?> clazz : reflections.getTypesAnnotatedWith(Table.class)) {
                 Table tableAnnotation = clazz.getAnnotation(Table.class);
                 if (tableAnnotation != null) {
                     tableToEntityMap.put(tableAnnotation.name(), clazz.getSimpleName());
                 }
             }
+            System.out.println(tableToEntityMap);
+            return tableToEntityMap;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

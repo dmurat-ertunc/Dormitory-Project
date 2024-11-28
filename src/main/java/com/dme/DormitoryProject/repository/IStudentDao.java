@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
+
 @Repository
 public interface IStudentDao extends JpaRepository<Student,Long> {
 
@@ -23,12 +25,13 @@ public interface IStudentDao extends JpaRepository<Student,Long> {
     @Query("SELECT d FROM Student d WHERE d.isDeleted = true AND d.throwMongo = false")
     List<Student> deletedStudent();
     List<Student> findByUniversityId(Long universityId);
-    List<Student> findByUniversity_Id(Long universityId);
+    Set<Student> findByUniversity_Id(Long universityId);
     @Query("SELECT s FROM Student s WHERE s.id = :id")
     Student findStudentById(@Param("id") Long id);
     Student findByMail(String mail);
     @Query("SELECT DISTINCT s FROM Student s LEFT JOIN s.punishments p WHERE p IS NULL OR p.punishmentTime < :thirtyDaysAgo")
     List<Student> findStudentsWithNoPunishmentsInLast30Days(@Param("thirtyDaysAgo") LocalDateTime thirtyDaysAgo);
+    List<Student> findByRoomId(Long id);
 
 
 }

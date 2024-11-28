@@ -7,9 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Set;
 
 public interface IUniversityDao extends JpaRepository<University,Long> {
     @Query("SELECT d FROM University d WHERE d.isDeleted = false")
     List<University> findAll();
+    Set<University> findByStudents_Id(Long id);
 
 }

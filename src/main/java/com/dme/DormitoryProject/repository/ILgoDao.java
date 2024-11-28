@@ -17,5 +17,6 @@ public interface ILgoDao extends JpaRepository<Lgo,Long> {
     //List<Log> getAll();
     @Query("SELECT d FROM Lgo d WHERE d.isDeleted = false")
     List<Lgo> findAll();
+    List<Lgo> findByLogLevelId(Long id);
 
 }
