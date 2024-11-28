@@ -1,6 +1,8 @@
 package com.dme.DormitoryProject.mongoDb.mongoDBEntity;
 
 import com.dme.DormitoryProject.entity.BookRental;
+import jakarta.persistence.Column;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -8,6 +10,8 @@ import java.util.List;
 
 @Document(collection = "book")
 public class BookMg extends BaseEntityMg{
+
+    @Indexed(unique = true)
     private Long bookId;
     private String name;
     private String type;

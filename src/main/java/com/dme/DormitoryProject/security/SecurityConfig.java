@@ -61,6 +61,7 @@ public class SecurityConfig {
                                 .requestMatchers("api/rooms/**").permitAll()
                                 .requestMatchers("api/mealTime/**").permitAll()
                                 .requestMatchers("api/dataMigration/**").permitAll()
+                                .requestMatchers("api/mg/books/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());
