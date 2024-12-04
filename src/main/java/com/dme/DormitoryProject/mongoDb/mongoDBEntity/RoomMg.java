@@ -18,7 +18,7 @@ public class RoomMg extends BaseEntityMg{
     private float perPersonPrice;
     private boolean isFull;
     @DBRef
-    private List<Student> students;
+    private List<StudentMg> students;
 
     public Long getRoomNo() {
         return roomNo;
@@ -59,11 +59,11 @@ public class RoomMg extends BaseEntityMg{
         this.roomId = roomId;
     }
 
-    public List<Student> getStudents() {
+    public List<StudentMg> getStudents() {
         return students;
     }
 
-    public void setStudents(List<Student> students) {
+    public void setStudents(List<StudentMg> students) {
         this.students = students;
     }
 }

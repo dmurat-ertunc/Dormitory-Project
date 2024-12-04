@@ -17,38 +17,38 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class PersonnelRequestFormMg extends BaseEntityMg{
     private Long personnelRequestFormId;
     @DBRef
-    private Department department;
+    private DepartmentMg department;
     @DBRef
-    private Title title;
+    private TitleMg title;
     @DBRef
-    private Manager manager;
+    private ManagerMg manager;
     private String description;
     @BsonRepresentation(BsonType.STRING)
     private RequestStatus status = RequestStatus.Pending;
     @DBRef
-    private Manager requestorManager;
+    private ManagerMg requestorManager;
 
-    public Department getDepartment() {
+    public DepartmentMg getDepartment() {
         return department;
     }
 
-    public void setDepartment(Department department) {
+    public void setDepartment(DepartmentMg department) {
         this.department = department;
     }
 
-    public Title getTitle() {
+    public TitleMg getTitle() {
         return title;
     }
 
-    public void setTitle(Title title) {
+    public void setTitle(TitleMg title) {
         this.title = title;
     }
 
-    public Manager getManager() {
+    public ManagerMg getManager() {
         return manager;
     }
 
-    public void setManager(Manager manager) {
+    public void setManager(ManagerMg manager) {
         this.manager = manager;
     }
 
@@ -68,11 +68,11 @@ public class PersonnelRequestFormMg extends BaseEntityMg{
         this.status = status;
     }
 
-    public Manager getRequestorManager() {
+    public ManagerMg getRequestorManager() {
         return requestorManager;
     }
 
-    public void setRequestorManager(Manager requestorManager) {
+    public void setRequestorManager(ManagerMg requestorManager) {
         this.requestorManager = requestorManager;
     }
 

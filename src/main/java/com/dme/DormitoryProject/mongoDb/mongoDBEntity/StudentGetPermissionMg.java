@@ -13,7 +13,7 @@ public class StudentGetPermissionMg extends BaseEntityMg{
     private LocalDate startDate;
     private LocalDate endDate;
     @DBRef
-    private Student student;
+    private StudentMg student;
     private boolean approval;
 
     public LocalDate getStartDate() {
@@ -32,11 +32,11 @@ public class StudentGetPermissionMg extends BaseEntityMg{
         this.endDate = endDate;
     }
 
-    public Student getStudent() {
+    public StudentMg getStudent() {
         return student;
     }
 
-    public void setStudent(Student student) {
+    public void setStudent(StudentMg student) {
         this.student = student;
     }
 

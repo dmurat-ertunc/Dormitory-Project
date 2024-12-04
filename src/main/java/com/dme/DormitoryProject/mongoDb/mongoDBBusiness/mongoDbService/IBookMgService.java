@@ -6,5 +6,6 @@ import com.dme.DormitoryProject.response.Result;
 public interface IBookMgService {
 
     Result getAll();
+    Result getByIdAndRentals(Long id);
     Result save(BookDto bookDto);
 }

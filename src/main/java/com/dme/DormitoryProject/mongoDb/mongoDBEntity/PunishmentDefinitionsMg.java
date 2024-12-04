@@ -15,7 +15,7 @@ public class PunishmentDefinitionsMg extends BaseEntityMg{
     private int penaltyScore;
     private String description;
     @DBRef
-    private List<Punishments> punishments;
+    private List<PunishmentsMg> punishments;
 
     public int getPenaltyScore() {
         return penaltyScore;
@@ -29,10 +29,10 @@ public class PunishmentDefinitionsMg extends BaseEntityMg{
     public void setDescription(String description) {
         this.description = description;
     }
-    public List<Punishments> getPunishments() {
+    public List<PunishmentsMg> getPunishments() {
         return punishments;
     }
-    public void setPunishments(List<Punishments> punishments) {
+    public void setPunishments(List<PunishmentsMg> punishments) {
         this.punishments = punishments;
     }
 

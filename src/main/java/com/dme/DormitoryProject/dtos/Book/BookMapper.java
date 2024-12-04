@@ -44,7 +44,6 @@ public class BookMapper {
 
         BookMg bookmg = new BookMg();
 
-        bookmg.setBookId(bookDto.getId());
         bookmg.setType(bookDto.getType());
         bookmg.setEmpty(bookDto.isEmpty());
         bookmg.setName(bookDto.getName());

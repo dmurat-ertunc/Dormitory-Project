@@ -15,20 +15,20 @@ public class SportAreaMg extends BaseEntityMg{
     private Long sportAreaId;
     private String sporType;
     @DBRef
-    private List<Rental> rentalList;
+    private List<RentalMg> rentalList;
     @DBRef
-    private List<StudentRequestRental> studentRequestRentalList;
+    private List<StudentRequestRentalMg> studentRequestRentalList;
 
-    public List<StudentRequestRental> getStudentRequestRentalList() {
+    public List<StudentRequestRentalMg> getStudentRequestRentalList() {
         return studentRequestRentalList;
     }
-    public void setStudentRequestRentalList(List<StudentRequestRental> studentRequestRentalList) {
+    public void setStudentRequestRentalList(List<StudentRequestRentalMg> studentRequestRentalList) {
         this.studentRequestRentalList = studentRequestRentalList;
     }
-    public List<Rental> getRentalList() {
+    public List<RentalMg> getRentalList() {
         return rentalList;
     }
-    public void setRentalList(List<Rental> rentalList) {
+    public void setRentalList(List<RentalMg> rentalList) {
         this.rentalList = rentalList;
     }
     public String getSporType(){

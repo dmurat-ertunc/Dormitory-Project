@@ -17,11 +17,11 @@ public class StaffMg extends BaseEntityMg{
     private int salary;
     private String phoneNumber;
     @DBRef
-    private Department department;
+    private DepartmentMg department;
     @DBRef
-    private Title title;
+    private TitleMg title;
     @DBRef
-    private Manager manager;
+    private ManagerMg manager;
 
     public String getName(){
         return name;
@@ -53,22 +53,22 @@ public class StaffMg extends BaseEntityMg{
     public void setPhoneNumber(String phoneNumber){
         this.phoneNumber=phoneNumber;
     }
-    public Department getDepartment(){
+    public DepartmentMg getDepartment(){
         return department;
     }
-    public void setDepartment(Department department){
+    public void setDepartment(DepartmentMg department){
         this.department=department;
     }
-    public Title getTitle() {
+    public TitleMg getTitle() {
         return title;
     }
-    public void setTitle(Title title) {
+    public void setTitle(TitleMg title) {
         this.title = title;
     }
-    public Manager getManager() {
+    public ManagerMg getManager() {
         return manager;
     }
-    public void setManager(Manager manager) {
+    public void setManager(ManagerMg manager) {
         this.manager = manager;
     }
 

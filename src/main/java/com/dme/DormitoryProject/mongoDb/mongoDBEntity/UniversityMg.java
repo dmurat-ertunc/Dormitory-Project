@@ -18,7 +18,7 @@ public class UniversityMg extends BaseEntityMg{
     // Bir üniversitenin birden çok öğrencisi olabilir
     @DBRef
     //@JsonBackReference
-    private Set<Student> students = new HashSet<>();
+    private Set<StudentMg> students = new HashSet<>();
 
     //mappedBy = "university": Öğrenci entity'sindeki university alanı üzerinden ilişkiyi yönetir.
     //cascade = CascadeType.ALL: Üniversite üzerinde yapılan işlemler (kaydetme, silme) öğrencilere de uygulanır.
@@ -48,11 +48,11 @@ public class UniversityMg extends BaseEntityMg{
     public void setcity(String city){
         this.city=city;
     }
-    public Set<Student> getStudents() {
+    public Set<StudentMg> getStudents() {
         return students;
     }
 
-    public void setStudents(Set<Student> students) {
+    public void setStudents(Set<StudentMg> students) {
         this.students = students;
     }
 

@@ -19,7 +19,7 @@ import java.time.LocalTime;
 public class StudentRequestRentalMg extends BaseEntityMg {
     private Long studentRequestRentalId;
     @DBRef
-    private Student student;
+    private StudentMg student;
     @BsonRepresentation(BsonType.STRING)
     private RequestStatus status = RequestStatus.Pending;
     private String details;
@@ -27,13 +27,13 @@ public class StudentRequestRentalMg extends BaseEntityMg {
     private LocalTime startTime;
     private LocalTime endTime;
     @DBRef
-    private SportArea sportArea;
+    private SportAreaMg sportArea;
 
-    public Student getStudent() {
+    public StudentMg getStudent() {
         return student;
     }
 
-    public void setStudent(Student student) {
+    public void setStudent(StudentMg student) {
         this.student = student;
     }
 
@@ -77,11 +77,11 @@ public class StudentRequestRentalMg extends BaseEntityMg {
         this.endTime = endTime;
     }
 
-    public SportArea getSportArea() {
+    public SportAreaMg getSportArea() {
         return sportArea;
     }
 
-    public void setSportArea(SportArea sportArea) {
+    public void setSportArea(SportAreaMg sportArea) {
         this.sportArea = sportArea;
     }
 

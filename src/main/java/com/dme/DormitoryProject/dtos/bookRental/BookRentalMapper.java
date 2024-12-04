@@ -2,6 +2,9 @@ package com.dme.DormitoryProject.dtos.bookRental;
 
 import com.dme.DormitoryProject.entity.Book;
 import com.dme.DormitoryProject.entity.BookRental;
+import com.dme.DormitoryProject.mongoDb.mongoDBEntity.BookRentalMg;
+import com.dme.DormitoryProject.mongoDb.mongoDBRepository.IBookMgDao;
+import com.dme.DormitoryProject.mongoDb.mongoDBRepository.IStudentMgDao;
 import com.dme.DormitoryProject.repository.IBookDao;
 import com.dme.DormitoryProject.repository.IStudentDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +17,16 @@ public class BookRentalMapper {
     private static IStudentDao studentDao;
     @Autowired
     private static IBookDao bookDao;
+    @Autowired
+    private static IBookMgDao bookMgDao;
+    @Autowired
+    private static IStudentMgDao studentMgDao;
 
-    public BookRentalMapper(IStudentDao studentDao, IBookDao bookDao){
+    public BookRentalMapper(IStudentDao studentDao, IBookDao bookDao, IStudentMgDao studentMgDao, IBookMgDao bookMgDao){
         this.bookDao=bookDao;
         this.studentDao=studentDao;
+        this.studentMgDao=studentMgDao;
+        this.bookMgDao=bookMgDao;
     }
 
     public static BookRentalDto toDto(BookRental bookRental){
@@ -42,6 +51,28 @@ public class BookRentalMapper {
         return bookRentalDto;
     }
 
+    public static BookRentalDto toDtoMg(BookRentalMg bookRentalMg){
+
+        BookRentalDto bookRentalDto = new BookRentalDto();
+
+        bookRentalDto.setDeliveryDate(bookRentalMg.getDeliveryDate());
+        bookRentalDto.setEndDate(bookRentalMg.getEndDate());
+        bookRentalDto.setDaysRented(bookRentalMg.getDaysRented());
+        bookRentalDto.setBookId(bookRentalMg.getBook().getBookId());
+        bookRentalDto.setBookName(bookRentalMg.getBook().getName());
+        bookRentalDto.setBookType(bookRentalMg.getBook().getType());
+        bookRentalDto.setStudentId(bookRentalMg.getStudent().getStudentId());
+        bookRentalDto.setStudentBirthDate(bookRentalMg.getStudent().getBirthDate());
+        bookRentalDto.setStudentMail(bookRentalMg.getStudent().getMail());
+        bookRentalDto.setStudentName(bookRentalMg.getStudent().getName());
+        bookRentalDto.setStudentSurName(bookRentalMg.getStudent().getSurName());
+        bookRentalDto.setStudentVerify(bookRentalMg.getStudent().getVerification());
+        bookRentalDto.setStudentTcNo(bookRentalMg.getStudent().getTcNo());
+        bookRentalDto.setDelivered(bookRentalMg.isDelivered());
+
+        return bookRentalDto;
+    }
+
     public static BookRental toEntity(BookRentalDto bookRentalDto){
 
         BookRental bookRental = new BookRental();
@@ -54,5 +85,19 @@ public class BookRentalMapper {
         bookRental.setStudent(studentDao.getById(bookRentalDto.getStudentId()));
 
         return bookRental;
+    }
+
+    public static BookRentalMg toEntityMg(BookRentalDto bookRentalDto){
+
+        BookRentalMg bookRentalMg = new BookRentalMg();
+
+        bookRentalMg.setDeliveryDate(bookRentalDto.getDeliveryDate());
+        bookRentalMg.setEndDate(bookRentalDto.getEndDate());
+        bookRentalMg.setDaysRented(bookRentalDto.getDaysRented());
+        bookRentalMg.setDelivered(bookRentalDto.isDelivered());
+        bookRentalMg.setBook(bookMgDao.getByBookId(bookRentalDto.getBookId()));
+        bookRentalMg.setStudent(studentMgDao.getByStudentId(bookRentalDto.getStudentId()));
+
+        return bookRentalMg;
     }
 }

@@ -20,7 +20,7 @@ public class MealTimeMg extends BaseEntityMg{
     private Meals meals;
     private LocalTime eatTime;
     @DBRef
-    private Student student;
+    private StudentMg student;
 
     public Meals getMeals() {
         return meals;
@@ -38,11 +38,11 @@ public class MealTimeMg extends BaseEntityMg{
         this.eatTime = eatTime;
     }
 
-    public Student getStudent() {
+    public StudentMg getStudent() {
         return student;
     }
 
-    public void setStudent(Student student) {
+    public void setStudent(StudentMg student) {
         this.student = student;
     }
 

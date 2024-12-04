@@ -4,10 +4,7 @@ import com.dme.DormitoryProject.dtos.Book.BookDto;
 import com.dme.DormitoryProject.mongoDb.mongoDBBusiness.mongoDbService.IBookMgService;
 import com.dme.DormitoryProject.response.Result;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/mg/books")
@@ -25,8 +22,13 @@ public class BookMgController {
         return this.bookMgService.getAll();
     }
 
+    @GetMapping("bookId/{bookId}")
+    public Result getByIdAndRentals(@PathVariable Long bookId){
+        return this.bookMgService.getByIdAndRentals(bookId);
+    }
+
     @PostMapping("save")
-    public Result save(BookDto bookDto){
+    public Result save(@RequestBody BookDto bookDto){
         return this.bookMgService.save(bookDto);
     }
 

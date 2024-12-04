@@ -14,9 +14,9 @@ public class PunishmentsMg extends BaseEntityMg{
     private Long punishmentId;
     private LocalTime punishmentTime;
     @DBRef
-    private Student student;
+    private StudentMg student;
     @DBRef
-    private PunishmentDefinitions punishmentDefinitions;
+    private PunishmentDefinitionsMg punishmentDefinitions;
 
     public LocalTime getPunishmentTime() {
         return punishmentTime;
@@ -24,16 +24,16 @@ public class PunishmentsMg extends BaseEntityMg{
     public void setPunishmentTime(LocalTime punishmentTime) {
         this.punishmentTime = punishmentTime;
     }
-    public Student getStudent() {
+    public StudentMg getStudent() {
         return student;
     }
-    public void setStudent(Student student) {
+    public void setStudent(StudentMg student) {
         this.student = student;
     }
-    public PunishmentDefinitions getPunishmentDefinitions() {
+    public PunishmentDefinitionsMg getPunishmentDefinitions() {
         return punishmentDefinitions;
     }
-    public void setPunishmentDefinitions(PunishmentDefinitions punishmentDefinitions) {
+    public void setPunishmentDefinitions(PunishmentDefinitionsMg punishmentDefinitions) {
         this.punishmentDefinitions = punishmentDefinitions;
     }
 

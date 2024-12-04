@@ -19,7 +19,7 @@ public class EntryExitMg extends BaseEntityMg{
     @BsonRepresentation(BsonType.STRING)
     private EntryOrExit entryExit;
     @DBRef
-    private Student student;
+    private StudentMg student;
     private LocalTime momentaryTime = LocalTime.now();
 
     public EntryOrExit getEntryExit() {
@@ -28,10 +28,10 @@ public class EntryExitMg extends BaseEntityMg{
     public void setEntryExit(EntryOrExit entryExit) {
         this.entryExit = entryExit;
     }
-    public Student getStudent() {
+    public StudentMg getStudent() {
         return student;
     }
-    public void setStudent(Student student) {
+    public void setStudent(StudentMg student) {
         this.student = student;
     }
     public LocalTime getMomentaryTime() {

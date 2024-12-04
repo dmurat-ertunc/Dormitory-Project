@@ -16,7 +16,7 @@ public class RolesMg {
     private Long roleId;
     private String name;
     @DBRef
-    private List<User> users = new ArrayList<>();
+    private List<UserMg> users = new ArrayList<>();
 
     public RolesMg(){
 
@@ -38,11 +38,11 @@ public class RolesMg {
         this.name = name;
     }
 
-    public List<User> getUsers() {
+    public List<UserMg> getUsers() {
         return users;
     }
 
-    public void setUsers(List<User> users) {
+    public void setUsers(List<UserMg> users) {
         this.users = users;
     }
 

@@ -14,17 +14,17 @@ import java.time.LocalTime;
 public class RentalMg extends BaseEntityMg {
     private Long rentalId;
     @DBRef
-    private SportArea sportArea;
+    private SportAreaMg sportArea;
     private LocalDate rentalDate;
     private LocalTime startTime;
     private LocalTime endTime;
     @DBRef
-    private Student student;
+    private StudentMg student;
 
-    public SportArea getSportArea() {
+    public SportAreaMg getSportArea() {
         return sportArea;
     }
-    public void setSportArea(SportArea sportArea) {
+    public void setSportArea(SportAreaMg sportArea) {
         this.sportArea = sportArea;
     }
     public LocalDate getRentalDate() {
@@ -45,10 +45,10 @@ public class RentalMg extends BaseEntityMg {
     public void setEndTime(LocalTime endTime) {
         this.endTime = endTime;
     }
-    public Student getStudent() {
+    public StudentMg getStudent() {
         return student;
     }
-    public void setStudent(Student student) {
+    public void setStudent(StudentMg student) {
         this.student = student;
     }
     public Long getRentalId() {

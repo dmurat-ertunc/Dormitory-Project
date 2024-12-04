@@ -8,6 +8,7 @@ import com.dme.DormitoryProject.dtos.login.LoginDTO;
 import com.dme.DormitoryProject.repository.IRoleDao;
 import com.dme.DormitoryProject.repository.IUserDao;
 import com.dme.DormitoryProject.response.Result;
+import com.dme.DormitoryProject.security.CustomUserDetailService;
 import com.dme.DormitoryProject.security.JWTGenerator;
 import jakarta.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/auth")
@@ -30,11 +34,13 @@ public class AuthController {
     private JWTGenerator jwtGenerator;
     private ITokenBlackListService tokenBlackListService;
     private IUserService userService;
+    private CustomUserDetailService customUserDetailService;
 
     @Autowired
     public AuthController(AuthenticationManager authenticationManager, IUserDao userDao,
                           IRoleDao roleDao, PasswordEncoder passwordEncoder, JWTGenerator jwtGenerator,
-                          ITokenBlackListService tokenBlackListService, IUserService userService) {
+                          ITokenBlackListService tokenBlackListService, IUserService userService,
+                          CustomUserDetailService customUserDetailService) {
         this.authenticationManager = authenticationManager;
         this.userDao = userDao;
         this.roleDao = roleDao;
@@ -42,6 +48,7 @@ public class AuthController {
         this.jwtGenerator = jwtGenerator;
         this.tokenBlackListService=tokenBlackListService;
         this.userService=userService;
+        this.customUserDetailService=customUserDetailService;
     }
 
     @PostMapping("login")
@@ -52,12 +59,14 @@ public class AuthController {
                         loginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtGenerator.generateToken(authentication);
-        Cookie jwtCookie = new Cookie("jwtToken",token);
-        jwtCookie.setHttpOnly(true); // JavaScript tarafından erişim engellenir
-        jwtCookie.setSecure(true); // HTTPS kullanıyorsanız etkinleştirin
-        jwtCookie.setMaxAge(3600000); // Süreyi belirleyin (saniye cinsinden)
-        jwtCookie.setPath("/"); // Cookie'nin erişilebilir olduğu yol
-        return new ResponseEntity<>(new AuthResponseDTO(token), HttpStatus.OK);
+        UserDetails userDetails = customUserDetailService.loadUserByUsername(loginDto.getUserName());
+        // COOKIE OLUŞTURMA
+//        Cookie jwtCookie = new Cookie("jwtToken",token);
+//        jwtCookie.setHttpOnly(true); // JavaScript tarafından erişim engellenir
+//        jwtCookie.setSecure(true); // HTTPS kullanıyorsanız etkinleştirin
+//        jwtCookie.setMaxAge(3600000); // Süreyi belirleyin (saniye cinsinden)
+//        jwtCookie.setPath("/"); // Cookie'nin erişilebilir olduğu yol
+        return new ResponseEntity<>(new AuthResponseDTO(token,userDetails.getUsername(),userDetails.getAuthorities()), HttpStatus.OK);
     }
     @PostMapping("passwordChange")
     public Result passwordChange(@RequestBody PasswordChangeDTO passwordChangeDTO){

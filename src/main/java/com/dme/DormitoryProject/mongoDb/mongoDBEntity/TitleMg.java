@@ -15,9 +15,9 @@ public class TitleMg extends BaseEntityMg{
     private Long titleId;
     private String name;
     @DBRef
-    private List<Staff> staffList;
+    private List<StaffMg> staffList;
     @DBRef
-    private List<PersonnelRequestForm> personnelRequestForms;
+    private List<PersonnelRequestFormMg> personnelRequestForms;
 
 
     public String getName() {
@@ -26,16 +26,16 @@ public class TitleMg extends BaseEntityMg{
     public void setName(String name) {
         this.name = name;
     }
-    public List<Staff> getStaffList() {
+    public List<StaffMg> getStaffList() {
         return staffList;
     }
-    public void setStaffList(List<Staff> staffList) {
+    public void setStaffList(List<StaffMg> staffList) {
         this.staffList = staffList;
     }
-    public List<PersonnelRequestForm> getPersonnelRequestForms() {
+    public List<PersonnelRequestFormMg> getPersonnelRequestForms() {
         return personnelRequestForms;
     }
-    public void setPersonnelRequestForms(List<PersonnelRequestForm> personnelRequestForms) {
+    public void setPersonnelRequestForms(List<PersonnelRequestFormMg> personnelRequestForms) {
         this.personnelRequestForms = personnelRequestForms;
     }
 

@@ -25,7 +25,7 @@ public class UserMg {
     @BsonRepresentation(BsonType.STRING)
     private UserType userType;
     @DBRef
-    private List<Roles> roles = new ArrayList<>();
+    private List<RolesMg> roles = new ArrayList<>();
 
     public UserMg(){
 
@@ -55,11 +55,11 @@ public class UserMg {
         this.userType = userType;
     }
 
-    public List<Roles> getRoles() {
+    public List<RolesMg> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Roles> roles) {
+    public void setRoles(List<RolesMg> roles) {
         this.roles = roles;
     }
 

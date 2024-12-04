@@ -8,14 +8,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class LgoMg extends BaseEntityMg{
     private Long lgoId;
     @DBRef
-    private LogLevel logLevel;
+    private LogLevelMg logLevel;
     private String message;
 
-    public LogLevel getLogLevel() {
+    public LogLevelMg getLogLevel() {
         return logLevel;
     }
 
-    public void setLogLevel(LogLevel logLevel) {
+    public void setLogLevel(LogLevelMg logLevel) {
         this.logLevel = logLevel;
     }
 

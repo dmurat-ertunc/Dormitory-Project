@@ -19,28 +19,28 @@ public class StudentMg extends BaseEntityMg{
     private String mail;
     private LocalDate birthDate;
     @DBRef
-    private Set<University> university = new HashSet<>();
+    private Set<UniversityMg> university = new HashSet<>();
     @DBRef
-    private List<Rental> rentalList;
+    private List<RentalMg> rentalList;
     private boolean verification = false;
     @DBRef
-    private List<StudentRequestRental> studentRequestRentalList;
+    private List<StudentRequestRentalMg> studentRequestRentalList;
     @Column(nullable = true)
     private int score = 100;
     @DBRef
-    private List<EntryExit> entryExits;
+    private List<EntryExitMg> entryExits;
     @DBRef
-    private List<Punishments> punishments;
+    private List<PunishmentsMg> punishments;
     @Column(nullable = true)
     private int remainingPermitHours = 30;
     @DBRef
-    private List<BookRental> bookRentals;
+    private List<BookRentalMg> bookRentals;
     @DBRef
-    private Room room;
+    private RoomMg room;
     @DBRef
-    private List<MealTime> mealTimes;
+    private List<MealTimeMg> mealTimes;
     @DBRef
-    private List<StudentGetPermission> studentGetPermissions;
+    private List<StudentGetPermissionMg> studentGetPermissions;
 
     public String getName() {
         return name;
@@ -72,16 +72,16 @@ public class StudentMg extends BaseEntityMg{
     public void setBirthDate(LocalDate birthDate) {
         this.birthDate = birthDate;
     }
-    public Set<University> getUniversity() {
+    public Set<UniversityMg> getUniversity() {
         return university;
     }
-    public void setUniversity(Set<University> university) {
+    public void setUniversity(Set<UniversityMg> university) {
         this.university = university;
     }
-    public List<Rental> getRentalList() {
+    public List<RentalMg> getRentalList() {
         return rentalList;
     }
-    public void setRentalList(List<Rental> rentalList) {
+    public void setRentalList(List<RentalMg> rentalList) {
         this.rentalList = rentalList;
     }
     public boolean getVerification() {
@@ -90,10 +90,10 @@ public class StudentMg extends BaseEntityMg{
     public void setVerification(boolean verification) {
         this.verification = verification;
     }
-    public List<StudentRequestRental> getStudentRequestRentalList() {
+    public List<StudentRequestRentalMg> getStudentRequestRentalList() {
         return studentRequestRentalList;
     }
-    public void setStudentRequestRentalList(List<StudentRequestRental> studentRequestRentalList) {
+    public void setStudentRequestRentalList(List<StudentRequestRentalMg> studentRequestRentalList) {
         this.studentRequestRentalList = studentRequestRentalList;
     }
     public int getScore() {
@@ -102,16 +102,16 @@ public class StudentMg extends BaseEntityMg{
     public void setScore(int score) {
         this.score = score;
     }
-    public List<EntryExit> getEntryExits() {
+    public List<EntryExitMg> getEntryExits() {
         return entryExits;
     }
-    public void setEntryExits(List<EntryExit> entryExits) {
+    public void setEntryExits(List<EntryExitMg> entryExits) {
         this.entryExits = entryExits;
     }
-    public List<Punishments> getPunishments() {
+    public List<PunishmentsMg> getPunishments() {
         return punishments;
     }
-    public void setPunishments(List<Punishments> punishments) {
+    public void setPunishments(List<PunishmentsMg> punishments) {
         this.punishments = punishments;
     }
     public int getRemainingPermitHours() {
@@ -120,22 +120,22 @@ public class StudentMg extends BaseEntityMg{
     public void setRemainingPermitHours(int remainingPermitHours) {
         this.remainingPermitHours = remainingPermitHours;
     }
-    public List<BookRental> getBookRentals() {
+    public List<BookRentalMg> getBookRentals() {
         return bookRentals;
     }
-    public void setBookRentals(List<BookRental> bookRentals) {
+    public void setBookRentals(List<BookRentalMg> bookRentals) {
         this.bookRentals = bookRentals;
     }
-    public Room getRoom() {
+    public RoomMg getRoom() {
         return room;
     }
-    public void setRoom(Room room) {
+    public void setRoom(RoomMg room) {
         this.room = room;
     }
-    public List<MealTime> getMealTimes() {
+    public List<MealTimeMg> getMealTimes() {
         return mealTimes;
     }
-    public void setMealTimes(List<MealTime> mealTimes) {
+    public void setMealTimes(List<MealTimeMg> mealTimes) {
         this.mealTimes = mealTimes;
     }
 
@@ -147,11 +147,11 @@ public class StudentMg extends BaseEntityMg{
         this.studentId = studentId;
     }
 
-    public List<StudentGetPermission> getStudentGetPermissions() {
+    public List<StudentGetPermissionMg> getStudentGetPermissions() {
         return studentGetPermissions;
     }
 
-    public void setStudentGetPermissions(List<StudentGetPermission> studentGetPermissions) {
+    public void setStudentGetPermissions(List<StudentGetPermissionMg> studentGetPermissions) {
         this.studentGetPermissions = studentGetPermissions;
     }
 }

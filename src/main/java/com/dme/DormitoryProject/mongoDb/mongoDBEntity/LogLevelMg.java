@@ -14,12 +14,12 @@ public class LogLevelMg extends BaseEntityMg{
     private Long logLevelId;
     private String description;
     @DBRef
-    private List<Lgo> lgoList;
+    private List<LgoMg> lgoList;
 
-    public List<Lgo> getLgoList() {
+    public List<LgoMg> getLgoList() {
         return lgoList;
     }
-    public void setLgoList(List<Lgo> lgoList) {
+    public void setLgoList(List<LgoMg> lgoList) {
         this.lgoList = lgoList;
     }
     public String getDescription(){

@@ -16,21 +16,21 @@ public class BookRentalMg extends BaseEntityMg {
     private LocalDate deliveryDate;
     private String daysRented;
     @DBRef
-    private Student student;
+    private StudentMg student;
     @DBRef
-    private Book book;
+    private BookMg book;
     private boolean delivered;
 
-    public Student getStudent() {
+    public StudentMg getStudent() {
         return student;
     }
-    public void setStudent(Student student) {
+    public void setStudent(StudentMg student) {
         this.student = student;
     }
-    public Book getBook() {
+    public BookMg getBook() {
         return book;
     }
-    public void setBook(Book book) {
+    public void setBook(BookMg book) {
         this.book = book;
     }
     public LocalDate getEndDate() {

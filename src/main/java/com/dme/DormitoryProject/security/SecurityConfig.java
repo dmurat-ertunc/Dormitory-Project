@@ -45,7 +45,7 @@ public class SecurityConfig {
                 .authorizeRequests(
                         auth -> auth
                                 .requestMatchers("api/auth/**").permitAll() // `antMatchers` yerine `requestMatchers` kullanılıyor
-                                .requestMatchers("api/departments/**").permitAll()
+                                .requestMatchers("api/departments/**").hasRole("MANAGER")
                                 .requestMatchers("api/google/**").permitAll()
                                 .requestMatchers("api/staffs/**").permitAll()
                                 .requestMatchers("api/rentals/**").hasAnyRole("MANAGER","STAFF","STUDENT")
@@ -61,7 +61,7 @@ public class SecurityConfig {
                                 .requestMatchers("api/rooms/**").permitAll()
                                 .requestMatchers("api/mealTime/**").permitAll()
                                 .requestMatchers("api/dataMigration/**").permitAll()
-                                .requestMatchers("api/mg/books/**").permitAll()
+                                .requestMatchers("api/mg/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());

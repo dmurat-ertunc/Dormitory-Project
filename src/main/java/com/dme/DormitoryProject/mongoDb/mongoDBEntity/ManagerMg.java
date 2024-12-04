@@ -18,18 +18,18 @@ public class ManagerMg extends BaseEntityMg{
     private String surName;
     private String mail;
     @DBRef
-    private List<Staff> staffList;
+    private List<StaffMg> staffList;
     private String phoneNumber;
     private String title;
     private int salary;
     @DBRef
-    private List<PersonnelRequestForm> personnelRequestForms;
+    private List<PersonnelRequestFormMg> personnelRequestForms;
 
 
-    public List<Staff> getStaffList() {
+    public List<StaffMg> getStaffList() {
         return staffList;
     }
-    public void setStaffList(List<Staff> staffList) {
+    public void setStaffList(List<StaffMg> staffList) {
         this.staffList = staffList;
     }
     public String getName() {
@@ -68,10 +68,10 @@ public class ManagerMg extends BaseEntityMg{
     public void setSalary(int salary) {
         this.salary = salary;
     }
-    public List<PersonnelRequestForm> getManagers() {
+    public List<PersonnelRequestFormMg> getManagers() {
         return personnelRequestForms;
     }
-    public void setManagers(List<PersonnelRequestForm> personnelRequestForms) {
+    public void setManagers(List<PersonnelRequestFormMg> personnelRequestForms) {
         this.personnelRequestForms = personnelRequestForms;
     }
     public Long getManagerId() {
@@ -81,11 +81,11 @@ public class ManagerMg extends BaseEntityMg{
         this.managerId = managerId;
     }
 
-    public List<PersonnelRequestForm> getPersonnelRequestForms() {
+    public List<PersonnelRequestFormMg> getPersonnelRequestForms() {
         return personnelRequestForms;
     }
 
-    public void setPersonnelRequestForms(List<PersonnelRequestForm> personnelRequestForms) {
+    public void setPersonnelRequestForms(List<PersonnelRequestFormMg> personnelRequestForms) {
         this.personnelRequestForms = personnelRequestForms;
     }
 }

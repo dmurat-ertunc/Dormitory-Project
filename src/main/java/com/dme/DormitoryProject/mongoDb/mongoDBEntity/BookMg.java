@@ -17,7 +17,7 @@ public class BookMg extends BaseEntityMg{
     private String type;
     private boolean isEmpty=true;
     @DBRef
-    private List<BookRental> bookRentals;
+    private List<BookRentalMg> bookRentals;
 
     public Long getBookId() {
         return bookId;
@@ -45,10 +45,10 @@ public class BookMg extends BaseEntityMg{
     public void setEmpty(boolean empty) {
         isEmpty = empty;
     }
-    public List<BookRental> getBookRentals() {
+    public List<BookRentalMg> getBookRentals() {
         return bookRentals;
     }
-    public void setBookRentals(List<BookRental> bookRentals) {
+    public void setBookRentals(List<BookRentalMg> bookRentals) {
         this.bookRentals = bookRentals;
     }
 }
