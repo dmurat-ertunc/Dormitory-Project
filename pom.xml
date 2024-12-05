@@ -186,6 +186,17 @@
 			<artifactId>reflections</artifactId>
 			<version>0.10.2</version>
 		</dependency>
+		<!-- rabbitmq -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-amqp</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.30</version> <!-- En son sürümü kontrol edin -->
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
