@@ -9,11 +9,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.logging.Logger;
 
 @RestController
+@RequestMapping("api/rabbit")
 @Slf4j
 public class ProducerController {
 
@@ -21,7 +23,7 @@ public class ProducerController {
     @Value("${spring.rabbitmq.notification.exchange}")
     private String exchange;
 
-    @Value("${spring.rabbitmq.notification.routekey}")
+    @Value("${spring.rabbitmq.notification.routing-key}")
     private String routingKey;
 
     @Autowired

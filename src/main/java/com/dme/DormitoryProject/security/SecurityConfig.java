@@ -62,6 +62,7 @@ public class SecurityConfig {
                                 .requestMatchers("api/mealTime/**").permitAll()
                                 .requestMatchers("api/dataMigration/**").permitAll()
                                 .requestMatchers("api/mg/**").permitAll()
+                                .requestMatchers("api/rabbit/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());

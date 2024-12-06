@@ -1,9 +1,10 @@
 package com.dme.DormitoryProject.rabbitmq;
 
 
-public class StudentMessage {
+import java.io.Serializable;
 
-    private Long id;
+public class StudentMessage implements Serializable {
+
     private Long studentId;
     private String message;
 
@@ -11,18 +12,12 @@ public class StudentMessage {
 
     }
 
-    public StudentMessage(Long id, Long studentId, String message) {
-        this.id = id;
+    public StudentMessage(Long studentId, String message) {
+
         this.studentId = studentId;
         this.message = message;
     }
 
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
     public Long getStudentId() {
         return studentId;
     }
