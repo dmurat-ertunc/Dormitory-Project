@@ -7,9 +7,12 @@ import com.dme.DormitoryProject.dtos.auth.PasswordChangeDTO;
 import com.dme.DormitoryProject.dtos.login.LoginDTO;
 import com.dme.DormitoryProject.repository.IRoleDao;
 import com.dme.DormitoryProject.repository.IUserDao;
+import com.dme.DormitoryProject.response.ErrorResult;
 import com.dme.DormitoryProject.response.Result;
+import com.dme.DormitoryProject.response.SuccessDataResult;
 import com.dme.DormitoryProject.security.CustomUserDetailService;
 import com.dme.DormitoryProject.security.JWTGenerator;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,7 +25,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/auth")
@@ -78,5 +83,32 @@ public class AuthController {
         String jwt = token.substring(7);
         tokenBlackListService.blackListToken(jwt);
         return ResponseEntity.ok("Çıkış Başarılı");
+    }
+
+    @GetMapping("tokenDecoder/{token}")
+    public Result tokenDecoder(@PathVariable String token){
+        String bearerToken = token;
+
+        // Token'ı '.' ile ayır
+        String[] tokenParts = bearerToken.split("\\.");
+        if (tokenParts.length < 2) {
+            throw new IllegalArgumentException("Geçersiz JWT Token");
+        }
+
+        // Payload kısmını Base64URL decode et
+        String payload = new String(Base64.getUrlDecoder().decode(tokenParts[1]));
+
+        // JSON string'i Map olarak oku
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            Map<String, Object> payloadMap = objectMapper.readValue(payload, Map.class);
+            System.out.println("Payload: " + payloadMap);
+            return new SuccessDataResult("Token içeriği açıldı",true,payloadMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ErrorResult("hata var",false);
+        }
+
     }
 }
